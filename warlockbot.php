@@ -10,15 +10,7 @@ if ($_POST['token'] != SLACK_TOKEN) {
 
 $player = load();
 
-if (isset($argv[1])) {
-    $_POST['text'] = implode(" ",array_slice($argv,1));
-}
-
-//$cmd = explode(" ",$_POST['text']);
 $commandlist = explode(";",$_POST['text']);
-
-//debug
-//sendqmsg(print_r($_POST,1));
 
 $executions = 0;
 while (sizeof($commandlist) > 0)
@@ -26,11 +18,7 @@ while (sizeof($commandlist) > 0)
     // Get the next command
     $thiscommand = array_shift($commandlist);
     
-    
     $cmd = preg_split('/\s+/', trim($thiscommand));
-    
-    //debug
-    //senqmsg(print_r($cmd,1));
     
     $cmd[0] = substr(strtolower($cmd[0]),1);
     if (sizeof($cmd) > 1) {
@@ -426,16 +414,6 @@ function roll_character() {
     $uin =$uinames->country('England')->fetch('Array');
     $p['name'] = $uin['name'];
     $p['icon'] = ($uin['gender']=='male'?':man:':':woman:');
-    
-    /*$male = array('&#x1f466;','&#x1f468;','&#x1f474;');
-    $female = array('&#x1f467;','&#x1f469;','&#x1f475;');
-    $skintone = array('&#x1f3fb;','&#x1f3fc;','&#x1f3fd;','&#x1f3fe;');
-    if ($uin['gender']=='male') {
-        $iconraw = $male[array_rand($male)].$skintone[array_rand($skintone)];
-    } else {
-        $iconraw = $female[array_rand($female)].$skintone[array_rand($skintone)];
-    }
-    $p['icon'] = mb_convert_encoding($iconraw, 'UTF-8', 'HTML-ENTITIES');*/
     
     $male = array(':boy:',':man:',':person_with_blond_hair:',':older_man:');
     $female = array(':girl:',':woman:',':princess:',':older_woman:');
