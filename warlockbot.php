@@ -41,7 +41,10 @@ while (sizeof($commandlist) > 0)
 
 save($player);
 
+die();
 
+/// ----------------------------------------------------------------------------
+/// Functions
 
 function roll_character() {
     $p = array('skill' => 6+rand(1,6), 'stam' => rand(1,6)+rand(1,6)+12, 'luck' => rand(1,6)+6, 'prov' => 10, 'gold' => rand(1,6)-1,
