@@ -20,14 +20,14 @@ while (sizeof($commandlist) > 0)
 {
     // Process the next command in the list
     processcommand(array_shift($commandlist));
-    
+
     // If stamina ever drops to less than 1, the player if dead
     // Stop processing any queued commands and tell the player they are dead
     if ($player['stam'] < 1) {
         sendqmsg("_*You are dead.*_ :skull:",":skull:");
         break;
     }
-    
+
     // Stop processing the queue after MAX_EXECUTIONS
     if ($executions++ > MAX_EXECUTIONS) {
         break;
@@ -35,7 +35,6 @@ while (sizeof($commandlist) > 0)
 }
 
 save($player);
-
 
 
 
@@ -156,13 +155,13 @@ function send_charsheet($text = "")
                 'short' => true
             ])
     ]);
-    
+
     if ($player['stam'] < 1) {
         $icon = ":skull:";
     } else {
         $icon = $player['icon'];
     }
-    
+
     sendmsg("\n*".$player['name']."*",$attachments,$player['icon']);
 }
 
@@ -176,7 +175,7 @@ function send_stuff()
         natcasesort($s);
         $s = array_map("ucfirst",$s);
     }
-    
+
     $attachments = array([
             'color'    => '#0066ff',
             'fields'   => array(
@@ -191,13 +190,13 @@ function send_stuff()
                 'short' => true
             ])
     ]);
-    
+
     if ($player['stam'] < 1) {
         $icon = ":skull:";
     } else {
         $icon = $player['icon'];
     }
-    
+
     sendmsg("",$attachments,$icon);
 }
 
@@ -217,7 +216,7 @@ function sendqmsg($message, $icon = ':green_book:')
 function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan = false)
 {
     global $player;
-    
+
     $data = array(
         'text'        => $message,
         'icon_emoji'  => $icon,
@@ -243,7 +242,7 @@ function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan
 function processcommand($command)
 {
     $cmd = preg_split('/\s+/', trim($command));
-    
+
     $cmd[0] = substr(strtolower($cmd[0]),1);
     if (sizeof($cmd) > 1) {
         $cmd[1] = trim($cmd[1]);
@@ -267,7 +266,7 @@ function processcommand($command)
             $player['lastpage'] = $p;
             require("book.php");
             $story = $book[$p];
-            
+
             // Check for one option stories
             preg_match_all('/turn to ([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
             if (sizeof($matches) == 1 && stripos($story,"if ") === false && stripos($story,"you may ") === false) {
@@ -291,8 +290,7 @@ function processcommand($command)
         if ($cmd[0] == 'stamina') $cmd[0] = 'stam';
         if ($cmd[0] == 'provisons') $cmd[0] = 'prov';
         if ($cmd[0] == 'weaponbonus') $cmd[0] = 'weapon';
-        
-        
+
         if ($cmd[1] == "max" && is_numeric($cmd[2])) {
             $statref = &$player['max'][$cmd[0]];
             $max = 99;
@@ -307,8 +305,7 @@ function processcommand($command)
             sendqmsg("Nope.".$cmd[1]);
             continue;
         }
-        
-        
+
         if ($val[0] == "+") {
             $val = substr($val,1);
             $statref += (int)$val;
@@ -358,13 +355,13 @@ function processcommand($command)
             $out .= "_*Lost 2 stamina!* Remaining stamina ".$player['stam']."_";
             $icon = ':lightning:';
         }
-        
+
         sendqmsg($out,$icon);
     }
     if (($cmd[0] == "get" || $cmd[0] == "take") && $cmd[1])
     {
         $cmd[1] = implode(" ",array_slice($cmd, 1));
-        
+
         // Look for special cases
         // Gold
         preg_match_all('/^([0-9]+) gold/i', $cmd[1], $matches, PREG_SET_ORDER, 0);
@@ -382,14 +379,14 @@ function processcommand($command)
             addcommand("!prov +".$matches[0][1]);
             continue;
         }
-        
+
         $player['stuff'][] = $cmd[1];
         sendqmsg("*Got the ".$cmd[1]."!*",":moneybag:");
     }
     if (($cmd[0] == "drop" || $cmd[0] == "lose" || $cmd[0] == "use") && $cmd[1])
     {
         $cmd[1] = implode(" ",array_slice($cmd, 1));
-        
+
         // Look for special cases
         // Gold
         preg_match_all('/^([0-9]+) gold/i', $cmd[1], $matches, PREG_SET_ORDER, 0);
@@ -407,7 +404,7 @@ function processcommand($command)
             addcommand("!prov -".$matches[0][1]);
             continue;
         }
-        
+
         $dropped = false;
         foreach($player['stuff'] as $k => $i)
         {
@@ -438,7 +435,7 @@ function processcommand($command)
             $cmd[1] = 1;
         }
         $out = "Result:";
-        
+
         $t = 0;
         for ($a = 0; $a < $cmd[1]; $a++) {
             $r = rand(1,6);
@@ -539,11 +536,11 @@ function processcommand($command)
             //invalid inputs
             continue;
         }
-        
+
         if (!is_numeric($maxrounds)) {
             $maxrounds = 50;
         }
-        
+
         $out = "";
         $round = 1;
         while ($player['stam'] > 0 && $mstam > 0) {
@@ -551,10 +548,10 @@ function processcommand($command)
             $proll = rand(1,6);
             $mattack = $mskill+$mroll;
             $pattack = $player['skill']+$player['weapon']+$proll;
-            
+
             $memoji = diceemoji($mroll);
             $pemoji = diceemoji($proll);
-        
+
             if ($pattack > $mattack) {
                 $out .= "_You hit the $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
                 $mstam -= 2;
@@ -566,7 +563,7 @@ function processcommand($command)
             else {
                 $out .= "_You avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
             }
-            
+
             if ($round++ == $maxrounds) {
                 break;
             }
