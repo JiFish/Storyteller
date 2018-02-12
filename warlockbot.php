@@ -231,8 +231,6 @@ function sendqmsg($message, $icon = ':green_book:')
 
 function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan = false)
 {
-    global $player;
-
     $data = array(
         'text'        => $message,
         'icon_emoji'  => $icon,
