@@ -1,4 +1,8 @@
+# Set warlockbot.php as index
+DirectoryIndex warlockbot.php
+
+# Deny access to any other file
 Order Allow,Deny
-<FilesMatch "^warlockbot\.php$">
+<FilesMatch "^(warlockbot\.php|)$">
 Allow from all
 </FilesMatch>
