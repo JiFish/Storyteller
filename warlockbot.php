@@ -142,14 +142,17 @@ function processcommand($command)
 {
     global $player;
 
+    // Split by whitespace
+    // $cmd[0] is the command
+    // $cmd[1...] are the parameters
     $cmd = preg_split('/\s+/', trim($command));
 
-    $cmd[0] = substr(strtolower($cmd[0]),1);
-    if (sizeof($cmd) > 1) {
-        $cmd[1] = trim($cmd[1]);
-    } else {
-        $cmd[1] = false;
-    }
+    // Remove trigger word from command
+    $cmd[0] = str_replace($_POST['dd'],'',$cmd[0],1);
+    $cmd[0] = strtolower($cmd[0]);
+
+    // pad the array, so we can safely check param values
+    array_pad($cmd,10,null);
 
     if ($cmd[0] == "look")
     {
