@@ -16,6 +16,10 @@ if ($_POST['token'] != SLACK_TOKEN) {
 
 $player = load();
 
+if (isset($argv[1])) {
+    $_POST['text'] = implode(" ",array_slice($argv,1));
+}
+
 // Split the command list by semi-colons. Allows multiple commands to be queued
 // Note, some commands will queue other commands
 $commandlist = explode(";",$_POST['text']);
@@ -136,133 +140,6 @@ function addcommand($cmd)
 {
     global $commandlist;
     return array_unshift($commandlist,$cmd);
-}
-
-// Convert the player array to a character sheet and send it to slack
-// along with message $text
-function send_charsheet($text = "")
-{
-    global $player;
-
-    $attachments = array([
-            'color'    => '#ff6600',
-            'fields'   => array(
-            [
-                'title' => 'Skill',
-                'value' => $player['skill']." / ".$player['max']['skill'],
-                'short' => true
-            ],
-            [
-                'title' => 'Stamina (stam)',
-                'value' => $player['stam']." / ".$player['max']['stam'],
-                'short' => true
-            ],
-            [
-                'title' => 'Luck',
-                'value' => $player['luck']." / ".$player['max']['luck'],
-                'short' => true
-            ],
-            [
-                'title' => 'Weapon Bonus (weapon)',
-                'value' => "+".$player['weapon'],
-                'short' => true
-            ],
-            [
-                'title' => 'Gold',
-                'value' => $player['gold'],
-                'short' => true
-            ],
-            [
-                'title' => 'Provisons (prov)',
-                'value' => $player['prov'],
-                'short' => true
-            ])
-    ]);
-
-    if ($player['stam'] < 1) {
-        $icon = ":skull:";
-    } else {
-        $icon = $player['icon'];
-    }
-
-    sendmsg("\n*".$player['name']."*",$attachments,$player['icon']);
-}
-
-// Send to slack a list of the player's stuff (inventory)
-function send_stuff()
-{
-    global $player;
-    $s = $player['stuff'];
-    if (sizeof($s) == 0) {
-        $s[] = "(Nothing!)";
-    } else {
-        natcasesort($s);
-        $s = array_map("ucfirst",$s);
-    }
-
-    $attachments = array([
-            'color'    => '#0066ff',
-            'fields'   => array(
-            [
-                'title' => 'Inventory',
-                'value' => implode("\n",array_slice($s, 0, floor(sizeof($s) / 2))),
-                'short' => true
-            ],
-            [
-                'title' => "",
-                'value' => "\n".implode("\n",array_slice($s, floor(sizeof($s) / 2))),
-                'short' => true
-            ])
-    ]);
-
-    if ($player['stam'] < 1) {
-        $icon = ":skull:";
-    } else {
-        $icon = $player['icon'];
-    }
-
-    sendmsg("",$attachments,$icon);
-}
-
-// Send a direct message to a user or channel on slack
-function senddirmsg($message, $user = false)
-{
-    if (!$user) {
-        $user = $_POST['user_id'];
-    }
-    return sendmsg($message, true, ':green_book:', '@'.$user);
-}
-
-// Send a quick and basic message to slack
-function sendqmsg($message, $icon = ':green_book:')
-{
-    return sendmsg($message, true, $icon);
-}
-
-// Full whistles and bells send message to slack
-// Normally use one of the convenience functions above
-function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan = false)
-{
-    $data = array(
-        'text'        => $message,
-        'icon_emoji'  => $icon,
-        'attachments' => $attachments
-    );
-    if ($chan) {
-        $data['channel'] = $chan;
-    }
-    $data_string = json_encode($data);
-    $ch = curl_init(SLACK_HOOK);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string))
-        );
-    //Execute CURL
-    $result = curl_exec($ch);
-    return $result;        
 }
 
 function processcommand($command)
@@ -620,4 +497,134 @@ function processcommand($command)
         }
         sendqmsg($out,":crossed_swords:");
     }
+}
+
+/// ----------------------------------------------------------------------------
+/// Send message to slack functions
+
+// Convert the player array to a character sheet and send it to slack
+// along with message $text
+function send_charsheet($text = "")
+{
+    global $player;
+
+    $attachments = array([
+            'color'    => '#ff6600',
+            'fields'   => array(
+            [
+                'title' => 'Skill',
+                'value' => $player['skill']." / ".$player['max']['skill'],
+                'short' => true
+            ],
+            [
+                'title' => 'Stamina (stam)',
+                'value' => $player['stam']." / ".$player['max']['stam'],
+                'short' => true
+            ],
+            [
+                'title' => 'Luck',
+                'value' => $player['luck']." / ".$player['max']['luck'],
+                'short' => true
+            ],
+            [
+                'title' => 'Weapon Bonus (weapon)',
+                'value' => "+".$player['weapon'],
+                'short' => true
+            ],
+            [
+                'title' => 'Gold',
+                'value' => $player['gold'],
+                'short' => true
+            ],
+            [
+                'title' => 'Provisons (prov)',
+                'value' => $player['prov'],
+                'short' => true
+            ])
+    ]);
+
+    if ($player['stam'] < 1) {
+        $icon = ":skull:";
+    } else {
+        $icon = $player['icon'];
+    }
+
+    sendmsg("\n*".$player['name']."*",$attachments,$player['icon']);
+}
+
+// Send to slack a list of the player's stuff (inventory)
+function send_stuff()
+{
+    global $player;
+    $s = $player['stuff'];
+    if (sizeof($s) == 0) {
+        $s[] = "(Nothing!)";
+    } else {
+        natcasesort($s);
+        $s = array_map("ucfirst",$s);
+    }
+
+    $attachments = array([
+            'color'    => '#0066ff',
+            'fields'   => array(
+            [
+                'title' => 'Inventory',
+                'value' => implode("\n",array_slice($s, 0, floor(sizeof($s) / 2))),
+                'short' => true
+            ],
+            [
+                'title' => "",
+                'value' => "\n".implode("\n",array_slice($s, floor(sizeof($s) / 2))),
+                'short' => true
+            ])
+    ]);
+
+    if ($player['stam'] < 1) {
+        $icon = ":skull:";
+    } else {
+        $icon = $player['icon'];
+    }
+
+    sendmsg("",$attachments,$icon);
+}
+
+// Send a direct message to a user or channel on slack
+function senddirmsg($message, $user = false)
+{
+    if (!$user) {
+        $user = $_POST['user_id'];
+    }
+    return sendmsg($message, true, ':green_book:', '@'.$user);
+}
+
+// Send a quick and basic message to slack
+function sendqmsg($message, $icon = ':green_book:')
+{
+    return sendmsg($message, true, $icon);
+}
+
+// Full whistles and bells send message to slack
+// Normally use one of the convenience functions above
+function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan = false)
+{
+    $data = array(
+        'text'        => $message,
+        'icon_emoji'  => $icon,
+        'attachments' => $attachments
+    );
+    if ($chan) {
+        $data['channel'] = $chan;
+    }
+    $data_string = json_encode($data);
+    $ch = curl_init(SLACK_HOOK);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+    //Execute CURL
+    $result = curl_exec($ch);
+    return $result;
 }
