@@ -84,17 +84,15 @@ function roll_character() {
 
     // Character Fluff
     // Get a random gender and name
-    require('uinames.class.php');
-    $uinames = new uiNames();
-    $uin =$uinames->country('England')->fetch('Array');
-    $p['name'] = $uin['name'];
-    $p['icon'] = ($uin['gender']=='male'?':man:':':woman:');
+    $gender = rand(0,1);
+    $lines = file($gender?'male_names.txt':'female_names.txt');
+    $p['name'] = trim($lines[array_rand($lines)]);
 
     // Get a random emoji to represent the character
     $male = array(':boy:',':man:',':person_with_blond_hair:',':older_man:');
     $female = array(':girl:',':woman:',':princess:',':older_woman:');
     $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:');
-    if ($uin['gender']=='male') {
+    if ($gender) {
         $p['icon'] = $male[array_rand($male)].$skintone[array_rand($skintone)];
     } else {
         $p['icon'] = $female[array_rand($female)].$skintone[array_rand($skintone)];
