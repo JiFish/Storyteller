@@ -16,10 +16,6 @@ if ($_POST['token'] != SLACK_TOKEN) {
 
 $player = load();
 
-if (isset($argv[1])) {
-    $_POST['text'] = implode(" ",array_slice($argv,1));
-}
-
 // Split the command list by semi-colons. Allows multiple commands to be queued
 // Note, some commands will queue other commands
 $commandlist = explode(";",$_POST['text']);
