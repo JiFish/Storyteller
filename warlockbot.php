@@ -148,7 +148,7 @@ function processcommand($command)
     $cmd = preg_split('/\s+/', trim($command));
 
     // Remove trigger word from command
-    $cmd[0] = str_replace($_POST['dd'],'',$cmd[0],1);
+    $cmd[0] = str_replace($_POST['trigger_word'],'',$cmd[0],1);
     $cmd[0] = strtolower($cmd[0]);
 
     // pad the array, so we can safely check param values
