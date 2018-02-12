@@ -257,6 +257,8 @@ function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan
 
 function processcommand($command)
 {
+    global $player;
+
     $cmd = preg_split('/\s+/', trim($command));
 
     $cmd[0] = substr(strtolower($cmd[0]),1);
