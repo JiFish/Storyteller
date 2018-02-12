@@ -101,6 +101,8 @@ function roll_character() {
     return $p;
 }
 
+// Load the player array from a serialized array
+// If we can't find the file, generate a new character
 function load()
 {
     $save = file_get_contents('save.txt');
@@ -114,11 +116,13 @@ function load()
     return $p;
 }
 
+// Serialize and save player array
 function save($p)
 {
     file_put_contents("save.txt",serialize($p));
 }
 
+// Convert number to html entity of dice emoji
 function diceemoji($r)
 {
     if ($r < 1 || $r > 6)
@@ -127,12 +131,15 @@ function diceemoji($r)
     return mb_convert_encoding('&#x'.(2679+$r).';', 'UTF-8', 'HTML-ENTITIES');
 }
 
+// Adds a new command to the command list
 function addcommand($cmd)
 {
     global $commandlist;
     return array_unshift($commandlist,$cmd);
 }
 
+// Convert the player array to a character sheet and send it to slack
+// along with message $text
 function send_charsheet($text = "")
 {
     global $player;
@@ -181,6 +188,7 @@ function send_charsheet($text = "")
     sendmsg("\n*".$player['name']."*",$attachments,$player['icon']);
 }
 
+// Send to slack a list of the player's stuff (inventory)
 function send_stuff()
 {
     global $player;
@@ -216,6 +224,7 @@ function send_stuff()
     sendmsg("",$attachments,$icon);
 }
 
+// Send a direct message to a user or channel on slack
 function senddirmsg($message, $user = false)
 {
     if (!$user) {
@@ -224,11 +233,14 @@ function senddirmsg($message, $user = false)
     return sendmsg($message, true, ':green_book:', '@'.$user);
 }
 
+// Send a quick and basic message to slack
 function sendqmsg($message, $icon = ':green_book:')
 {
     return sendmsg($message, true, $icon);
 }
 
+// Full whistles and bells send message to slack
+// Normally use one of the convenience functions above
 function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan = false)
 {
     $data = array(
