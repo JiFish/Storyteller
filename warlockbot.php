@@ -46,13 +46,19 @@ die();
 /// ----------------------------------------------------------------------------
 /// Functions
 
+// Roll a new random character and return a 'player' array ready to be used elsewhere
 function roll_character() {
-    $p = array('skill' => 6+rand(1,6), 'stam' => rand(1,6)+rand(1,6)+12, 'luck' => rand(1,6)+6, 'prov' => 10, 'gold' => rand(1,6)-1,
-                'weapon' => 0,
-                   'lastpage' => 1,
-                   'stuff' => array('Sword','Leather Armor','Lantern'));
+    $p = array('skill' => rand(1,6) + 6,             //1d6+6
+               'stam' => rand(1,6) + rand(1,6) + 12, //2d6+12
+               'luck' => rand(1,6) + 6,              //1d6+6
+               'prov' => 10,
+               'gold' => rand(1,6)-1, //1d6-1 (Note this is a customisation from the book's rules)
+               'weapon' => 0,
+               'lastpage' => 1,
+               'stuff' => array('Sword','Leather Armor','Lantern'));
 
-    // random potion
+    // Random Potion
+    // The book rules actually give you a choice, but this is a bit more fun
     switch(rand(1,3)) {
         case 1:
             $p['stuff'][] = 'Potion of Skill';
@@ -62,11 +68,13 @@ function roll_character() {
             break;
         case 3:
             $p['stuff'][] = 'Potion of Luck';
+            // If the potion of luck is chosen, the player get 1 bonus luck
             $p['luck']++;
             break;
     }
 
     // Set maximums
+    // The game won't (normally) allow you to exceed your inital scores
     $p['max']['skill']  = $p['skill'];
     $p['max']['stam']   = $p['stam'];
     $p['max']['luck']   = $p['luck'];
@@ -74,13 +82,15 @@ function roll_character() {
     $p['max']['gold']   = 99999;
     $p['max']['weapon'] = 99999;
 
-    // Fluff
+    // Character Fluff
+    // Get a random gender and name
     require('uinames.class.php');
     $uinames = new uiNames();
     $uin =$uinames->country('England')->fetch('Array');
     $p['name'] = $uin['name'];
     $p['icon'] = ($uin['gender']=='male'?':man:':':woman:');
 
+    // Get a random emoji to represent the character
     $male = array(':boy:',':man:',':person_with_blond_hair:',':older_man:');
     $female = array(':girl:',':woman:',':princess:',':older_woman:');
     $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:');
