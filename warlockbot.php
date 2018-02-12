@@ -30,7 +30,7 @@ while (sizeof($commandlist) > 0)
     if ($cmd[0] == "look")
     {
         require("book.php");
-        sendqmsg($wofm[$player['lastpage']]);
+        sendqmsg($book[$player['lastpage']]);
     }
     if (($cmd[0] == "page" && is_numeric($cmd[1])) || is_numeric($cmd[0]))
     {
@@ -42,7 +42,7 @@ while (sizeof($commandlist) > 0)
         if ($p >= 0 && $p <= 400) {
             $player['lastpage'] = $p;
             require("book.php");
-            $story = $wofm[$p];
+            $story = $book[$p];
             
             // Check for one option stories
             preg_match_all('/turn to ([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
