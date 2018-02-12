@@ -19,12 +19,20 @@ function processcommand($command)
     // pad the array, so we can safely check param values
     array_pad($cmd,10,null);
 
-    // Yes, this is a big if block. Sorry.
+    //
+    // Now the actual command functionality. Yes, this is a big if block. Sorry.
+    //
+
+    //// !look
+    //
     if ($cmd[0] == "look")
     {
         require("book.php");
         sendqmsg($book[$player['lastpage']]);
     }
+
+    //// !page / !<num> (Read page from book)
+    //
     elseif (($cmd[0] == "page" && is_numeric($cmd[1])) || is_numeric($cmd[0]))
     {
         if ($cmd[0] == "page") {
@@ -55,6 +63,9 @@ function processcommand($command)
 
         sendqmsg($story);
     }
+
+    //// !eat
+    //
     elseif ($cmd[0] == "eat" && $player['prov'] > 0) {
         $player['prov']--;
         $player['stam']+=4;
@@ -63,13 +74,21 @@ function processcommand($command)
         }
         sendqmsg("*Yum! Stamina now ".$player['stam']." and ".$player['prov']." provisions left.*",":bread:");
     }
+
+    //// statistic adjustment commands. e.g. !skill +2
+    //
     elseif (in_array($cmd[0],array('skill','stam','stamina','luck','prov','provisons','gold','weapon','weaponbonus')))
     {
-        //aliases
+        // Aliases. Allow people to give long-form stat names if they like
         if ($cmd[0] == 'stamina') $cmd[0] = 'stam';
         if ($cmd[0] == 'provisons') $cmd[0] = 'prov';
         if ($cmd[0] == 'weaponbonus') $cmd[0] = 'weapon';
 
+        // Setup the details of the ajustment
+        // $statref is a reference to the stat that will be changed
+        // $max is the maximum we will allow it to be set to
+        // $statname is what we will send back to slack
+        // $val is the adjustment or new value
         if ($cmd[1] == "max" && is_numeric($cmd[2])) {
             $statref = &$player['max'][$cmd[0]];
             $max = 99;
@@ -81,10 +100,11 @@ function processcommand($command)
             $statname = $cmd[0];
             $val = $cmd[1];
         } else {
-            sendqmsg("Nope.".$cmd[1]);
+            // invalid command
             return;
         }
 
+        // apply adjustment to stat
         if ($val[0] == "+") {
             $val = substr($val,1);
             $statref += (int)$val;
@@ -107,11 +127,17 @@ function processcommand($command)
             sendqmsg("*Set $statname to $statref.*");
         }
     }
+
+    //// !pay (alias for losing gold)
+    //
     elseif (($cmd[0] == "pay" || $cmd[0] == "spend") && is_numeric($cmd[1]))
     {
         addcommand("!gold -".$cmd[1]);
         return;
     }
+
+    //// !luckyescape (roll for running away)
+    //
     elseif ($cmd[0] == "luckyescape" || $cmd[0] == "le")
     {
         $d1 = rand(1,6);
@@ -137,47 +163,61 @@ function processcommand($command)
 
         sendqmsg($out,$icon);
     }
+
+    //// !get / !take (add item to inventory/stuff list)
+    //
     elseif (($cmd[0] == "get" || $cmd[0] == "take") && $cmd[1])
     {
+        // Turn the params back in to one string, since items can have whitespace
+        // in their name
         $cmd[1] = implode(" ",array_slice($cmd, 1));
 
-        // Look for special cases
-        // Gold
+        // Attempt to catch cases where people get or take gold or provisions
+        // and turn them in to stat adjustments
+        // "x Gold"
         preg_match_all('/^([0-9]+) gold/i', $cmd[1], $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
             addcommand("!gold +".$matches[0][1]);
             return;
         }
-        // Provision
+        // "provision"
         if (strtolower($cmd[1]) == "provision") {
             addcommand("!prov +1");
             return;
         }
+        // "x provisions"
         preg_match_all('/^([0-9]+) provisions/i', $cmd[1], $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
             addcommand("!prov +".$matches[0][1]);
             return;
         }
 
+        // Otherwise just append it to the stuff array
         $player['stuff'][] = $cmd[1];
         sendqmsg("*Got the ".$cmd[1]."!*",":moneybag:");
     }
+
+    //// !drop / !lose / !use 
+    //
     elseif (($cmd[0] == "drop" || $cmd[0] == "lose" || $cmd[0] == "use") && $cmd[1])
     {
         $cmd[1] = implode(" ",array_slice($cmd, 1));
 
-        // Look for special cases
-        // Gold
+        // TODO: This is code repetition
+        // Attempt to catch cases where people get or take gold or provisions
+        // and turn them in to stat adjustments
+        // "x Gold"
         preg_match_all('/^([0-9]+) gold/i', $cmd[1], $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
             addcommand("!gold -".$matches[0][1]);
             return;
         }
-        // Provision
+        // "provision"
         if (strtolower($cmd[1]) == "provision") {
             addcommand("!prov -1");
             return;
         }
+        // "x provisions"
         preg_match_all('/^([0-9]+) provisions/i', $cmd[1], $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
             addcommand("!prov -".$matches[0][1]);
@@ -185,6 +225,7 @@ function processcommand($command)
         }
 
         $dropped = false;
+        // search stuff list from item and remove it
         foreach($player['stuff'] as $k => $i)
         {
             if (strtolower($i) == strtolower($cmd[1])) {
@@ -204,10 +245,14 @@ function processcommand($command)
                 break;
             }
         }
+        // Nothing was dropped
         if (!$dropped) {
             sendqmsg("*No ".$cmd[1]." to loose!*");
         }
     }
+
+    //// !roll [x] (roll xd6)
+    //
     elseif ($cmd[0] == "roll")
     {
         if (!is_numeric($cmd[1]) || $cmd[1] < 1 || $cmd[1] > 100) {
@@ -227,13 +272,12 @@ function processcommand($command)
         }
         sendqmsg($out,":game_die:");
     }
+
+    //// !test <luck/skill/stam> (run a skill test)
+    //
     elseif ($cmd[0] == "test" && ($cmd[1] == "luck" || $cmd[1] == "skill" || $cmd[1] == "stam"))
     {
-        $d1 = rand(1,6);
-        $d2 = rand(1,6);
-        $e1 = diceemoji($d1);
-        $e2 = diceemoji($d2);
-        $target = $player[$cmd[1]];
+        // Setup outcome pages to read if provided
         if (is_numeric($cmd[2])) {
             $success_page = "!".$cmd[2];
         }
@@ -241,6 +285,14 @@ function processcommand($command)
             $fail_page = "!".$cmd[3];
         }
 
+        // roll 2d6 and set target from stat name ($cmd[1])
+        $d1 = rand(1,6);
+        $d2 = rand(1,6);
+        $e1 = diceemoji($d1);
+        $e2 = diceemoji($d2);
+        $target = $player[$cmd[1]];
+
+        // Check roll versus target number
         if ($d1+$d2 <= $target) {
             if ($cmd[1] == "luck") {
                 $player['luck']--;
@@ -250,7 +302,7 @@ function processcommand($command)
             } else {
                 sendqmsg("_*You are strong enough*_\n_(_ $e1 $e2 _ vs $target)_",':muscle:');
             }
-            //run follow up page
+            // Show follow up page
             if (isset($success_page)) {
                 addcommand($success_page);
             }
@@ -264,55 +316,78 @@ function processcommand($command)
             } else {
                 sendqmsg("_*You are not strong enough*_\n_(_ $e1 $e2 _ vs $target)_",':warning:');
             }
-            //run follow up page
+            // Show follow up page
             if (isset($fail_page)) {
                 addcommand($fail_page);
             }
         }
     }
+
+    //// !newgame (roll new character)
+    //
     elseif ($cmd[0] == "newgame")
     {
         $player = roll_character();
         send_charsheet("*NEW CHARACTER!*\nType `!0` to begin, or `!newgame` to roll again.");
         send_stuff();
     }
+
+    //// !info / !status (send character sheet and inventory)
+    //
     elseif ($cmd[0] == "info" || $cmd[0] == "status")
     {
         send_charsheet();
         send_stuff();
     }
+
+    //// !stats / !s (send character sheet)
+    //
     elseif ($cmd[0] == "stats" || $cmd[0] == "s")
     {
         send_charsheet();
     }
+
+    //// !stuff / !i (send inventory)
+    //
     elseif ($cmd[0] == "stuff" || $cmd[0] == "i")
     {
         send_stuff();
     }
+
+    //// !help (send basic help)
+    //
     elseif ($cmd[0] == 'help')
     {
         sendqmsg(file_get_contents('help.txt'));
     }
+
+    //// !helpmore (send advanced help)
+    //
     elseif ($cmd[0] == 'helpmore')
     {
         senddirmsg(file_get_contents('helpmore.txt'));
     }
+
+    //// !fight [name] <skill> <stamina> [maxrounds] (run fight logic)
+    //
     elseif ($cmd[0] == "fight" && $cmd[1] && is_numeric($cmd[2]))
     {
+        // No opponent name given
         if (is_numeric($cmd[1])) {
             $m = "opponent";
             $mskill = $cmd[1];
             $mstam = $cmd[2];
             $maxrounds = $cmd[3];
         }
+        // Opponent name given
         else if (is_numeric($cmd[3])) {
             $m = $cmd[1];
             $mskill = $cmd[2];
             $mstam = $cmd[3];
             $maxrounds = $cmd[4];
         }
+        // Invalid inputs
         else {
-            //invalid inputs
             return;
         }
 
