@@ -160,7 +160,7 @@ function processcommand($command)
         require("book.php");
         sendqmsg($book[$player['lastpage']]);
     }
-    if (($cmd[0] == "page" && is_numeric($cmd[1])) || is_numeric($cmd[0]))
+    elseif (($cmd[0] == "page" && is_numeric($cmd[1])) || is_numeric($cmd[0]))
     {
         if ($cmd[0] == "page") {
             $p = $cmd[1];
@@ -190,7 +190,7 @@ function processcommand($command)
 
         sendqmsg($story);
     }
-    if ($cmd[0] == "eat" && $player['prov'] > 0) {
+    elseif ($cmd[0] == "eat" && $player['prov'] > 0) {
         $player['prov']--;
         $player['stam']+=4;
         if ($player['stam'] > $player['max']['stam']) {
@@ -198,7 +198,7 @@ function processcommand($command)
         }
         sendqmsg("*Yum! Stamina now ".$player['stam']." and ".$player['prov']." provisions left.*",":bread:");
     }
-    if (in_array($cmd[0],array('skill','stam','stamina','luck','prov','provisons','gold','weapon','weaponbonus')))
+    elseif (in_array($cmd[0],array('skill','stam','stamina','luck','prov','provisons','gold','weapon','weaponbonus')))
     {
         //aliases
         if ($cmd[0] == 'stamina') $cmd[0] = 'stam';
@@ -242,12 +242,12 @@ function processcommand($command)
             sendqmsg("*Set $statname to $statref.*");
         }
     }
-    if (($cmd[0] == "pay" || $cmd[0] == "spend") && is_numeric($cmd[1]))
+    elseif (($cmd[0] == "pay" || $cmd[0] == "spend") && is_numeric($cmd[1]))
     {
         addcommand("!gold -".$cmd[1]);
         continue;
     }
-    if ($cmd[0] == "luckyescape" || $cmd[0] == "le")
+    elseif ($cmd[0] == "luckyescape" || $cmd[0] == "le")
     {
         $d1 = rand(1,6);
         $d2 = rand(1,6);
@@ -272,7 +272,7 @@ function processcommand($command)
 
         sendqmsg($out,$icon);
     }
-    if (($cmd[0] == "get" || $cmd[0] == "take") && $cmd[1])
+    elseif (($cmd[0] == "get" || $cmd[0] == "take") && $cmd[1])
     {
         $cmd[1] = implode(" ",array_slice($cmd, 1));
 
@@ -297,7 +297,7 @@ function processcommand($command)
         $player['stuff'][] = $cmd[1];
         sendqmsg("*Got the ".$cmd[1]."!*",":moneybag:");
     }
-    if (($cmd[0] == "drop" || $cmd[0] == "lose" || $cmd[0] == "use") && $cmd[1])
+    elseif (($cmd[0] == "drop" || $cmd[0] == "lose" || $cmd[0] == "use") && $cmd[1])
     {
         $cmd[1] = implode(" ",array_slice($cmd, 1));
 
@@ -343,7 +343,7 @@ function processcommand($command)
             sendqmsg("*No ".$cmd[1]." to loose!*");
         }
     }
-    if ($cmd[0] == "roll")
+    elseif ($cmd[0] == "roll")
     {
         if (!is_numeric($cmd[1]) || $cmd[1] < 1 || $cmd[1] > 100) {
             $cmd[1] = 1;
@@ -362,7 +362,7 @@ function processcommand($command)
         }
         sendqmsg($out,":game_die:");
     }
-    if ($cmd[0] == "test" && ($cmd[1] == "luck" || $cmd[1] == "skill" || $cmd[1] == "stam"))
+    elseif ($cmd[0] == "test" && ($cmd[1] == "luck" || $cmd[1] == "skill" || $cmd[1] == "stam"))
     {
         $d1 = rand(1,6);
         $d2 = rand(1,6);
@@ -405,34 +405,34 @@ function processcommand($command)
             }
         }
     }
-    if ($cmd[0] == "newgame")
+    elseif ($cmd[0] == "newgame")
     {
         $player = roll_character();
         send_charsheet("*NEW CHARACTER!*\nType `!0` to begin, or `!newgame` to roll again.");
         send_stuff();
     }
-    if ($cmd[0] == "info" || $cmd[0] == "status")
+    elseif ($cmd[0] == "info" || $cmd[0] == "status")
     {
         send_charsheet();
         send_stuff();
     }
-    if ($cmd[0] == "stats" || $cmd[0] == "s")
+    elseif ($cmd[0] == "stats" || $cmd[0] == "s")
     {
         send_charsheet();
     }
-    if ($cmd[0] == "stuff" || $cmd[0] == "i")
+    elseif ($cmd[0] == "stuff" || $cmd[0] == "i")
     {
         send_stuff();
     }
-    if ($cmd[0] == 'help')
+    elseif ($cmd[0] == 'help')
     {
         sendqmsg(file_get_contents('help.txt'));
     }
-    if ($cmd[0] == 'helpmore')
+    elseif ($cmd[0] == 'helpmore')
     {
         senddirmsg(file_get_contents('helpmore.txt'));
     }
-    if ($cmd[0] == "fight" && $cmd[1] && is_numeric($cmd[2]))
+    elseif ($cmd[0] == "fight" && $cmd[1] && is_numeric($cmd[2]))
     {
         if (is_numeric($cmd[1])) {
             $m = "opponent";
