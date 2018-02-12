@@ -11,8 +11,13 @@ if ($_POST['token'] != SLACK_TOKEN) {
     die('Access Denied. Token does not match');
 }
 
+// Note, $player and $commandlist are referenced as global variables in the
+// below functions.
+
 $player = load();
 
+// Split the command list by semi-colons. Allows multiple commands to be queued
+// Note, some commands will queue other commands
 $commandlist = explode(";",$_POST['text']);
 
 $executions = 0;
