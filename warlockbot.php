@@ -280,19 +280,28 @@ function processcommand($command)
         } else {
             $p = $cmd[0];
         }
-        if ($p >= 0 && $p <= 400) {
+
+        require("book.php");
+        if (array_key_exists($p, $book)) {
             $player['lastpage'] = $p;
-            require("book.php");
             $story = $book[$p];
 
-            // Check for one option stories
+            // Attempt to find pages that give you only one choice
+            // and add that page to the command list
             preg_match_all('/turn to ([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
-            if (sizeof($matches) == 1 && stripos($story,"if ") === false && stripos($story,"you may ") === false) {
-                addcommand("!".$matches[0][1]);
-            }
+            if (sizeof($matches) == 1 &&
+                stripos($story,"if ") === false &&
+                stripos($story,"you may ") === false) {
+                    addcommand("!".$matches[0][1]);
+                }
+
+            // Look for choices in the text and give them bold formatting
             $story = preg_replace('/\(?turn(ing)? to [0-9]+\)?/i', '*${0}*', $story);
-            sendqmsg($story);
+        } else {
+            $story = "**PAGE NOT FOUND**";
         }
+
+        sendqmsg($story);
     }
     if ($cmd[0] == "eat" && $player['prov'] > 0) {
         $player['prov']--;
