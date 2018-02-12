@@ -1,12 +1,12 @@
 <?php
 
+require('config.php');
+
 // Check the incoming data for the secret slack token
 if ($_POST['token'] != SLACK_TOKEN) {
     header('HTTP/1.0 403 Forbidden');
     die('Access Denied. Token does not match');
 }
-
-require('config.php');
 
 $player = load();
 
