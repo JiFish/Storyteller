@@ -358,14 +358,20 @@ function processcommand($command)
     //
     elseif ($cmd[0] == 'help')
     {
-        sendqmsg(file_get_contents('help.txt'));
+        $help = file_get_contents('help.txt');
+        // Replace "!" with whatever the trigger word is
+        $help = str_replace("!",$_POST['trigger_word'],$help);
+        sendqmsg($help);
     }
 
     //// !helpmore (send advanced help)
     //
     elseif ($cmd[0] == 'helpmore')
     {
-        senddirmsg(file_get_contents('helpmore.txt'));
+        $help = file_get_contents('helpmore.txt');
+        // Replace "!" with whatever the trigger word is
+        $help = str_replace("!",$_POST['trigger_word'],$help);
+        senddirmsg($help);
     }
 
     //// !fight [name] <skill> <stamina> [maxrounds] (run fight logic)

@@ -1,7 +1,7 @@
 Don't Panic. You probably don't need to know all of this.
 
 *Basic Commands*
-`!<number>` or `!page <number>` _Read page <number>. e.g. !42_
+`!<number>` or `!page <number>` _Read page <number>. e.g. `!42_`
 `!look` _Re-read last page._
 `!info` or `!status` _Show character stats and inventory._
 `!stats` or `!s` _Show character stats only._
