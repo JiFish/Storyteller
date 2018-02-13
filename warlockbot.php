@@ -2,9 +2,7 @@
 
 // Other configuration settings. You can override these in config.php if you wish
 define("MAX_EXECUTIONS",30);
-
 require('config.php');
-require('commands.php');
 
 // Check the incoming data for the secret slack token
 if ($_POST['token'] != SLACK_TOKEN) {
@@ -46,6 +44,8 @@ die();
 
 /// ----------------------------------------------------------------------------
 /// Functions
+
+require('commands.php');
 
 // Roll a new random character and return a 'player' array ready to be used elsewhere
 function roll_character($name = null, $emoji = null) {
@@ -154,38 +154,38 @@ function send_charsheet($text = "")
     global $player;
 
     $attachments = array([
-            'color'    => '#ff6600',
-            'fields'   => array(
-            [
-                'title' => 'Skill',
-                'value' => $player['skill']." / ".$player['max']['skill'],
-                'short' => true
-            ],
-            [
-                'title' => 'Stamina (stam)',
-                'value' => $player['stam']." / ".$player['max']['stam'],
-                'short' => true
-            ],
-            [
-                'title' => 'Luck',
-                'value' => $player['luck']." / ".$player['max']['luck'],
-                'short' => true
-            ],
-            [
-                'title' => 'Weapon Bonus (weapon)',
-                'value' => "+".$player['weapon'],
-                'short' => true
-            ],
-            [
-                'title' => 'Gold',
-                'value' => $player['gold'],
-                'short' => true
-            ],
-            [
-                'title' => 'Provisons (prov)',
-                'value' => $player['prov'],
-                'short' => true
-            ])
+        'color'    => '#ff6600',
+        'fields'   => array(
+        [
+            'title' => 'Skill',
+            'value' => $player['skill']." / ".$player['max']['skill'],
+            'short' => true
+        ],
+        [
+            'title' => 'Stamina (stam)',
+            'value' => $player['stam']." / ".$player['max']['stam'],
+            'short' => true
+        ],
+        [
+            'title' => 'Luck',
+            'value' => $player['luck']." / ".$player['max']['luck'],
+            'short' => true
+        ],
+        [
+            'title' => 'Weapon Bonus (weapon)',
+            'value' => "+".$player['weapon'],
+            'short' => true
+        ],
+        [
+            'title' => 'Gold',
+            'value' => $player['gold'],
+            'short' => true
+        ],
+        [
+            'title' => 'Provisons (prov)',
+            'value' => $player['prov'],
+            'short' => true
+        ])
     ]);
 
     if ($player['stam'] < 1) {
