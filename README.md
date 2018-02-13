@@ -11,10 +11,12 @@ Download and extract the bot to start.
 #### 1. Set-Up Slack
 First you must create an incoming and outgoing webhook. In Slack, go to **Administration > Manage Apps > Custom Integrations**.
 ##### Incoming Webhook
+![Incoming hook example](../master/example-slack-webhooks/slack_incoming_hook_example.jpg)
 Set the channel to where you want the story to be told. You will probably want to dedicate a channel to the story.
 Give the bot a good name. I suggest Storyteller or StorytellerBot.
 **Make a note of the Webhook URL.** Open `config.php` and set `SLACK_HOOK` to this URL.
 ##### Outgoing Webhook
+![Outgoing hook example](../master/example-slack-webhooks/slack_outgoing_hook_example.jpg)
 Set the channel to the same channel as the incoming hook.
 Set the trigger word. I suggest using `!` to keep things simple. The trigger word must be prefixed to every command.
 Set the URL to where your installation will be located.
@@ -32,6 +34,7 @@ Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook 
 Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
 #### 3. Get the code online
 Upload the installation to your PHP enabled web-server. No database is needed. The uploaded directory must be writable.
+Make sure it's location matches what you step up for the outgoing hook in step 1. If it's different go back and alter the hook.
 If you are _not_ using apache, you must replicate the rules in `.htaccess` to ensure the installation is secure.
 #### 4. Ready to play!
 Type `!newgame` in the channel you chose for the webhook to get started. Type `!help` to see the basic commands or `!helpmore` for the complete list.
