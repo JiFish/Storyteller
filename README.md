@@ -38,3 +38,27 @@ Make sure it's location matches what you step up for the outgoing hook in step 1
 If you are _not_ using apache, you must replicate the rules in `.htaccess` to ensure the installation is secure.
 #### 4. Ready to play!
 Type `!newgame` in the channel you chose for the webhook to get started. Type `!help` to see the basic commands or `!helpmore` for the complete list.
+
+### Usage Tips and Hints
+- Remember, you have to enforce the rules!
+- If the book asks you to do something there isn't a command for, you can always manually roll dice with `!roll` and apply any effects manually.
+- To easily restore a stat to max, just set it to 99 and it'll set it to the highest possible value
+- `!use` doesn't do anything on it's own. You must still apply the item's effects manually. e.g. `!use Potion of Skill;!skill 99`
+- If the book asks you to do something after a certain number of rounds in a fight, you can make the fight end early by putting the number of rounds end the end of the command. e.g. To stop after 3 rounds: `!fight Squirrel 5 5 3`
+- If the book says you get a bonus to your attack for one fight, you can apply it to your weapon bonus and remove it at the end of the fight. e.g. `!weapon +1;!fight Squirrel 5 5;!weapon -1`
+
+### Technical Information
+**Do you accept bug reports?**
+Yes. Particularly security issues should be reported. Please provide a test case for the issue and post it on the github project's issue page.
+
+**What about support requests and feature ideas?**
+Sure. You can also post them on the issues page. No promises though.
+
+**What about pull requests / patches etc.?**
+Gladly.
+
+**Where's the object-orientation?**
+There isn't any. This was pretty much a single use script that I've genericised just enough that it can be installed elsewhere. I've tried to clean the code up enough to allow easy hackablity, but drastic expansions will likely require a refactor.
+
+**What about support for other chat software (Discord, IRC etc.) or other books/systems?**
+All these would be nice. But a I'll have to refactor the code before considering them.
