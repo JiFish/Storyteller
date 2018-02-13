@@ -1,12 +1,15 @@
 Don't Panic. You probably don't need to know all of this.
 
-*Basic Commands*
-`!<number>` or `!page <number>` _Read page <number>. e.g. `!42_`
+*Book Reading*
+`!<number>` or `!page <number>` _Read page <number>. e.g. `!42`_
 `!look` _Re-read last page._
+
+*Character*
 `!info` or `!status` _Show character stats and inventory._
 `!stats` or `!s` _Show character stats only._
 `!stuff` or `!i` _Show character inventory._
 `!newgame` _Rolls and new character and resets the game._
+`!newgame <name> <emoji>` _New character with customised name and icon. e.g. `!newgame Gandalf :male_mage:`_
 
 *Roll Automation*
 `!test <stat> [successpage] [failpage]` _Roll test for <stat>. Valid stats are: `luck`, `skill` and `stam`. Turn to [successpage] if successful, [failpage] otherwise (optional.)_

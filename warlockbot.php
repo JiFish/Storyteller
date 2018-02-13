@@ -48,7 +48,7 @@ die();
 /// Functions
 
 // Roll a new random character and return a 'player' array ready to be used elsewhere
-function roll_character() {
+function roll_character($name = null, $emoji = null) {
     $p = array('skill' => rand(1,6) + 6,             //1d6+6
                'stam' => rand(1,6) + rand(1,6) + 12, //2d6+12
                'luck' => rand(1,6) + 6,              //1d6+6
@@ -84,19 +84,24 @@ function roll_character() {
     $p['max']['weapon'] = 99999;
 
     // Character Fluff
-    // Get a random gender and name
-    $gender = rand(0,1);
-    $lines = file($gender?'male_names.txt':'female_names.txt');
-    $p['name'] = trim($lines[array_rand($lines)]);
-
-    // Get a random emoji to represent the character
-    $male = array(':boy:',':man:',':person_with_blond_hair:',':older_man:');
-    $female = array(':girl:',':woman:',':princess:',':older_woman:');
-    $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:');
-    if ($gender) {
-        $p['icon'] = $male[array_rand($male)].$skintone[array_rand($skintone)];
+    if ($name && $emoji) {
+        $p['name'] = $name;
+        $p['icon'] = $emoji;
     } else {
-        $p['icon'] = $female[array_rand($female)].$skintone[array_rand($skintone)];
+        // Get a random gender and name
+        $gender = rand(0,1);
+        $lines = file($gender?'male_names.txt':'female_names.txt');
+        $p['name'] = trim($lines[array_rand($lines)]);
+
+        // Get a random emoji to represent the character
+        $male = array(':boy:',':man:',':person_with_blond_hair:',':older_man:');
+        $female = array(':girl:',':woman:',':princess:',':older_woman:');
+        $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:');
+        if ($gender) {
+            $p['icon'] = $male[array_rand($male)].$skintone[array_rand($skintone)];
+        } else {
+            $p['icon'] = $female[array_rand($female)].$skintone[array_rand($skintone)];
+        }
     }
 
     return $p;

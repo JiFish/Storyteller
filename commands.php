@@ -327,7 +327,7 @@ function processcommand($command)
     //
     elseif ($cmd[0] == "newgame")
     {
-        $player = roll_character();
+        $player = roll_character($cmd[1],$cmd[2]);
         send_charsheet("*NEW CHARACTER!*\nType `!0` to begin, or `!newgame` to roll again.");
         send_stuff();
     }
