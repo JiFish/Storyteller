@@ -24,7 +24,7 @@ Set the URL to where your installation will be located.
 By default Storyteller ships with a very short and simple sample book. It isn't very fun, so you'll likely want to replace it. You have 3 options.
 ##### Option 1: Download pre-prepared _Warlock on Firetop Mountain_
 Importing from an official source is painful (see the next section.) So I am reluctantly providing a link to _Warlock on Firetop Mountain_ that has been pre-prepared for use. Download this file and replace the contents of `book.php` with it.
-http://link.me/dddd
+[Pre-prepared WoFM book.php](https://pastebin.com/raw/wBr63c10)
 This link will be removed hastily if anyone ever objects. Don't be a jerk. If use this, make sure you own the book. [It's still in print.](https://www.amazon.co.uk/Fighting-Fantasy-Warlock-Firetop-Mountain/dp/1407181300)
 ##### Option 2: Import a book you own
 Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook format. If they were, I'd provide a script to automate extraction. Since they aren't your only option is to scan, OCR and input the text yourself from a paper book. If you're mad enough to attempt this, see `book.php` for details.
