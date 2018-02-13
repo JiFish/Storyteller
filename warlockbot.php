@@ -90,7 +90,7 @@ function roll_character($name = null, $emoji = null) {
     } else {
         // Get a random gender and name
         $gender = rand(0,1);
-        $lines = file($gender?'male_names.txt':'female_names.txt');
+        $lines = file($gender?'resources/male_names.txt':'resources/female_names.txt');
         $p['name'] = trim($lines[array_rand($lines)]);
 
         // Get a random emoji to represent the character

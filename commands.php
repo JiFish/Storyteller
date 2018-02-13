@@ -361,7 +361,7 @@ function processcommand($command)
     //
     elseif ($cmd[0] == 'help')
     {
-        $help = file_get_contents('help.txt');
+        $help = file_get_contents('resources/help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!",$_POST['trigger_word'],$help);
         sendqmsg($help);
@@ -371,7 +371,7 @@ function processcommand($command)
     //
     elseif ($cmd[0] == 'helpmore')
     {
-        $help = file_get_contents('helpmore.txt');
+        $help = file_get_contents('resources/helpmore.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!",$_POST['trigger_word'],$help);
         senddirmsg($help);
