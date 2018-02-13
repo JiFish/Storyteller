@@ -275,8 +275,11 @@ function processcommand($command)
 
     //// !test <luck/skill/stam> (run a skill test)
     //
-    elseif ($cmd[0] == "test" && ($cmd[1] == "luck" || $cmd[1] == "skill" || $cmd[1] == "stam"))
+    elseif ($cmd[0] == "test" && ($cmd[1] == "luck" || $cmd[1] == "skill" || $cmd[1] == "stam" || $cmd[1] == "stamina"))
     {
+        // Alias for stam
+        if ($cmd[1] == "stamina") $cmd[1] = "stam";
+
         // Setup outcome pages to read if provided
         if (is_numeric($cmd[2])) {
             $success_page = "!".$cmd[2];
