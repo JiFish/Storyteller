@@ -3,12 +3,14 @@
 // Other configuration settings. You can override these in config.php if you wish
 define("MAX_EXECUTIONS",30);
 require('config.php');
+require('commands.php');
 
 // Check the incoming data for the secret slack token
 if ($_POST['token'] != SLACK_TOKEN) {
     header('HTTP/1.0 403 Forbidden');
     die('Access Denied. Token does not match');
 }
+
 
 // Note, $player and $commandlist are referenced as global variables in the
 // below functions.
@@ -44,8 +46,6 @@ die();
 
 /// ----------------------------------------------------------------------------
 /// Functions
-
-require('commands.php');
 
 // Roll a new random character and return a 'player' array ready to be used elsewhere
 function roll_character($name = null, $emoji = null) {
