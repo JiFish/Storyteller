@@ -34,7 +34,7 @@ _If [max] is used, the stat's maximum is changed instead._
 Examples:
 `!stam -3` _Take 3 stamina loss._
 `!weapon +1` _Increase weapon bonus by 1._
-`!luck 10 max` _Set maximum luck to 10._
+`!luck max 10` _Set maximum luck to 10._
 
 *Command Chaining*
 _You can chain multiple commands together in one go with semicolons._ `;`
