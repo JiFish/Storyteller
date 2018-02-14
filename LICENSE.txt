@@ -3,8 +3,8 @@ General Licence
 
 All code is copyright Joseph Fowler.
 
-Permission to use, copy, modify, and/or distribute this software for any non-
-commercial purpose with or without fee is hereby granted, provided that the
+Permission to use, copy, modify, and/or distribute this software for any
+non-commercial purpose without fee is hereby granted, provided that the
 above copyright notice and this permission notice appear in all copies.
 
 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
