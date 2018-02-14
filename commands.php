@@ -452,12 +452,14 @@ function processcommand($command)
     elseif ($cmd[0] == "edgar")
     {
         $player = array('name' => 'Edgar the Sorcerer',
-                        'icon' => ':male-mage:',
+                        'icon' => ':male_mage:',
                         'skill' => 10, 'stam' => 14, 'luck' => 7,
                         'prov' => 5, 'gold' => 20, 'weapon' => 1,
                         'max' => array ('skill' => 10, 'stam' => 18, 'luck' => 8,
-                                        'prov' => 99999, 'gold' => 99999, 'weapon' => 99999),
-                        'stuff' => ('Magic Staff (+1)','Cotten Robes','Lantern','Potion of Skill'),
+                                        'prov' => 99999, 'gold' => 99999,
+                                        'weapon' => 99999),
+                        'stuff' => array('Magic Staff (+1)','Cotten Robes',
+                                         'Lantern','Potion of Skill'),
                         'lastpage' => 1);
         send_charsheet("You have found the secret character!");
         send_stuff();
