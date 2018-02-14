@@ -460,5 +460,6 @@ function processcommand($command)
                         'stuff' => ('Magic Staff (+1)','Cotten Robes','Lantern','Potion of Skill'),
                         'lastpage' => 1);
         send_charsheet("You have found the secret character!");
+        send_stuff();
     }
 }
