@@ -4,7 +4,9 @@
 ## Introduction
 Storyteller is a bot for use with Slack which helps a group of people play through a Fighting Fantasy gamebook co-operatively. It was designed for _Warlock on Firetop Mountain_, but should work fine with any other book using compatible rules.
 
-Storyteller adds commands to read the story, manage your character and roll dice for fights and other challenges. Warlock Bot is designed to assist your game, but does not strictly enforce rules - replicating the experience of playing with a real book and dice. 
+Storyteller adds commands to read the story, manage your character and roll dice for fights and other challenges. Warlock Bot is designed to assist your game, but does not strictly enforce rules - replicating the experience of playing with a real book and dice.
+
+Storyteller is programmed in PHP, requires no database and is state-based. This means it can be installed on an ordinary web-server, without the need to setup a complicated chat-bot.
 
 ## Set-Up
 Download and extract the bot to start.
@@ -70,4 +72,4 @@ There isn't any. This was pretty much a single use script that I've genericised 
 
 **What about support for other chat software (Discord, IRC etc.) or other books/systems?**
 
-All these would be nice. But a I'll have to refactor the code before considering them.
+All these would be nice. But I'll have to refactor the code before considering them.
