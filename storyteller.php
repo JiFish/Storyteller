@@ -194,7 +194,7 @@ function send_charsheet($text = "")
         $icon = $player['icon'];
     }
 
-    sendmsg("\n*".$player['name']."*",$attachments,$player['icon']);
+    sendmsg($text."\n*".$player['name']."*",$attachments,$player['icon']);
 }
 
 // Send to slack a list of the player's stuff (inventory)
