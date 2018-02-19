@@ -1,5 +1,5 @@
 # Storyteller
-## A Slack Bot for playing Fighting Fantasy Gamebooks (v1.0)
+## A Slack Bot for playing Fighting Fantasy Gamebooks (v1.01)
 
 ## Introduction
 Storyteller is a bot for use with Slack which helps a group of people play through a Fighting Fantasy gamebook co-operatively. It was designed for _Warlock on Firetop Mountain_, but should work fine with any other book using compatible rules.
