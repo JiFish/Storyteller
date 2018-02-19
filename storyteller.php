@@ -4,6 +4,7 @@
 define("MAX_EXECUTIONS",30);
 require('config.php');
 require('commands.php');
+register_commands();
 
 // Check the incoming data for the secret slack token
 if ($_POST['token'] != SLACK_TOKEN) {
@@ -51,6 +52,49 @@ die();
 
 /// ----------------------------------------------------------------------------
 /// Functions
+
+// Process command text and call command's function
+function processcommand($command)
+{
+    global $player, $commandslist;
+
+    // Split by whitespace
+    // $cmd[0] is the command
+    // $cmd[1...] are the parameters
+    $cmd = preg_split('/\s+/', trim($command));
+
+    // Remove trigger word from command
+    $cmd[0] = substr($cmd[0],strlen($_POST['trigger_word']));
+    $cmd[0] = trim(strtolower($cmd[0]));
+
+    // pad the array, so we can safely check param values
+    array_pad($cmd,10,null);
+
+    // Special case for quick page lookup
+    if (is_numeric($cmd[0])) {
+        $cmd[1] = $cmd[0];
+        $cmd[0] = 'page';
+    }
+
+    // look for a command function to call
+    echo $cmd[0];
+    print_r($commandslist);
+    if (array_key_exists($cmd[0],$commandslist)) {
+        call_user_func($commandslist[$cmd[0]],$cmd,$player);
+    }
+}
+
+/// register new command
+function register_command($name, $function)
+{
+    global $commandslist;
+
+    if (!is_array($commandslist)) {
+        $commandslist = array();
+    }
+
+    $commandslist[$name] = $function;
+}
 
 // Roll a new random character and return a 'player' array ready to be used elsewhere
 function roll_character($name = null, $emoji = null) {
