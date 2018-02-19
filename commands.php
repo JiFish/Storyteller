@@ -55,9 +55,9 @@ function _cmd_page($cmd, &$player)
     }
 
     require("book.php");
-    if (array_key_exists($p, $book)) {
-        $player['lastpage'] = $p;
-        $story = $book[$p];
+    if (array_key_exists($cmd[1], $book)) {
+        $player['lastpage'] = $cmd[1];
+        $story = $book[$cmd[1]];
 
         // Attempt to find pages that give you only one choice
         // and add that page to the command list
