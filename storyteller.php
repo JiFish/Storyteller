@@ -18,8 +18,7 @@ if ($_POST['token'] != SLACK_TOKEN) {
     $_POST['trigger_word'] = '!';
 }*/
 
-// Note, $player and $commandlist are referenced as global variables in the
-// below functions.
+// Note $commandlist is referenced as a global variables in the below functions.
 
 $player = load();
 
@@ -31,7 +30,7 @@ $executions = 0;
 while (sizeof($commandlist) > 0)
 {
     // Process the next command in the list
-    processcommand(array_shift($commandlist));
+    processcommand(array_shift($commandlist),$player);
 
     // If stamina ever drops to less than 1, the player if dead
     // Stop processing any queued commands and tell the player they are dead
@@ -54,9 +53,9 @@ die();
 /// Functions
 
 // Process command text and call command's function
-function processcommand($command)
+function processcommand($command, &$player)
 {
-    global $player, $commandslist;
+    global $commandslist;
 
     // Split by whitespace
     // $cmd[0] is the command
@@ -77,10 +76,8 @@ function processcommand($command)
     }
 
     // look for a command function to call
-    echo $cmd[0];
-    print_r($commandslist);
     if (array_key_exists($cmd[0],$commandslist)) {
-        call_user_func($commandslist[$cmd[0]],$cmd,$player);
+        call_user_func_array($commandslist[$cmd[0]],array($cmd,&$player));
     }
 }
 
@@ -198,10 +195,8 @@ function addcommand($cmd)
 
 // Convert the player array to a character sheet and send it to slack
 // along with message $text
-function send_charsheet($text = "")
+function send_charsheet($player, $text = "")
 {
-    global $player;
-
     $attachments = array([
         'color'    => '#ff6600',
         'fields'   => array(
@@ -247,9 +242,8 @@ function send_charsheet($text = "")
 }
 
 // Send to slack a list of the player's stuff (inventory)
-function send_stuff()
+function send_stuff($player)
 {
-    global $player;
     $s = $player['stuff'];
     if (sizeof($s) == 0) {
         $s[] = "(Nothing!)";

@@ -358,27 +358,27 @@ function _cmd_test($cmd, &$player)
 function _cmd_newgame($cmd, &$player)
 {
     $player = roll_character($cmd[1],$cmd[2]);
-    send_charsheet("*NEW CHARACTER!*\nType `".$_POST['trigger_word']."0` to begin, or `".$_POST['trigger_word']."newgame` to roll again.");
-    send_stuff();
+    send_charsheet($player, "*NEW CHARACTER!*\nType `".$_POST['trigger_word']."0` to begin, or `".$_POST['trigger_word']."newgame` to roll again.");
+    send_stuff($player);
 }
 
 //// !info / !status (send character sheet and inventory)
 function _cmd_info($cmd, &$player)
 {
-    send_charsheet();
-    send_stuff();
+    send_charsheet($player);
+    send_stuff($player);
 }
 
 //// !stats / !s (send character sheet)
 function _cmd_stats($cmd, &$player)
 {
-    send_charsheet();
+    send_charsheet($player);
 }
 
 //// !stuff / !i (send inventory)
 function _cmd_stuff($cmd, &$player)
 {
-    send_stuff();
+    send_stuff($player);
 }
 
 //// !help (send basic help)
@@ -481,6 +481,6 @@ function _cmd_edgar($cmd, &$player)
                     'stuff' => array('Magic Staff (+1)','Cotten Robes',
                                      'Lantern','Potion of Skill'),
                     'lastpage' => 1);
-    send_charsheet("You have found the secret character!");
-    send_stuff();
+    send_charsheet($player, "You have found the secret character!");
+    send_stuff($player);
 }
