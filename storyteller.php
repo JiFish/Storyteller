@@ -11,6 +11,11 @@ if ($_POST['token'] != SLACK_TOKEN) {
     die('Access Denied. Token does not match');
 }
 
+// Uncomment for command-line debugging
+/*if (isset($argv[1])) {
+    $_POST['text'] = implode(" ",array_slice($argv,1));
+    $_POST['trigger_word'] = '!';
+}*/
 
 // Note, $player and $commandlist are referenced as global variables in the
 // below functions.
