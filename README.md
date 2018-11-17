@@ -32,10 +32,11 @@ First you must create an incoming and outgoing webhook. In Slack, go to **Admini
 ### 2. Get the story
 By default Storyteller ships with a very short and simple sample book. It isn't very fun, so you'll likely want to replace it. You have 3 options.
 
-#### Option 1: Download pre-prepared _Warlock on Firetop Mountain_
-Importing from an official source is painful (see the next section.) So I am reluctantly providing a link to _Warlock on Firetop Mountain_ that has been pre-prepared for use. Download this file and replace the contents of `book.php` with it.
+#### Option 1: Download pre-prepared _Warlock on Firetop Mountain_ or _Return to Firetop Mountain_
+Importing from an official source is painful (see the next section.) So I am reluctantly providing a link to _Warlock on Firetop Mountain_ and _Return to Firetop Mountain_ that has been pre-prepared for use. Download this file and replace the contents of `book.php` with it.
 
-[Pre-prepared WoFM book.php](https://pastebin.com/raw/wBr63c10)
+- [Pre-prepared WoFM book.php](https://pastebin.com/raw/rwbfuT6L)
+- [Pre-prepared RtFM book.php](https://pastebin.com/raw/GSL5sY7B)
 
 This link will be removed hastily if anyone ever objects. Don't be a jerk. If use this, make sure you own the book. [It's still in print.](https://www.amazon.co.uk/Fighting-Fantasy-Warlock-Firetop-Mountain/dp/1407181300)
 
@@ -46,7 +47,7 @@ Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook 
 Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
 
 ### 3. Get the code online
-- Upload the installation to your PHP enabled web-server. No database is needed. The uploaded directory must be writable.
+- Upload the installation to your PHP enabled web-server. No database is needed. The uploaded directory must be writeable.
 - Make sure it's location matches what you step up for the outgoing hook in step 1. If it's different go back and alter the hook.
 - If you are _not_ using apache, you must replicate the rules in `.htaccess` to ensure the installation is secure.
 
