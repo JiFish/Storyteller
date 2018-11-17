@@ -5,7 +5,7 @@
 $gamebook = 'wofm';
 
 $book = array(
-0 => "_*The Janitor of Firetop Mountain*_\nYou are the weary janitor to The Warlock of Firetop Mountain. Your task today is to clean up the corpse of an unfortunate adventurer who is making a mess in one of the rooms. If you can survive that long...\nNow turn to 1\n(THIS IS AN EXAMPLE ADVENTURE. SEE README.MD FOR INFO ON CHANGING THE ADVENTURE.)",
+0 => "*The Janitor of Firetop Mountain*\nYou are the weary janitor to The Warlock of Firetop Mountain. Your task today is to clean up the corpse of an unfortunate adventurer who is making a mess in one of the rooms. If you can survive that long...\nNow turn to 1\n(THIS IS AN EXAMPLE ADVENTURE. SEE README.MD FOR INFO ON CHANGING THE ADVENTURE.)",
 1 => "You are in your own room. There is a small cot here with your mop to one side.\nYou may take the mop. (Type `!get mop`)\nWill you exit the room (Turn to 2 by typing `!2`) or get some sleep (Turn to 3 by typing `!3`)?",
 2 => "You exit your room. There's no point returning until your task is done. In front of you are two doors, one labelled \"Brains\" and the other \"Brawn\".\nWill you take the Brains door (Turn to 4) or take the Brawn door (Turn to 5)",
 3 => "\"Foolish slave, how dare you sleep on the job?\"\nThe voice is of your boss, The Warlock. You must fight.\nWARLOCK SKILL 11 STAMINA 18\n(Type `!fight Warlock 11 18`)\nIf you win, turn to 6. Otherwise, your quest ends here.",
