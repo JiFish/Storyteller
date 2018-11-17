@@ -74,17 +74,21 @@ function _cmd_page($cmd, &$player)
         $player['lastpage'] = $cmd[1];
         $story = $book[$cmd[1]];
 
-        // Attempt to find pages that give you only one choice
-        // and add that page to the command list
-        preg_match_all('/turn to ([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
-        if (sizeof($matches) == 1 &&
-            stripos($story,"if ") === false &&
-            stripos($story,"you may ") === false) {
-                addcommand("!".$matches[0][1]);
+        // Exclude pages using 'if ', 'you may' or 'otherwise'
+        // This isn't perfect, but will prevent many false matches
+        if (stripos($story,"if ") === false && stripos($story,"you may ") === false
+            && stripos($story,"otherwise") === false) {
+            // Attempt to find pages that give you only one choice
+            // Find pages with only one turn to and add that page to the command list
+            preg_match_all('/turn to ([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
+            if (sizeof($matches) == 1) {
+                    addcommand("!".$matches[0][1]);
+                }
+            // Attempt to find pages that end the story, kill the player if found
+            elseif (sizeof($matches) < 1 &&
+                    preg_match('/Your (adventure|quest) (is over|ends here)\./i', $story, $matches)) {
+                $player['stam'] = 0;
             }
-        // Attempt to find pages that end the story, kill the player if found
-        if (preg_match('/Your adventure (is over|ends here)\./i', $story, $matches)) {
-            $player['stam'] = 0;
         }
 
         $story = format_story($player['lastpage'],$story);

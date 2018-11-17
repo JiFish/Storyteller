@@ -517,7 +517,7 @@ function format_story($page,$text) {
 
     // Look for choices in the text and give them bold formatting
     $story = preg_replace('/\(?turn(ing)? to [0-9]+\)?/i', '*${0}*', $text);
-    $story = preg_replace('/Your adventure (is over|ends here)\./i', '*${0}*', $story);
+    $story = preg_replace('/Your (adventure|quest) (is over|ends here)\./i', '*${0}*', $story);
     
     // Wrapping and formatting
     $story = str_replace("\n","\n\n",$story);
