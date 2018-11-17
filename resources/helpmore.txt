@@ -1,44 +1,25 @@
-Don't Panic. You probably don't need to know all of this.
+_*Common Commands*_ - Don't Panic
 
-*Book Reading*
-`!<number>` or `!page <number>` _Read page <number>. e.g. `!42`_
-`!look` _Re-read last page._
+*Reading*
+`!<number>` Read page <number>. e.g. !42
+`!look` Re-read last page.
+`!info` Show character sheet. `!stats` just shows stats, `!stuff` just shows inventory.
 
-*Character*
-`!info` or `!status` _Show character stats and inventory._
-`!stats` or `!s` _Show character stats only._
-`!stuff` or `!i` _Show character inventory._
-`!newgame` _Rolls and new character and resets the game._
-`!newgame <name> <emoji>` _New character with customised name and icon. e.g. `!newgame Gandalf :male_mage:`_
+*Rolling Dice*
+`!fight [name] <skill> <stamina>` Fight a monster with skill <skill> and stamina <stamina>. Name is optional and can contain spaces. e.g. `!fight Giant Spider 4 5`
+`!roll [dienumber]` Roll [dienumber] six-sided dice and sum the result. If dienumber is missing, rolls one die.
+`!test luck` or `!test skill` or `!test stam` Test the stat against two dice.
+`!randpage <page 1> [page 2] [page 3] [...]` Turn randomly to one of the listed pages.
 
-*Roll Automation*
-`!test <stat> [successpage] [failpage]` _Roll test for <stat>. Valid stats are: `luck`, `skill` and `stam`. Turn to [successpage] if successful, [failpage] otherwise (optional.)_
-`!fight [name] <skill> <stamina> [maxrounds]` _Fight a monster named [name] (optional) with skill <skill> and stamina <stamina>. Stop after [maxrounds] rounds (optional.)_
-`!roll [dienumber]` _Roll [dienumber] six-sided dice and sum the result. If dienumber is missing, rolls one die._
-`!luckyescape` or `!le` _Test luck to negate damage. 2 stamina loss on a failure._
+*Character Management*
+`!<stat> [+/-]<amount>` Set <stat> to <amount>. Use + or - to ALTER <stat> by <amount>. e.g. `!skill 3` or `!gold +2`
+`!<stat> max [+/-]<amount>` Set or alter the MAX of <stat> with <amount>. e.g. `!stam max -1`
+<stat> values are: `skill`, `stam`, `luck`, `weapon`, `gold` and `prov`
+`!eat` Eats one provision for 4 stamina.
+`!get <item>` Adds <item> to your inventory.
+`!lose <item>` Removes <item> to your inventory. You can also use `!drop` and `!use` for different descriptions.
+`!newgame [name] [m/f] [emoji]` Rolls and new character and resets the game. Optionally set name, gender and emoji. e.g. `!newgame Jill f`
 
-*Inventory Management*
-`!get <item>` or `!take <item>` _Adds <item> to your inventory. Attempts to automatically manage gold and provisions stats if used like "!get 5 gold"_
-`!lose <item>` or `!drop <item>` or `!use <item>` _Removes <item> to your inventory. As above._
-`!eat` _Eats one provision for 4 stamina._
-`!pay <amount>` or `!spend <amount>` _Subtracts <amount> of gold. See stats below._
+You can chain multiple commands together in one go with semicolons e.g. `!newgame; !1`
 
-*Stats Management*
-The quick version
-`!<stat> <amount>` _Set the stat called <stat> to <amount>. See below for the list of stats._
-The full version
-`!<stat> [max] [-/+]<amount>`
-_Valid <stat> values are:_ `skill`, `stam`, `luck`, `weapon`, `gold` and `prov`
-_If the number starts with a - or +, <amount> will be subtracted or added from the total. Otherwise the value is replaced with <amount>_
-_If [max] is used, the stat's maximum is changed instead._
-Examples:
-`!stam -3` _Take 3 stamina loss._
-`!weapon +1` _Increase weapon bonus by 1._
-`!luck max 10` _Set maximum luck to 10._
-
-*Command Chaining*
-_You can chain multiple commands together in one go with semicolons._ `;`
-Examples:
-`!eat;!eat;!eat` _Eat 3 times._
-`!pay 5;!get 2 provisions` _Pay 5 gold and recieve 2 provisions._
-`!stam max -1;!weapon 2;!45` _Take 1 from max stamina, set weapon bonus to 2 and read page 45._
+Still awake? You can get an exhaustive list of commands using `!helpall` back on the channel.

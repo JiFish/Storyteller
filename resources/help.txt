@@ -1,12 +1,11 @@
-*Basic Commands*
+_*Basic Commands*_ - Just enough to get going.
 
-`!<number>` _Read page <number>. e.g. !42_ `!look` _Re-read last page._
-`!info` _Show character stats and inventory. `!s` just shows stats._
-`!test luck` or `!test skill` or `!test stam` _Roll a stat test._
-`!get <item>` or `!lose <item>` _Adds or removes <item> to your inventory. e.g. `!get 3 gold` or `!lose Ring`_
-`!eat` _Eats one provision for 4 stamina._
-`!fight <skill> <stamina>` _Fight a monster with skill <skill> and stamina <stamina>. e.g. `!fight 6 2`_
-`!<stat> <+/-><amount>` _Set or alter the <stat> with <amount>. e.g. `!stam 3` or `!luck +2`_
-`!newgame` _Rolls and new character and resets the game._
+`!<number>` Read page <number>. e.g. `!42`
+`!info` Show character stats and inventory.
+`!test luck` or `!test skill` or `!test stam` Roll two dice against a stat
+`!get <item>` or `!lose <item>` Adds or removes <item> to your inventory. e.g. `!get 3 gold` or `!lose Ring`
+`!fight <skill> <stamina>` Fight a monster with skill <skill> and stamina <stamina>. e.g. `!fight 6 2`
 
-`!helpmore` _Sends a DM with all the commands._
+`!newgame` Rolls and new character and resets the game.
+
+`!helpmore` Sends a DM with the most common commands. `!helpall` Sends a DM with the complete command list.

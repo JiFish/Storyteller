@@ -1,5 +1,6 @@
 <?php
 
+$gamebook = 'wofm';
 // This is only an example adventure. See readme.md
 
 $book = array(

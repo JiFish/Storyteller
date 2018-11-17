@@ -1,8 +1,15 @@
 # Set storyteller.php as index
 DirectoryIndex storyteller.php
 
-# Deny access to any other file
+# Deny access to all files
 Order Allow,Deny
+
+# Allow in endpoint
 <FilesMatch "^(storyteller\.php|)$">
+Allow from all
+</FilesMatch>
+
+# Allow page images
+<FilesMatch "^images\/[0-9]+\.jpg$">
 Allow from all
 </FilesMatch>
