@@ -38,7 +38,7 @@ Importing from an official source is painful (see the next section.) So I am rel
 - [Pre-prepared WoFM book.php](https://pastebin.com/raw/rwbfuT6L)
 - [Pre-prepared RtFM book.php](https://pastebin.com/raw/GSL5sY7B)
 
-This link will be removed hastily if anyone ever objects. Don't be a jerk. If use this, make sure you own the book. [It's still in print.](https://www.amazon.co.uk/Fighting-Fantasy-Warlock-Firetop-Mountain/dp/1407181300)
+This link will be removed hastily if anyone ever objects. Don't be a jerk. If use this, make sure you own the books. [WoFM Amazon link](https://www.amazon.co.uk/Fighting-Fantasy-Warlock-Firetop-Mountain/dp/1407181300/), [RtFM Amazon link](https://www.amazon.co.uk/Return-Firetop-Mountain-Fighting-Fantasy/dp/184046481X/)
 
 #### Option 2: Import a book you own
 Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook format. If they were, I'd provide a script to automate extraction. Since they aren't your only option is to scan, OCR and input the text yourself from a paper book. If you're mad enough to attempt this, see `book.php` for details.
