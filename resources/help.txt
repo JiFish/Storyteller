@@ -7,5 +7,3 @@ _*Basic Commands*_ - Just enough to get going.
 `!fight <skill> <stamina>` Fight a monster with skill <skill> and stamina <stamina>. e.g. `!fight 6 2`
 
 `!newgame` Rolls and new character and resets the game.
-
-`!helpmore` Sends a DM with the most common commands. `!helpall` Sends a DM with the complete command list.

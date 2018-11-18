@@ -30,8 +30,6 @@ function register_commands($gamebook)
     register_command('i',           '_cmd_stuff');
     register_command('help',        '_cmd_help');
     register_command('?',           '_cmd_help');
-    register_command('helpmore',    '_cmd_helpmore');
-    register_command('helpall',     '_cmd_helpall');
     register_command('fight',       '_cmd_fight',['oms','n','n','osl']);
     register_command('critfight',   '_cmd_critfight',['oms','n','os','on']);
     register_command('bonusfight',  '_cmd_bonusfight',['oms','n','n','n']);
@@ -41,6 +39,7 @@ function register_commands($gamebook)
     register_command('a',           '_cmd_attack',['n','on']);
     register_command('echo',        '_cmd_echo',['l']);
     register_command('randpage',    '_cmd_randpage',['n','on','on','on','on','on','on','on']);
+    register_command('shield',      '_cmd_shield',['os']);
     
     // Stats commands
     $stats = array('skill', 'stam', 'stamina', 'luck', 'prov',
@@ -451,25 +450,8 @@ function _cmd_help($cmd, &$player)
     $help = file_get_contents('resources/help.txt');
     // Replace "!" with whatever the trigger word is
     $help = str_replace("!",$_POST['trigger_word'],$help);
-    sendqmsg($help);
-}
-
-//// !helpmore (send advanced help)
-function _cmd_helpmore($cmd, &$player)
-{
-    $help = file_get_contents('resources/helpmore.txt');
-    // Replace "!" with whatever the trigger word is
-    $help = str_replace("!",$_POST['trigger_word'],$help);
-    senddirmsg($help);
-}
-
-//// !helpall (send complete help)
-function _cmd_helpall($cmd, &$player)
-{
-    $help = file_get_contents('resources/helpall.txt');
-    // Replace "!" with whatever the trigger word is
-    $help = str_replace("!",$_POST['trigger_word'],$help);
-    senddirmsg($help);
+    $helpurl = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI']).'commands.html';
+    sendqmsg($help."\nMore commands can be found here: ".$helpurl);
 }
 
 //// !fight [name] <skill> <stamina> [maxrounds] (run fight logic)
@@ -661,11 +643,9 @@ function _cmd_echo($cmd, &$player)
     if (!$cmd[1]) {
         return;
     }
-    
-    $line = implode(" ",array_slice($cmd, 1));
 
     // Turn the params back in to one string
-    sendqmsg("*$line*", ':speech_balloon:');
+    sendqmsg("*".$cmd[1]."*", ':speech_balloon:');
 }
 
 //// !randpage <page 1> [page 2] [page 3] [...]
@@ -695,4 +675,21 @@ function _cmd_randpage ($cmd, &$player)
 
     sendqmsg("Rolled $de",":game_die:");
     addcommand('!'.$pagelist[$choice]);
+}
+
+//// !shield [on/off] - Toggle shield
+function _cmd_shield($cmd, &$player)
+{
+    if (!isset($cmd[1])) {
+        $state = '';
+    } else {
+        $state = strtolower($cmd[1]);
+    }
+    
+    if ($state != 'on' && $state != 'off') {
+        $state = ($player['shield']?'off':'on');
+    }
+
+    $player['shield'] = ($state == 'on');
+    sendqmsg("*Shield $state*", ':shield:');
 }

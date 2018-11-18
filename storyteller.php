@@ -117,6 +117,8 @@ function pre_processes_magic($command, &$player)
             } elseif (!isset($matches[3]) && array_key_exists($matches[1],$player)) {
                 if (is_array($player[$matches[1]])) {
                     return str_replace("\n"," ",var_export($player[$matches[1]],1));
+                } elseif (is_bool($player[$matches[1]])) {
+                    return ($player[$matches[1]]?'on':'off');
                 }
                 return $player[$matches[1]];
             } elseif ($matches[1] == 'all') {
@@ -206,6 +208,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                'prov' => 10,
                'gold' => 0,
                'weapon' => 0,
+               'shield' => false,
                'lastpage' => 1,
                'stuff' => array('Sword (+0)','Leather Armor','Lantern'),
                'gamebook' => $gamebook);
@@ -431,18 +434,22 @@ function send_stuff($player)
         natcasesort($s);
         $s = array_map("ucfirst",$s);
     }
+    
+    if ($player['shield']) {
+        $s[] .= '*Shield _(Equipped)_*';
+    }
 
     $attachments = array([
             'color'    => '#0066ff',
             'fields'   => array(
             [
                 'title' => 'Inventory',
-                'value' => implode("\n",array_slice($s, 0, floor(sizeof($s) / 2))),
+                'value' => implode("\n",array_slice($s, 0, ceil(sizeof($s) / 2))),
                 'short' => true
             ],
             [
                 'title' => "",
-                'value' => "\n".implode("\n",array_slice($s, floor(sizeof($s) / 2))),
+                'value' => html_entity_decode("&nbsp;")."\n".implode("\n",array_slice($s, ceil(sizeof($s) / 2))),
                 'short' => true
             ])
     ]);

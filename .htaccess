@@ -4,8 +4,13 @@ DirectoryIndex storyteller.php
 # Deny access to all files
 Order Allow,Deny
 
-# Allow in endpoint
+# Allow api endpoint
 <FilesMatch "^(storyteller\.php|)$">
+Allow from all
+</FilesMatch>
+
+# Allow command help document
+<FilesMatch "^(commands\.html|)$">
 Allow from all
 </FilesMatch>
 
