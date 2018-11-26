@@ -50,6 +50,8 @@ function register_commands($gamebook)
                    'provisons', 'gold', 'weapon', 'weaponbonus', 'bonus');
     if ($gamebook == 'rtfm') {
         $stats = array_merge($stats,['goldzagors','gz']);
+    } elseif ($gamebook == 'loz') {
+        $stats = array_merge($stats,['magic','provisions','daggers']);
     }
     foreach($stats as $s) {
         register_command($s, '_cmd_stat_adjust',['os','nm']);
@@ -410,7 +412,7 @@ function _cmd_test($cmd, &$player)
     if ($cmd[1] == "stamina") $cmd[1] = "stam";
 
     // Check for valid test types
-    if ($cmd[1] != "luck" && $cmd[1] != "skill" && $cmd[1] != "stam") {
+    if ($cmd[1] != "luck" && $cmd[1] != "skill" && $cmd[1] != "stam" && $cmd[1] != "spot") {
         sendqmsg("_*Don't know how to test ".$cmd[1]."_",':interrobang:');
         return;
     }
@@ -428,7 +430,13 @@ function _cmd_test($cmd, &$player)
     $d2 = rand(1,6);
     $e1 = diceemoji($d1);
     $e2 = diceemoji($d2);
-    $target = $player[$cmd[1]];
+
+    // Spot is a special case
+    if ($cmd[1] == 'spot') {
+        $target = $player['skill'] + ($player['adjective'] == 'Wizard'?2:0);
+    } else {
+        $target = $player[$cmd[1]];
+    }
 
     // Check roll versus target number
     if ($d1+$d2 <= $target) {
@@ -439,6 +447,8 @@ function _cmd_test($cmd, &$player)
             sendqmsg("_*You are skillful*_\n_(_ $e1 $e2 _ vs $target)_",':juggling:');
         } else if ($cmd[1] == "stam") {
             sendqmsg("_*You are strong enough*_\n_(_ $e1 $e2 _ vs $target)_",':muscle:');
+        } else if ($cmd[1] == "spot") {
+            sendqmsg("_*You spotted something*_\n_(_ $e1 $e2 _ vs $target)_",':eyes:');
         }
         // Show follow up page
         if (isset($success_page)) {
@@ -453,6 +463,8 @@ function _cmd_test($cmd, &$player)
             sendqmsg("_*You are not skillful*_\n_(_ $e1 $e2 _ vs $target)_",':tired_face:');
         } else if ($cmd[1] == "stam") {
             sendqmsg("_*You are not strong enough*_\n_(_ $e1 $e2 _ vs $target)_",':sweat:');
+        } else if ($cmd[1] == "spot") {
+            sendqmsg("_*You didn't spot anything*_\n_(_ $e1 $e2 _ vs $target)_",':persevere:');
         }
         // Show follow up page
         if (isset($fail_page)) {

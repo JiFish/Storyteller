@@ -334,6 +334,56 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
             $p['creationdice'][] = rand(1,6);
             $p['prov'] = $p['creationdice'][4]-1; // 1d6-1
         }
+    } elseif ($gamebook == 'loz') {
+        $p['prov'] = 12;
+        $p['max']['prov'] = 12;
+        $p['talismans'] = 0;
+        $p['max']['talismans'] = 999;
+        $p['daggers'] = 0;
+        $p['max']['daggers'] = 999;
+
+        // Reuse adjective as player class
+        // Miner is the old Dwarf class (to separate from races above)
+        $classes = ['Barbarian','Warrior','Miner','Wizard'];
+        if (in_array(ucfirst(strtolower($adjective)),$classes)) {
+            $p['adjective'] = ucfirst(strtolower($adjective));
+        } else {
+            $p['adjective'] = $classes[rand(0,3)];
+        }
+        switch ($p['adjective']) {
+            case 'Barbarian':
+                $p['magic'] = 1;
+                $p['advantages'] = "Can't be surprised.";
+                $p['disadvantages'] = "Can't wear plate mail. No bonus to attack strength with chain mail. Subtract 2 from attack strength with crossbow.";
+                break;
+            case 'Warrior':
+                $p['magic'] = 3;
+                $p['advantages'] = "Can use any weapons.";
+                $p['disadvantages'] = "None.";
+                break;
+            case 'Miner':
+                $p['magic'] = 2;
+                $p['advantages'] = "Add 2 to attack strength vs. stone monsters.";
+                $p['disadvantages'] = "Can't use longbow or two-handed weapons.";
+                break;
+            case 'Wizard':
+                $p['magic'] = 7;
+                $p['advantages'] = "Add 2 to skill when testing spot skill.";
+                $p['disadvantages'] = "Can't use metal armour, bow or two-handed weapons.";
+                break;
+        }
+        $p['max']['magic'] = $p['magic'];
+        // Special emoji for human wizards
+        if ((!$emoji || $emoji == '?') && $p['adjective'] == 'Wizard' && $p['race'] == 'Human') {
+                if ($p['gender'] == 'Male') {
+                    $p['emoji'] = ':male_mage:';
+                } elseif ($p['gender'] == 'Female') {
+                    $p['emoji'] = ':female_mage:';
+                } else {
+                    $p['emoji'] = ':mage:';
+                }
+                $p['emoji'] .= $skintone[array_rand($skintone)];
+        }
     }
 
     return $p;
@@ -355,7 +405,7 @@ function getbook()
     }
     
     $supported_books = array(
-        'none','wofm','wofm-strict','rtfm','rtfm-strict');
+        'none','wofm','wofm-strict','rtfm','rtfm-strict','loz');
         
     if (!in_array($gamebook, $supported_books)) {
         return 'none';
@@ -454,6 +504,31 @@ function send_charsheet($player, $text = "")
             'title' => 'Gold Zagors (gz)',
             'value' => $player['goldzagors'],
             'short' => true
+        );
+    }
+
+    if ($player['gamebook'] == 'loz') {
+        array_splice($attachments[0]['fields'], 3, 0,
+            array([
+                'title' => 'Magic',
+                'value' => $player['magic']." / ".$player['max']['magic'],
+                'short' => true
+            ])
+        );
+        $attachments[0]['fields'] = array_merge($attachments[0]['fields'],
+        array([
+                'title' => 'Talismans: '.$player['talismans'],
+                'value' => '*Daggers: '.$player['daggers'].'*',
+                'short' => true
+            ],[
+                'title' => 'Advantages',
+                'value' => $player['advantages'],
+                'short' => false
+            ],[
+                'title' => 'Disadvantages',
+                'value' => $player['disadvantages'],
+                'short' => false
+            ])
         );
     }
 
