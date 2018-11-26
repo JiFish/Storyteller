@@ -13,6 +13,7 @@ Mostly everything you'll need to know.
 - `!randpage <page 1> [page 2] [page 3] [...]` Turn randomly to one of the listed pages.
 
 ### Character Management
+- `!newgame [name] [m/f] [emoji]` Rolls a new character and resets the game. Optionally set name, gender and emoji. e.g. `!newgame Jill f`
 - `!<stat> [+/-]<amount>` Set <stat> to <amount>. Use + or - to *alter* <stat> by <amount>. e.g. `!skill 3` or `!gold +2`
 - `!<stat> max [+/-]<amount>` Set or alter the MAX of <stat> with <amount>. e.g. `!stam max -1`
 <stat> values are: `skill`, `stam`, `luck`, `weapon`, `gold` and `prov`
@@ -20,7 +21,7 @@ Mostly everything you'll need to know.
 - `!get <item>` Adds <item> to your inventory.
 - `!lose <item>` Removes <item> to your inventory. You can also use `!drop` and `!use` for different descriptions.
 - `!shield <on/off>` Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using !fight.
-- `!newgame [name] [m/f] [emoji]` Rolls a new character and resets the game. Optionally set name, gender and emoji. e.g. `!newgame Jill f`
+- `!dead` Reduce stamina to 0.
 
 You can chain multiple commands together in one go with semicolons e.g. `!newgame; !1`
 
@@ -76,19 +77,28 @@ The following cover many custom fight rules:
 - `!weapon 2` Set weapon bonus to 2.
 - `!luck max +1` Add 1 to maximum luck.
 
-### Command Chaining & Fancy Stuff
-- `!echo <message>` Simply repeats <message>. Useful to label outputs when chaining commands.
-- You can chain multiple commands together in one go with semicolons `;` e.g. `!newgame; !1` The chain will stop automatically on player death.
-- You can include magic substitutions in any command with curly brackets. There are two types:
--- Player information. Any of the stats will work, plus a few extra. Try `!echo Hello {name}.`
--- Dice rolls in the form <numdice>d[dicesides][+/-bonus]. If dicesides is omitted, 6 is assumed. e.g. `{1d}`, `{3d10}`, `{1d8-4}`, `{1d+3}`
+### Command Chaining
+You can chain multiple commands together in one go with semicolons `;` e.g. `!newgame; !1` The chain will stop automatically on player death. You can omit the `!` prefix after the first command in the chain.
 
 ##### Examples:
-- `!eat;!eat;!eat` Eat 3 times.
-- `!fight spider 4 5; !42` Fight a spider and turn to page 42 if you win.
-- `!pay 5; !get Odd Potion` Pay 5 gold and receive an Odd Potion.
-- `!echo Jim:; !roll 5; !echo Bob:; !roll 5` Roll 5 dice each for Jim and Bob.
+- `!eat;eat;eat` Eat 3 times.
+- `!fight Spider 4 5; !42` Fight a spider and turn to page 42 if you win.
+- `!pay 5; get Odd Potion` Pay 5 gold and receive an Odd Potion.
+
+### Fancy Stuff & Debugging
+Dragons be here. Advanced users only.
+
+- `!echo <message>` Simply repeats <message>. Useful to label outputs when chaining commands.
+- `!debugset <var> <val> [silent]` Set character variable <var> to <val>. Potentially could ruin the character if you are careless. Silent is optional, if given nothing will be outputted.
+- You can include magic substitutions in any command with curly brackets. There are three types:
+-- Character vars. Any of the stats will work, plus a few extra. Try `!echo Hello {name}.` Useful for debugging. Use the special case `{all}` to see everything.
+-- Dice rolls in the form <numdice>d[dicesides][+/-bonus]. If dicesides is omitted, 6 is assumed. e.g. `{1d}`, `{3d10}`, `{1d8-4}`, `{1d+3}`
+-- `{sc}` will be replaced with a semicolon ";". Just in case you need one in a string.
+
+##### Examples:
+- `!echo Jim:; roll 5; echo Bob:; roll 5` Roll 5 dice each for Jim and Bob.
 - `!{1d400}` Turn to a random page between 1 - 400.
 - `!stam -{1d}` Roll a 6-sided dice and subtract the result from stamina.
 - `!skill max {skill}` Set your maximum skill to your current skill.
 - `!ng {name} {gender} {emoji} {race} Second` Start a new game as the offspring of the last character
+- `!debugset name Bob silent` Set the character's name to Bob silently.

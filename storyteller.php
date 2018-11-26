@@ -24,7 +24,7 @@ register_commands($player['gamebook']);
 // Split the command list by semi-colons. Allows multiple commands to be queued
 // Note, some commands will queue other commands
 // Note $commandlist is referenced as a global variable in the below functions.
-$commandlist = explode(";",$_POST['text']);
+$commandlist = explode(";",html_entity_decode($_POST['text']));
 
 $executions = 0;
 while (sizeof($commandlist) > 0)
@@ -57,14 +57,16 @@ function processcommand($command, &$player)
 {
     global $commandslist, $commandsargs;
     
+    // If we have a trigger word right at the start, strip it now
+    if (stripos($command,$_POST['trigger_word']) === 0) {
+        $command = substr($command,strlen($_POST['trigger_word']));
+    }
+
     $command = pre_processes_magic($command, $player);
 
     // Split by whitespace
     // $cmd[0] is the command
     $cmd = preg_split('/\s+/', trim($command));
-
-    // Remove trigger word from command
-    $cmd[0] = substr($cmd[0],strlen($_POST['trigger_word']));
     $cmd[0] = trim(strtolower($cmd[0]));
 
     // Special case for quick page lookup
@@ -88,6 +90,9 @@ function processcommand($command, &$player)
 
 function pre_processes_magic($command, &$player)
 {
+    // magic to allow semi-colons
+    $command = str_replace("{sc}",";",$command);
+
     // magic to substitute dice rolls
     $command = preg_replace_callback(
         '/{([1-9][0-9]?)d([1-9][0-9]{0,2})?([+|\-][1-9][0-9]{0,2})?}/',
@@ -134,7 +139,7 @@ function pre_processes_magic($command, &$player)
 
 function advanced_command_split($command,$def)
 {
-    $regex = "/^\\s*\\!([A-Za-z]+)";
+    $regex = "/^\\s*(\\S+)";
     foreach ($def as $d) {
         switch($d) {
             case 'l':  //whole line
@@ -198,20 +203,33 @@ function register_command($name, $function, $args = [])
 }
 
 // Roll a new random character and return a 'player' array ready to be used elsewhere
-function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = null) {
+    // Seed random
+    if (!$seed) {
+        $seed = make_seed();
+    }
+    srand($seed);
+
+    // Roll dice!
+    for ($c = 0; $c < 4; $c++) {
+        $dice[$c] = rand(1,6);
+    }
+
     // Get the type of book
     $gamebook = getbook();
 
-    $p = array('skill' => rand(1,6) + 6,             //1d6+6
-               'stam' => rand(1,6) + rand(1,6) + 12, //2d6+12
-               'luck' => rand(1,6) + 6,              //1d6+6
+    $p = array('skill' => $dice[0] + 6,             //1d6+6
+               'stam' => $dice[1] + $dice[2] + 12, //2d6+12
+               'luck' => $dice[3] + 6,              //1d6+6
                'prov' => 10,
                'gold' => 0,
                'weapon' => 0,
                'shield' => false,
                'lastpage' => 1,
                'stuff' => array('Sword (+0)','Leather Armor','Lantern'),
-               'gamebook' => $gamebook);
+               'gamebook' => $gamebook,
+               'creationdice' => $dice,
+               'seed' => $seed);
 
     // Set maximums
     // The game won't (normally) allow you to exceed your initial scores
@@ -225,12 +243,16 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     // Character Fluff - Gender, name, race etc.
     if (!$gender || $gender == '?') {
         $gender = (rand(0,1)?'Male':'Female');
+        if (rand(0,99) == 0) {
+            $gender = array('Agender','Androgynous','Gender neutral', 'Genderfluid',
+                            'Genderless','Non-binary','Transgender')[rand(0,6)];
+        }
     } elseif ($gender == 'm' || $gender == 'M') {
         $gender = 'Male';
     } elseif ($gender == 'f' || $gender == 'F') {
         $gender = 'Female';
     }
-    $p['gender'] = ucfirst($gender);
+    $p['gender'] = ucfirst(strtolower($gender));
     if (!$name || $name == '?') {
         $names = file($gender=='Male'?'resources/male_names.txt':'resources/female_names.txt');
         $p['name'] = trim($names[array_rand($names)]);
@@ -243,26 +265,35 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     } else {
         $p['adjective'] = ucfirst($adjective);
     }
-    if (!$emoji || $emoji == '?') {
-        // Get a random emoji to represent the character
-        $male = array(':man:',':blond-haired-man:',':older_man:',':male_elf:',':male_genie:',':smirk_cat:',':bearded_person:');
-        $female = array(':woman:',':blond-haired-woman:',':older_woman:',':female_elf:',':female_genie:',':smile_cat:',':bearded_person:');
-        $races = array('Human','Human','Human','Elven','Djinnin','Catling','Dwarf');
-        $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:',':skin-tone-2:');
 
-        $selection = array_rand($male);
+    // Race, Gender and emoji are linked
+    // Note this array should match with the emoji arrays below
+    $races = array('Human','Human','Human','Elf','Djinnin','Catling','Dwarf');
+    // Determine race
+    if (in_array(ucfirst(strtolower($race)),$races)) {
+        $keys = array_keys($races, ucfirst(strtolower($race)));
+        $selection = $keys[array_rand($keys)];
+        $p['race'] = ucfirst(strtolower($race));
+    } elseif (!$race || $race == '?') {
+        $selection = array_rand($races);
         $p['race'] = $races[$selection];
+    } else {
+        $selection = array_rand($races);
+        $p['race'] = ucfirst(strtolower($race));
+    }
+    // Determine emoji
+    if (!$emoji || $emoji == '?') {
+        $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:',':skin-tone-2:');
         if ($gender == 'Male') {
-            $p['emoji'] = $male[$selection].$skintone[array_rand($skintone)];
+            $emojilist = array(':man:',':blond-haired-man:',':older_man:',':male_elf:',':male_genie:',':smirk_cat:',':bearded_person:');
+        } elseif ($gender == 'Female') {
+            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:',':female_elf:',':female_genie:',':smile_cat:',':bearded_person:');
         } else {
-            $p['emoji'] = $female[$selection].$skintone[array_rand($skintone)];
+            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:',':elf:',':genie:',':smiley_cat:',':bearded_person:');
         }
+        $p['emoji'] = $emojilist[$selection].$skintone[array_rand($skintone)];
     } else {
         $p['emoji'] = $emoji;
-        $p['race'] = 'Human';
-    }
-    if ($race && $race !== '?') { // Override avatar generated race
-        $p['race'] = ucfirst($race);
     }
     
     // End of bare character generation.
@@ -271,31 +302,37 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     if ($gamebook == 'wofm' || $gamebook == 'wofm-strict') {
         // Random Potion
         // The book rules actually give you a choice, but this is a bit more fun
-        switch(rand(1,3)) {
-            case 1:
+        $p['creationdice'][] = rand(1,6);
+        switch($p['creationdice'][4]) {
+            case 1: case 2:
                 $p['stuff'][] = 'Potion of Skill';
                 break;
-            case 2:
+            case 3: case 4:
                 $p['stuff'][] = 'Potion of Strength';
                 break;
-            case 3:
+            case 5: case 6:
                 $p['stuff'][] = 'Potion of Luck';
                 // If the potion of luck is chosen, the player get 1 bonus luck
                 $p['luck']++;
                 $p['max']['luck']++;
                 break;
         }
-        if ($gamebook == 'wofm') {
+        if ($gamebook == 'wofm-strict') {
+            $p['gamebook'] = 'wofm';
+        } else {
             // Random Gold (Note this is a customisation from the book's rules)
-            $p['gold'] = rand(0,5); //1d6-1
+            $p['creationdice'][] = rand(1,6);
+            $p['gold'] = $p['creationdice'][5]-1; //1d6-1
         }
     } elseif ($gamebook == 'rtfm' || $gamebook == 'rtfm-strict') {
-        $p['prov'] = rand(0,5); // 1d6-1
         $p['goldzagors'] = 0;
         $p['max']['goldzagors'] = 999;
         if ($gamebook == 'rtfm-strict') {
-            $p['prov'] = 0; // No provisions!!
             $p['gamebook'] = 'rtfm';
+        } else {
+            // Random Provisions (Note this is a customisation from the book's rules)
+            $p['creationdice'][] = rand(1,6);
+            $p['prov'] = $p['creationdice'][4]-1; // 1d6-1
         }
     }
 
@@ -401,16 +438,21 @@ function send_charsheet($player, $text = "")
             'short' => true
         ],
         [
-            'title' => 'Provisons (prov)',
+            'title' => 'Provisions (prov)',
             'value' => $player['prov'],
             'short' => true
         ])
     ]);
     
     if ($player['gamebook'] == 'rtfm') {
-        $attachments[0]['fields'][4] = array (
-            'title' => 'Coins',
-            'value' => $player['gold'].' Gold, '.$player['goldzagors'].' Gold Zagors (gz)',
+        $attachments[0]['fields'][3] = array (
+            'title' => 'Weapon: '.sprintf("%+d",$player['weapon']),
+            'value' => '*Provisions: '.$player['prov'].'*',
+            'short' => true
+        );
+        $attachments[0]['fields'][5] = array (
+            'title' => 'Gold Zagors (gz)',
+            'value' => $player['goldzagors'],
             'short' => true
         );
     }
@@ -436,7 +478,7 @@ function send_stuff($player)
     }
     
     if ($player['shield']) {
-        $s[] .= '*Shield _(Equipped)_*';
+        $s[] .= '*Shield* _(Equipped)_';
     }
 
     $attachments = array([
@@ -524,7 +566,8 @@ function format_story($page,$text) {
 
     // Look for choices in the text and give them bold formatting
     $story = preg_replace('/\(?turn(ing)? to [0-9]+\)?/i', '*${0}*', $text);
-    $story = preg_replace('/Your (adventure|quest) (is over|ends here)\./i', '*${0}*', $story);
+    $story = preg_replace('/Your (adventure|quest) (is over|ends here)\.?/i', '*${0}*', $story);
+    $story = preg_replace('/((Add|Subject|Deduct|Regain|Gain|Lose) )?([1-9] (points? )?from your (SKILL|LUCK|STAMINA)|([1-9] )?(SKILL|LUCK|STAMINA) points?|your (SKILL|LUCK|STAMINA))/', '*${0}*', $story);
     
     // Wrapping and formatting
     $story = str_replace("\n","\n\n",$story);
@@ -534,18 +577,34 @@ function format_story($page,$text) {
         if (trim($story[$l]) == "") {
             $story[$l] = "> ";
         } else {
-            $story[$l] = "> _".$story[$l];
+            // Prevent code blocks from linebreaking
+            if (substr_count($story[$l],'`') % 2 != 0) {
+                if (array_key_exists($l+1,$story)) {
+                    $story[$l+1] = $story[$l].' '.$story[$l+1];
+                    $story[$l] = '';
+                    continue;
+                }
+            }
+
+            // Deal with bold blocks across lines
             if (substr_count($story[$l],'*') % 2 != 0) {
-                $story[$l] .= '*_';
+                $story[$l] .= '*';
                 if (array_key_exists($l+1,$story)) {
                     $story[$l+1] = "*".$story[$l+1];
                 }
-            } else {
-                $story[$l] .= '_';
             }
+
+            // Italic and quote
+            $story[$l] = "> _".$story[$l].'_';
         }
     }
     $story = "> ~ *$page* ~\n".implode("\n",$story);
     
     return $story;
+}
+
+function make_seed()
+{
+  list($usec, $sec) = explode(' ', microtime());
+  return (int)($sec + $usec * 1000000);
 }

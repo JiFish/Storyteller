@@ -40,6 +40,10 @@ function register_commands($gamebook)
     register_command('echo',        '_cmd_echo',['l']);
     register_command('randpage',    '_cmd_randpage',['n','on','on','on','on','on','on','on']);
     register_command('shield',      '_cmd_shield',['os']);
+    register_command('dead',        '_cmd_dead');
+    register_command('debugset',    '_cmd_debugset',['s','s','os']);
+    register_command('π',           '_cmd_easteregg');
+    register_command(':pie:',       '_cmd_easteregg');
     
     // Stats commands
     $stats = array('skill', 'stam', 'stamina', 'luck', 'prov',
@@ -85,7 +89,7 @@ function _cmd_page($cmd, &$player)
                 }
             // Attempt to find pages that end the story, kill the player if found
             elseif (sizeof($matches) < 1 &&
-                    preg_match('/Your (adventure|quest) (is over|ends here)\./i', $story, $matches)) {
+                    preg_match('/Your (adventure|quest) (is over|ends here)\.?/i', $story, $matches)) {
                 $player['stam'] = 0;
             }
         }
@@ -122,7 +126,8 @@ function _cmd_eat($cmd, &$player)
         if ($player['stam'] > $player['max']['stam']) {
             $player['stam'] = $player['max']['stam'];
         }
-        sendqmsg("*Yum! Stamina now ".$player['stam']." and ".$player['prov']." provisions left.*",":bread:");
+        $icon = array(":bread:",":cheese_wedge:",":meat_on_bone:")[rand(0,2)];
+        sendqmsg("*Yum! Stamina now ".$player['stam']." and ".$player['prov']." provisions left.*",$icon);
     }
 }
 
@@ -141,14 +146,29 @@ function _cmd_stat_adjust($cmd, &$player)
     // $max is the maximum we will allow it to be set to
     // $statname is what we will send back to slack
     // $val is the adjustment or new value
+    switch ($cmd[0]) {
+        case 'stam':
+            $statname = "Stamina";
+            break;
+        case 'prov':
+            $statname = "Provisions";
+            break;
+        case 'weapon':
+            $statname = "Weapon Bonus";
+            break;
+        case 'goldzagors':
+            $statname = "Gold Zagors";
+            break;
+        default:
+            $statname = ucfirst($cmd[0]);
+    }
     if (strtolower($cmd[1]) == "max") {
         $statref = &$player['max'][$cmd[0]];
         $max = 999;
-        $statname = 'maximum '.$cmd[0];
+        $statname = 'maximum '.$statname;
     } elseif (!$cmd[1]) {
         $statref = &$player[$cmd[0]];
         $max = $player['max'][$cmd[0]];
-        $statname = $cmd[0];
     }
     $val = $cmd[2];
 
@@ -176,20 +196,35 @@ function _cmd_stat_adjust($cmd, &$player)
         }
         $msg = "*Set $statname to $statref.*";
     }
-    if ($oldval < $statref && $statname == 'stam') {
+
+    // When reducing the max value, we may also need to reduce the current value
+    if (($oldval > $statref) &&
+        (strtolower($cmd[1]) == "max") &&
+        ($player[$cmd[0]] > $statref))
+    {
+        $player[$cmd[0]] = $statref;
+    }
+
+    if ($oldval <= $statref && strtolower($cmd[1]) == "max") {
+        $icon = ':arrow_up:';
+    } elseif ($oldval > $statref && strtolower($cmd[1]) == "max") {
+        $icon = ':arrow_down:';
+    } elseif ($oldval <= $statref && $cmd[0] == 'stam') {
         $icon = ':medical_symbol:';
-    } elseif ($oldval >= $statref && $statname == 'stam') {
+    } elseif ($oldval > $statref && $cmd[0] == 'stam') {
         $icon = ':face_with_head_bandage:';
-    } elseif ($oldval < $statref && $statname == 'luck') {
+    } elseif ($oldval <= $statref && $cmd[0] == 'luck') {
         $icon = ':four_leaf_clover:';
-    } elseif ($oldval >= $statref && $statname == 'luck') {
+    } elseif ($oldval > $statref && $cmd[0] == 'luck') {
         $icon = ':lightning:';
-    } elseif ($statname == 'gold' || $statname == 'goldzagors') {
+    } elseif ($cmd[0] == 'gold' || $cmd[0] == 'goldzagors') {
         $icon = ':moneybag:';
-    } elseif ($statname == 'weapon') {
+    } elseif ($cmd[0] == 'weapon') {
         $icon = ':dagger_knife:';
-    } elseif ($statname == 'prov') {
+    } elseif ($cmd[0] == 'prov') {
         $icon = ':bread:';
+    } elseif ($cmd[0] == 'skill') {
+        $icon = ':juggling:';
     } else {
         $icon = ':green_book:';
     }
@@ -260,6 +295,11 @@ function _cmd_get($cmd, &$player)
         addcommand("!prov +".$matches[0][1]);
         return;
     }
+    // "shield"
+    if (strtolower($item) == "shield") {
+        addcommand("!shield on");
+        return;
+    }
 
     // Prevent duplicate entries
     if (array_search(strtolower($item), array_map('strtolower', $player['stuff'])) !== false) {
@@ -275,7 +315,7 @@ function _cmd_get($cmd, &$player)
 //// !drop / !lose / !use
 function _cmd_drop($cmd, &$player)
 {
-    $drop = $cmd[1];
+    $drop = strtolower($cmd[1]);
     // TODO: This is code repetition
     // Attempt to catch cases where people get or take gold or provisions
     // and turn them in to stat adjustments
@@ -286,7 +326,7 @@ function _cmd_drop($cmd, &$player)
         return;
     }
     // "provision"
-    if (strtolower($drop) == "provision") {
+    if ($drop == "provision") {
         addcommand("!prov -1");
         return;
     }
@@ -294,6 +334,11 @@ function _cmd_drop($cmd, &$player)
     preg_match_all('/^([0-9]+) provisions/i', $drop, $matches, PREG_SET_ORDER, 0);
     if (sizeof($matches) > 0) {
         addcommand("!prov -".$matches[0][1]);
+        return;
+    }
+    // "shield"
+    if ($drop == "shield") {
+        addcommand("!shield off");
         return;
     }
 
@@ -391,8 +436,8 @@ function _cmd_test($cmd, &$player)
             $player['luck']--;
             sendqmsg("_*You are lucky*_\n_(_ $e1 $e2 _ vs $target, Remaining luck ".$player['luck'].")_",':four_leaf_clover:');
         } else if ($cmd[1] == "skill") {
-            sendqmsg("_*You are skillful*_\n_(_ $e1 $e2 _ vs $target)_",':runner:');
-        } else {
+            sendqmsg("_*You are skillful*_\n_(_ $e1 $e2 _ vs $target)_",':juggling:');
+        } else if ($cmd[1] == "stam") {
             sendqmsg("_*You are strong enough*_\n_(_ $e1 $e2 _ vs $target)_",':muscle:');
         }
         // Show follow up page
@@ -406,7 +451,7 @@ function _cmd_test($cmd, &$player)
             sendqmsg("_*You are unlucky.*_\n_(_ $e1 $e2 _ vs $target, Remaining luck ".$player['luck'].")_",':lightning:');
         } else if ($cmd[1] == "skill") {
             sendqmsg("_*You are not skillful*_\n_(_ $e1 $e2 _ vs $target)_",':tired_face:');
-        } else {
+        } else if ($cmd[1] == "stam") {
             sendqmsg("_*You are not strong enough*_\n_(_ $e1 $e2 _ vs $target)_",':sweat:');
         }
         // Show follow up page
@@ -421,7 +466,7 @@ function _cmd_newgame($cmd, &$player)
 {
     $cmd = array_pad($cmd, 6, '?');
     $player = roll_character($cmd[1],$cmd[2],$cmd[3],$cmd[4],$cmd[5]);
-    send_charsheet($player, "_*NEW CHARACTER!*_");
+    send_charsheet($player, "_*NEW CHARACTER!*_ ".implode(' ',array_map("diceemoji",$player['creationdice'])));
     send_stuff($player);
 }
 
@@ -637,7 +682,7 @@ function _cmd_attack($cmd, &$player)
     sendqmsg($out,":crossed_swords:");
 }
 
-//// !echo - simply repeat the inputted text
+//// !echo - simply repeat the input text
 function _cmd_echo($cmd, &$player)
 {
     if (!$cmd[1]) {
@@ -645,7 +690,7 @@ function _cmd_echo($cmd, &$player)
     }
 
     // Turn the params back in to one string
-    sendqmsg("*".$cmd[1]."*", ':speech_balloon:');
+    sendqmsg($cmd[1], ':green_book:');
 }
 
 //// !randpage <page 1> [page 2] [page 3] [...]
@@ -691,5 +736,46 @@ function _cmd_shield($cmd, &$player)
     }
 
     $player['shield'] = ($state == 'on');
+    $state = ($player['shield']?'Equipped':'Un-Equipped');
     sendqmsg("*Shield $state*", ':shield:');
+}
+
+//// !dead - Kill your character.
+function _cmd_dead($cmd, &$player)
+{
+    $player['stam'] = 0;
+    sendqmsg("> _*Your adventure ends here.*_", ':skull:');
+}
+
+//// !debugset - Set any value
+function _cmd_debugset($cmd, &$player)
+{
+    $key = $cmd[1];
+    $val = $cmd[2];
+    $silent = (isset($cmd[3]) && (strtolower($cmd[3]) == 'silent' || strtolower($cmd[3]) == 's'));
+
+    if (array_key_exists($key,$player) && !is_array($player[$key])) {
+        if (is_numeric($val)) {
+            $val = (int)$val;
+        }
+        $player[$key] = $val;
+        $msg = "*$key set to $val*";
+    } else {
+        $msg = "*$key is invalid.*";
+    }
+    if (!$silent) {
+        sendqmsg($msg, ':desktop_computer:');
+    }
+}
+
+//// !π - Easter egg
+function _cmd_easteregg($cmd, &$player)
+{
+    $eggs = file('resources/easter_eggs.txt');
+    $fullcmd = trim($eggs[array_rand($eggs)]);
+
+    $cmdlist = explode(";",$fullcmd);
+    for ($k = count($cmdlist)-1; $k >= 0; $k--) {
+        addcommand($cmdlist[$k]);
+    }
 }

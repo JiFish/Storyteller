@@ -28,7 +28,7 @@ h3 { font-size: 2.3rem; }
 </style>
 
 </head><body id="preview">
-<h1><a id="Storyteller_Command_Help_0"></a>Storyteller Commands Help</h1>
+<h1><a id="Storyteller_Commands_Help_0"></a>Storyteller Commands Help</h1>
 <h2><a id="Quick_Guide__Common_Commands_1"></a>Quick Guide / Common Commands</h2>
 <p>Mostly everything you’ll need to know.</p>
 <h3><a id="Reading_4"></a>Reading</h3>
@@ -45,6 +45,7 @@ h3 { font-size: 2.3rem; }
 </ul>
 <h3><a id="Character_Management_14"></a>Character Management</h3>
 <ul>
+<li><code>!newgame [name] [m/f] [emoji]</code> Rolls a new character and resets the game. Optionally set name, gender and emoji. e.g. <code>!newgame Jill f</code></li>
 <li><code>!&lt;stat&gt; [+/-]&lt;amount&gt;</code> Set &lt;stat&gt; to &lt;amount&gt;. Use + or - to <em>alter</em> &lt;stat&gt; by &lt;amount&gt;. e.g. <code>!skill 3</code> or <code>!gold +2</code></li>
 <li><code>!&lt;stat&gt; max [+/-]&lt;amount&gt;</code> Set or alter the MAX of &lt;stat&gt; with &lt;amount&gt;. e.g. <code>!stam max -1</code><br>
 &lt;stat&gt; values are: <code>skill</code>, <code>stam</code>, <code>luck</code>, <code>weapon</code>, <code>gold</code> and <code>prov</code></li>
@@ -52,38 +53,38 @@ h3 { font-size: 2.3rem; }
 <li><code>!get &lt;item&gt;</code> Adds &lt;item&gt; to your inventory.</li>
 <li><code>!lose &lt;item&gt;</code> Removes &lt;item&gt; to your inventory. You can also use <code>!drop</code> and <code>!use</code> for different descriptions.</li>
 <li><code>!shield &lt;on/off&gt;</code> Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using !fight.</li>
-<li><code>!newgame [name] [m/f] [emoji]</code> Rolls a new character and resets the game. Optionally set name, gender and emoji. e.g. <code>!newgame Jill f</code></li>
+<li><code>!dead</code> Reduce stamina to 0.</li>
 </ul>
 <p>You can chain multiple commands together in one go with semicolons e.g. <code>!newgame; !1</code></p>
 <p>Still awake? Below is an exhaustive list of commands</p>
-<h2><a id="Complete_Command_List_28"></a>Complete Command List</h2>
+<h2><a id="Complete_Command_List_29"></a>Complete Command List</h2>
 <p>For the nerds</p>
-<h3><a id="Reading_31"></a>Reading</h3>
+<h3><a id="Reading_32"></a>Reading</h3>
 <ul>
 <li><code>!&lt;number&gt;</code> or <code>!page &lt;number&gt;</code> Read page &lt;number&gt;. e.g. <code>!42</code></li>
 <li><code>!look</code> Re-read last page.</li>
 </ul>
-<h3><a id="Character_Information_35"></a>Character Information</h3>
+<h3><a id="Character_Information_36"></a>Character Information</h3>
 <ul>
 <li><code>!info</code> or <code>!status</code> Show character stats and inventory.</li>
 <li><code>!stats</code> or <code>!s</code> Show character stats only.</li>
 <li><code>!stuff</code> or <code>!i</code> Show character inventory.</li>
 <li><code>!newgame [name] [m/f] [emoji] [race] [adjective]</code> or <code>!ng</code> Rolls a new character and resets the game. Optionally customise the new character. Use <code>?</code> to randomise a field.</li>
 </ul>
-<h5><a id="Some_fun_character_ideas_41"></a>Some fun character ideas:</h5>
+<h5><a id="Some_fun_character_ideas_42"></a>Some fun character ideas:</h5>
 <ul>
 <li><code>!ng ? m :male_mage::skin-tone-5: Human Wizard</code></li>
 <li><code>!ng ? ? :robot_face: Robot</code></li>
 <li><code>!ng Vaarsuvius Non-Binary :elf::skin-tone-2: Elf</code></li>
 </ul>
-<h3><a id="Roll_Automation_46"></a>Roll Automation</h3>
+<h3><a id="Roll_Automation_47"></a>Roll Automation</h3>
 <ul>
 <li><code>!test &lt;stat&gt; [successpage] [failpage]</code> Roll test for &lt;stat&gt;. Valid stats are: <code>luck</code>, <code>skill</code> and <code>stam</code>. Turn to [successpage] if successful, [failpage] otherwise (optional.)</li>
 <li><code>!roll [dienumber]</code> Roll [dienumber] six-sided dice and sum the result. If dienumber is missing, rolls one die.</li>
 <li><code>!luckyescape</code> or <code>!le</code> Test luck to try to negate damage. Lose 3 stamina on a failure and 1 stamina on a success.</li>
 <li><code>!randpage &lt;page 1&gt; [page 2] [page 3] [...]</code> Turn randomly to one of the listed pages.</li>
 </ul>
-<h3><a id="Fight_Automation_52"></a>Fight Automation</h3>
+<h3><a id="Fight_Automation_53"></a>Fight Automation</h3>
 <ul>
 <li><code>!fight [name] &lt;skill&gt; &lt;stamina&gt; [stopafter]</code> Fight a monster named [name] (optional) with skill &lt;skill&gt; and stamina &lt;stamina&gt;. Spaces are accepted in the name. Stop after [stopafter] rounds (optional.) You can use 3 special phrases for [stopafter]: <code>hitme</code>, <code>hitthem</code> and <code>hitany</code> to stop the fight in those situations.</li>
 <li><code>!attack &lt;skill&gt; [damage]</code> or <code>!a &lt;skill&gt; [damage]</code> Perform a single attack roll versus a monster with skill &lt;skill&gt;. [damage] is taken from stamina on a fail (Default: 0) This is for manually running combat with special rules.<br>
@@ -93,7 +94,7 @@ The following cover many custom fight rules:</li>
 <li><code>!fighttwo &lt;name 1&gt; &lt;skill 1&gt; &lt;stamina 1&gt; [&lt;name 2&gt; &lt;skill 2&gt; &lt;stamina 2&gt;]</code> Fight two opponents at the same time. If a second monster isn’t provided, you’ll fight two copies of the first.</li>
 <li><code>!vs &lt;name 1&gt; &lt;skill 1&gt; &lt;stamina 1&gt; &lt;name 2&gt; &lt;skill 2&gt; &lt;stamina 2&gt;</code> Fight two monsters against each other.</li>
 </ul>
-<h3><a id="Inventory_Management_61"></a>Inventory Management</h3>
+<h3><a id="Inventory_Management_62"></a>Inventory Management</h3>
 <ul>
 <li><code>!get &lt;item&gt;</code> or <code>!take &lt;item&gt;</code> Adds &lt;item&gt; to your inventory. Attempts to automatically manage gold and provisions stats if used like “!get 5 gold”</li>
 <li><code>!lose &lt;item&gt;</code> Removes &lt;item&gt; to your inventory. You don’t have to provide a full match. e.g. Drop ‘leather armor’ with <code>!drop armor</code>. Will attempt to manage gold and provisions as above.</li>
@@ -102,32 +103,40 @@ The following cover many custom fight rules:</li>
 <li><code>!pay &lt;amount&gt;</code> or <code>!spend &lt;amount&gt;</code> Subtracts &lt;amount&gt; of gold. See stats below.</li>
 <li><code>!shield &lt;on/off&gt;</code> Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using !fight (and variants.)</li>
 </ul>
-<h3><a id="Stats_Management_69"></a>Stats Management</h3>
+<h3><a id="Stats_Management_70"></a>Stats Management</h3>
 <p><code>!&lt;stat&gt; [max] [+/-]&lt;amount&gt;</code> Set the stat called &lt;stat&gt; to &lt;amount&gt;. Valid &lt;stat&gt; values are: <code>skill</code>, <code>stam</code>, <code>luck</code>, <code>weapon</code>, <code>gold</code> and <code>prov</code>. If [max] is used, the stat’s maximum is changed instead. Depending which booktype you are playing, additional stats may be available. If the number starts with a - or +, &lt;amount&gt; will be subtracted or added from the total. Otherwise the value is replaced with &lt;amount&gt;. Only weapon can be reduced below 0.</p>
-<h5><a id="Examples_73"></a>Examples:</h5>
+<h5><a id="Examples_74"></a>Examples:</h5>
 <ul>
 <li><code>!stam -3</code> Take 3 stamina loss.</li>
 <li><code>!weapon 2</code> Set weapon bonus to 2.</li>
 <li><code>!luck max +1</code> Add 1 to maximum luck.</li>
 </ul>
-<h3><a id="Command_Chaining__Fancy_Stuff_78"></a>Command Chaining &amp; Fancy Stuff</h3>
+<h3><a id="Command_Chaining_79"></a>Command Chaining</h3>
+<p>You can chain multiple commands together in one go with semicolons <code>;</code> e.g. <code>!newgame; !1</code> The chain will stop automatically on player death. You can omit the <code>!</code> prefix after the first command in the chain.</p>
+<h5><a id="Examples_82"></a>Examples:</h5>
+<ul>
+<li><code>!eat;eat;eat</code> Eat 3 times.</li>
+<li><code>!fight Spider 4 5; !42</code> Fight a spider and turn to page 42 if you win.</li>
+<li><code>!pay 5; get Odd Potion</code> Pay 5 gold and receive an Odd Potion.</li>
+</ul>
+<h3><a id="Fancy_Stuff__Debugging_87"></a>Fancy Stuff &amp; Debugging</h3>
+<p>Dragons be here. Advanced users only.</p>
 <ul>
 <li><code>!echo &lt;message&gt;</code> Simply repeats &lt;message&gt;. Useful to label outputs when chaining commands.</li>
-<li>You can chain multiple commands together in one go with semicolons <code>;</code> e.g. <code>!newgame; !1</code> The chain will stop automatically on player death.</li>
-<li>You can include magic substitutions in any command with curly brackets. There are two types:<br>
-– Player information. Any of the stats will work, plus a few extra. Try <code>!echo Hello {name}.</code><br>
-– Dice rolls in the form &lt;numdice&gt;d[dicesides][+/-bonus]. If dicesides is omitted, 6 is assumed. e.g. <code>{1d}</code>, <code>{3d10}</code>, <code>{1d8-4}</code>, <code>{1d+3}</code></li>
+<li><code>!debugset &lt;var&gt; &lt;val&gt; [silent]</code> Set character variable &lt;var&gt; to &lt;val&gt;. Potentially could ruin the character if you are careless. Silent is optional, if given nothing will be outputted.</li>
+<li>You can include magic substitutions in any command with curly brackets. There are three types:<br>
+– Character vars. Any of the stats will work, plus a few extra. Try <code>!echo Hello {name}.</code> Useful for debugging. Use the special case <code>{all}</code> to see everything.<br>
+– Dice rolls in the form &lt;numdice&gt;d[dicesides][+/-bonus]. If dicesides is omitted, 6 is assumed. e.g. <code>{1d}</code>, <code>{3d10}</code>, <code>{1d8-4}</code>, <code>{1d+3}</code><br>
+– <code>{sc}</code> will be replaced with a semicolon “;”. Just in case you need one in a string.</li>
 </ul>
-<h5><a id="Examples_85"></a>Examples:</h5>
+<h5><a id="Examples_97"></a>Examples:</h5>
 <ul>
-<li><code>!eat;!eat;!eat</code> Eat 3 times.</li>
-<li><code>!fight spider 4 5; !42</code> Fight a spider and turn to page 42 if you win.</li>
-<li><code>!pay 5; !get Odd Potion</code> Pay 5 gold and receive an Odd Potion.</li>
-<li><code>!echo Jim:; !roll 5; !echo Bob:; !roll 5</code> Roll 5 dice each for Jim and Bob.</li>
+<li><code>!echo Jim:; roll 5; echo Bob:; roll 5</code> Roll 5 dice each for Jim and Bob.</li>
 <li><code>!{1d400}</code> Turn to a random page between 1 - 400.</li>
 <li><code>!stam -{1d}</code> Roll a 6-sided dice and subtract the result from stamina.</li>
 <li><code>!skill max {skill}</code> Set your maximum skill to your current skill.</li>
 <li><code>!ng {name} {gender} {emoji} {race} Second</code> Start a new game as the offspring of the last character</li>
+<li><code>!debugset name Bob silent</code> Set the character’s name to Bob silently.</li>
 </ul>
 
 </body></html>
