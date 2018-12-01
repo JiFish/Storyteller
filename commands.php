@@ -87,7 +87,7 @@ function _cmd_page($cmd, &$player)
             // Find pages with only one turn to and add that page to the command list
             preg_match_all('/turn to ([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
             if (sizeof($matches) == 1) {
-                    addcommand("!".$matches[0][1]);
+                    addcommand("page ".$matches[0][1]);
                 }
             // Attempt to find pages that end the story, kill the player if found
             elseif (sizeof($matches) < 1 &&
@@ -241,7 +241,7 @@ function _cmd_pay($cmd, &$player)
     } else if ($player['gold'] < $cmd[1]) {
         sendqmsg("* You don't have ".$cmd[1]." gold! *",':interrobang');
     } else {
-        addcommand("!gold -".$cmd[1]);
+        addcommand("gold -".$cmd[1]);
     }
 }
 
@@ -283,23 +283,23 @@ function _cmd_get($cmd, &$player)
     // "x Gold"
     preg_match_all('/^([0-9]+) gold/i', $item, $matches, PREG_SET_ORDER, 0);
     if (sizeof($matches) > 0) {
-        addcommand("!gold +".$matches[0][1]);
+        addcommand("gold +".$matches[0][1]);
         return;
     }
     // "provision"
     if (strtolower($item) == "provision") {
-        addcommand("!prov +1");
+        addcommand("prov +1");
         return;
     }
     // "x provisions"
     preg_match_all('/^([0-9]+) provisions/i', $item, $matches, PREG_SET_ORDER, 0);
     if (sizeof($matches) > 0) {
-        addcommand("!prov +".$matches[0][1]);
+        addcommand("prov +".$matches[0][1]);
         return;
     }
     // "shield"
     if (strtolower($item) == "shield") {
-        addcommand("!shield on");
+        addcommand("shield on");
         return;
     }
 
@@ -324,23 +324,23 @@ function _cmd_drop($cmd, &$player)
     // "x Gold"
     preg_match_all('/^([0-9]+) gold/i', $drop, $matches, PREG_SET_ORDER, 0);
     if (sizeof($matches) > 0) {
-        addcommand("!gold -".$matches[0][1]);
+        addcommand("gold -".$matches[0][1]);
         return;
     }
     // "provision"
     if ($drop == "provision") {
-        addcommand("!prov -1");
+        addcommand("prov -1");
         return;
     }
     // "x provisions"
     preg_match_all('/^([0-9]+) provisions/i', $drop, $matches, PREG_SET_ORDER, 0);
     if (sizeof($matches) > 0) {
-        addcommand("!prov -".$matches[0][1]);
+        addcommand("prov -".$matches[0][1]);
         return;
     }
     // "shield"
     if ($drop == "shield") {
-        addcommand("!shield off");
+        addcommand("shield off");
         return;
     }
 
@@ -653,7 +653,7 @@ function _cmd_fighttwo($cmd, &$player)
 
     $out = run_fight($player,$m,$mskill,$mstam,50,'nobody',null,$m2,$mskill2);
     if ($player['stam'] > 0) {
-        addcommand("!fight $m2 $mskill2 $mstam2");
+        addcommand("fight $m2 $mskill2 $mstam2");
     }
     sendqmsg($out,":crossed_swords:");
 }
@@ -733,7 +733,7 @@ function _cmd_randpage ($cmd, &$player)
     }
 
     sendqmsg("Rolled $de",":game_die:");
-    addcommand('!'.$pagelist[$choice]);
+    addcommand("page ".$pagelist[$choice]);
 }
 
 //// !shield [on/off] - Toggle shield

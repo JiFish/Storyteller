@@ -1,12 +1,12 @@
-!echo > _"Yer a wizard, {name}!"_;debugset emoji :mage::skin-tone-3: s;debugset adjective Wizard s
-!echo > _This is odd..._;shield
-!echo > _Uh, oh. You've become a zombie, {name}._;!debugset emoji :zombie: s;debugset adjective Zombie s;skill max 7;skill 7;stamina max 24;stamina 24
-!echo > _Cat fight!!_;vs Black Cat 6 {4d6} Tabby Cat 6 {4d6}
-!echo > _You are lost in time and space..._;page {1d400}
-!echo > _It's not your lucky day!_;luck -1;luck max -{1d3}
-!echo > _You must fight the Randor_;fight Randor {2d6+2} {2d6+2};echo _That fight was worthy of legends!!_;get title: Randor Killer
-!echo > _You are struck by lightning!_;dead
-!echo > _Money pours from the sky!_;gold +{1d50+50}
-!echo > _You feel rejuvenated!_;stam 99;skill 99
-!echo > _It's your lucky day!_;luck max +{1d3};luck 99
-!echo > _You find a stash of food!_;prov +{1d10}
+echo > _"Yer a wizard, {name}!"_;debugset emoji :mage::skin-tone-3: s;debugset adjective Wizard s
+echo > _This is odd..._;shield
+echo > _Uh, oh. You've become a zombie!._;!debugset emoji :zombie: s;debugset adjective Zombie s;skill max 7;skill 7;stamina max 24;stamina 24;lose knife;lose (+0;weapon 0;weapon -2
+echo > _Cat fight!!_;vs Black Cat 6 {4d6} Tabby Cat 6 {4d6}
+echo > _You are lost in time and space..._;page {1d400}
+echo > _It's not your lucky day!_;luck -1;luck max -{1d3}
+echo > _You must fight the Randor_;fight Randor {2d6+2} {2d6+2};echo _That fight was worthy of legends!!_;get title: Randor Killer
+echo > _You are struck by lightning!_;dead
+echo > _Money pours from the sky!_;gold +{1d50+50}
+echo > _You feel rejuvenated!_;stam 99;skill 99
+echo > _It's your lucky day!_;luck max +{1d3};luck 99
+echo > _You find a stash of food!_;prov +{1d10}
