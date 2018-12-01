@@ -1,1 +1,1 @@
-echo Hello World!
+echo This is an example macro. Run me with !macro 1 ; roll 4; echo Hello World!

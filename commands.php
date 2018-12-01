@@ -795,7 +795,10 @@ function _cmd_easteregg($cmd, &$player)
 function _cmd_macro($cmd, &$player)
 {
     $macros = file('macros.txt');
-    $fullcmd = trim($macros[$cmd[1]]);
+    if ($cmd[1] < 1 || $cmd[1] > sizeof($macros)) {
+        sendqmsg('Macro '.$cmd[1].' not found.', ':interrobang:');
+    }
+    $fullcmd = trim($macros[$cmd[1]-1]);
 
     $cmdlist = explode(";",$fullcmd);
     for ($k = count($cmdlist)-1; $k >= 0; $k--) {
