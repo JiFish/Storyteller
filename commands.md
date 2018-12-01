@@ -20,6 +20,7 @@ Mostly everything you'll need to know.
 - `!eat` Eats one provision for 4 stamina.
 - `!get <item>` Adds <item> to your inventory.
 - `!lose <item>` Removes <item> to your inventory. You can also use `!drop` and `!use` for different descriptions.
+- `!buy <item> [cost]` Add <item> to your inventory and subtracts [cost] gold. If cost is missing, 2 gold will be taken.
 - `!shield <on/off>` Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using !fight.
 - `!dead` Reduce stamina to 0.
 
@@ -51,6 +52,7 @@ For the nerds
 - `!drop <item>` or `!use <item>` As above, but with thematic descriptions.
 - `!eat` Eats one provision for 4 stamina.
 - `!pay <amount>` or `!spend <amount>` Subtracts <amount> of gold. See stats below.
+- `!buy <item> [cost]` Add <item> to your inventory and subtracts [cost] gold. If cost is missing, 2 gold will be taken.
 - `!shield <on/off>` Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using !fight (and variants.)
 
 ### Stats Management

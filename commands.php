@@ -11,6 +11,7 @@ function register_commands($gamebook)
     register_command('eat',         '_cmd_eat');
     register_command('pay',         '_cmd_pay',['n']);
     register_command('spend',       '_cmd_pay',['n']);
+    register_command('buy',         '_cmd_buy',['ms','on']);
     register_command('luckyescape', '_cmd_luckyescape');
     register_command('le',          '_cmd_luckyescape');
     register_command('get',         '_cmd_get',['l']);
@@ -256,6 +257,27 @@ function _cmd_pay($cmd, &$player)
         sendqmsg("* You don't have ".$cmd[1]." gold! *",':interrobang');
     } else {
         addcommand("gold -".$cmd[1]);
+    }
+}
+
+//// !buy (alias for get & losing gold)
+function _cmd_buy($cmd, &$player)
+{
+    if ($cmd[2]) {
+        $cost = $cmd[2];
+    } else {
+        $cost = 2;
+    }
+    $item = $cmd[1];
+
+    if ($player['gold'] < $cost) {
+        sendqmsg("* You don't have $cost gold! *",':interrobang');
+    } else if (array_search(strtolower($item), array_map('strtolower', $player['stuff'])) !== false) {
+        sendqmsg("*You already have '".$item."'. Try giving this item a different name.*",':interrobang:');
+    } else {
+        $player['gold'] -= $cost;
+        $player['stuff'][] = $item;
+        sendqmsg("*Bought $item for $cost Gold*",':handshake:');
     }
 }
 
