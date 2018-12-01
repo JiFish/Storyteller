@@ -317,7 +317,17 @@ function send_charsheet($player, $text = "")
             'short' => true
         ])
     ]);
-    
+
+    if ($player['max']['magic'] > 0) {
+        array_splice($attachments[0]['fields'], 3, 0,
+            array([
+                'title' => 'Magic',
+                'value' => $player['magic']." / ".$player['max']['magic'],
+                'short' => true
+            ])
+        );
+    }
+
     if ($player['gamebook'] == 'rtfm') {
         $attachments[0]['fields'][3] = array (
             'title' => 'Weapon: '.sprintf("%+d",$player['weapon']),
@@ -332,13 +342,6 @@ function send_charsheet($player, $text = "")
     }
 
     if ($player['gamebook'] == 'loz') {
-        array_splice($attachments[0]['fields'], 3, 0,
-            array([
-                'title' => 'Magic',
-                'value' => $player['magic']." / ".$player['max']['magic'],
-                'short' => true
-            ])
-        );
         $attachments[0]['fields'] = array_merge($attachments[0]['fields'],
         array([
                 'title' => 'Talismans: '.$player['talismans'],
@@ -430,7 +433,7 @@ function sendimgmsg($message, $imgurl, $icon = ':open_book:')
 
 // Full whistles and bells send message to slack
 // Normally use one of the convenience functions above
-function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan = false)
+function sendmsg($message, $attachments = array(), $icon = ':open_book:', $chan = false)
 {
     $data = array(
         'text'        => $message,
@@ -461,7 +464,7 @@ function sendmsg($message, $attachments = array(), $icon = ':green_book:', $chan
 }
 
 function format_story($page,$text) {
-    require_once("book.php");
+    require("book.php");
 
     // Look for choices in the text and give them bold formatting
     $story = preg_replace('/\(?turn(ing)? to [0-9]+\)?/i', '*${0}*', $text);

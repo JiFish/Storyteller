@@ -377,7 +377,7 @@ function _cmd_drop($cmd, &$player)
     }
 
     if (sizeof($foundlist) < 1) {
-        sendqmsg("*'".$drop."' didn't match anything. Check your !stuff.*",':interrobang:');
+        sendqmsg("*'".$drop."' didn't match anything in inventory. Can't ".strtolower($cmd[0]).".*",':interrobang:');
     } elseif (sizeof($foundlist) > 1) {
         sendqmsg("*Which did you want to ".$cmd[0]."? ".implode(", ",$foundlist)."*",':interrobang:');
     } else {
