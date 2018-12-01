@@ -55,7 +55,7 @@ function register_commands($gamebook)
     if ($gamebook == 'rtfm') {
         $stats = array_merge($stats,['goldzagors','gz']);
     } elseif ($gamebook == 'loz') {
-        $stats = array_merge($stats,['magic','provisions','daggers']);
+        $stats = array_merge($stats,['magic','talismans','daggers']);
     }
     foreach($stats as $s) {
         register_command($s, '_cmd_stat_adjust',['os','nm']);
