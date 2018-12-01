@@ -42,6 +42,8 @@ function register_commands($gamebook)
     register_command('shield',      '_cmd_shield',['os']);
     register_command('dead',        '_cmd_dead');
     register_command('debugset',    '_cmd_debugset',['s','s','os']);
+    register_command('spellbook',   '_cmd_spellbook',['osl']);
+    register_command('cast',        '_cmd_cast',['spell','oms','on','on']);
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
 
@@ -784,5 +786,89 @@ function _cmd_easteregg($cmd, &$player)
     $cmdlist = explode(";",$fullcmd);
     for ($k = count($cmdlist)-1; $k >= 0; $k--) {
         addcommand($cmdlist[$k]);
+    }
+}
+
+//// !spellbook - read spellbook
+function _cmd_spellbook($cmd, &$player)
+{
+    require('spells.php');
+
+    $typeslist = array();
+    foreach ($spells as $s) {
+        $typeslist[] = $s['type'];
+    }
+    $typeslist = array_unique($typeslist);
+    $pagesize = 4;
+    $total = ceil(count($spells)/$pagesize);
+
+    $in = strtolower($cmd[1]);
+
+    if ($in == 'all') {
+        $out = "_*~ All Spells ~*_\n";
+        $list = $spells;
+        usort($list, function($a, $b) {
+            return strcmp($a["name"], $b["name"]);
+        });
+    } elseif (in_array($in,$typeslist)) {
+        $out = "_*~ ".ucfirst($in)." Spells ~*_\n";
+        $list = array_filter($spells,function($v) use ($in){
+            return ($v['type'] == $in);
+        });
+        usort($list, function($a, $b) {
+            if ($a['cost'] == $b['cost']) { return strcmp($a["name"], $b["name"]); }
+            return ($a['cost'] < $b['cost']) ? -1 : 1;
+        });
+    } elseif (is_numeric($in)) {
+        if ($in < 1 || $in > $total) {
+            $in = 1;
+        }
+        $out = "_*~ PAGE $in of $total ~*_\n";
+        usort($spells, function($a, $b) {
+            return strcmp($a["name"], $b["name"]);
+        });
+        $list = array_slice($spells,($in-1)*$pagesize,$pagesize);
+    } else {
+        $out = "_*~ Spellbook Contents ~*_\n";
+        $out .= "By Page: `!spellbook 1` ... `!spellbook $total`\n";
+        $out .= "By Type: ";
+        foreach ($typeslist as $t) {
+            $out .= "`!spellbook $t`, ";
+        }
+        $out = substr($out, 0, -2)."\n";
+        $out .= "Everything: `!spellbook all`\n";
+        $list = array();
+    }
+
+    foreach ($list as $s) {
+        $out .= "*".$s['name']."* _(Cost: ".$s['cost']." Magic".($s['target']?", Requires Target":"").", Type: ".ucfirst($s['type']).")_\n";
+        $out .= wordwrap($s['desc'],100)."\n\n";
+    }
+
+    // Turn the params back in to one string
+    sendqmsg($out, ':green_book:');
+}
+
+//// !echo - simply repeat the input text
+function _cmd_cast($cmd, &$player)
+{
+    require('spells.php');
+
+    foreach ($spells as $s) {
+        if (strtolower($s['name']) == strtolower($cmd[1])) {
+            break;
+        }
+    }
+
+    if ($player['magic'] < $s['cost']) {
+        sendqmsg("*You don't have ".$s['cost']." Magic to spend!*", ':interrobang:');
+    } elseif ($s['target'] && (!$cmd[3] || !$cmd[4])) {
+        sendqmsg("*This spell requires a target!* e.g. `!cast ".$s['name']." Monster 6 7`", ':interrobang:');
+    } elseif ($s['target']) {
+        $player['magic'] -= $s['cost'];
+        $s['func']($player,($cmd[2]?$cmd[2]:'Opponent'),$cmd[3],$cmd[4]);
+    } else {
+        $player['magic'] -= $s['cost'];
+        $s['func']();
     }
 }

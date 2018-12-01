@@ -58,6 +58,7 @@ function processcommand($command, &$player)
     global $commandslist, $commandsargs;
 
     // If we have a trigger word right at the start, strip it now
+    $command = trim($command);
     if (stripos($command,$_POST['trigger_word']) === 0) {
         $command = substr($command,strlen($_POST['trigger_word']));
     }
@@ -172,11 +173,20 @@ function advanced_command_split($command,$def)
             case 'nm':  //number modifier
                 $regex .= "\s+([+\-]?[0-9]+)";
                 break;
+            case 'spell': //spell name
+                require('spells.php');
+                $regex .= "\s+(";
+                foreach ($spells as $s) {
+                    $regex .= preg_quote($s['name']).'|';
+                }
+                $regex = substr($regex,0,-1);
+                $regex .= ")";
+                break;
             default:  //misc
                 break;
         }
     }
-    $regex .= '\s*$/';
+    $regex .= '\s*$/i';
     $matches = array();
 
     if (!preg_match($regex, $command, $matches)) {

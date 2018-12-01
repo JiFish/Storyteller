@@ -1,6 +1,6 @@
 <?php
 
-function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0) {
+function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0, $fasthands = false) {
     // Apply temp bonuses, if any
     apply_temp_stats($player);
 
@@ -30,7 +30,21 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
 
         $mattack = $mskill+$mroll;
         $pattack = $player['skill']+$player['weapon']+$proll;
-        
+
+        // Fast hands gives 1 extra dice, drop lowest for attack power
+        if ($fasthands) {
+            $fhroll = rand(1,6);
+            if ($fhroll > $proll) {
+                $pattack = $player['skill']+$player['weapon']+$fhroll;
+                $pemoji = "~".$pemoji."~ :fireworks:".diceemoji($fhroll);
+            } else {
+                $pemoji .= " ~:fireworks:".diceemoji($fhroll)."~";
+            }
+            if ($round >= 3) {
+                $fasthands = false;
+            }
+        }
+
         if ($critsfor != 'nobody') {
             $croll = rand(1,6);
             $cemoji = diceemoji($croll);
