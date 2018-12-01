@@ -399,17 +399,17 @@ function senddirmsg($message, $user = false)
     if (!$user) {
         $user = $_POST['user_id'];
     }
-    return sendmsg($message, true, ':green_book:', '@'.$user);
+    return sendmsg($message, true, ':open_book:', '@'.$user);
 }
 
 // Send a quick and basic message to slack
-function sendqmsg($message, $icon = ':green_book:')
+function sendqmsg($message, $icon = ':open_book:')
 {
     return sendmsg($message, true, $icon);
 }
 
 // Send an image to slack
-function sendimgmsg($message, $imgurl, $icon = ':green_book:')
+function sendimgmsg($message, $imgurl, $icon = ':open_book:')
 {
     $attachments = array([
             'image_url'    => $imgurl

@@ -238,7 +238,7 @@ function _cmd_stat_adjust($cmd, &$player)
     } elseif ($cmd[0] == 'skill') {
         $icon = ':juggling:';
     } else {
-        $icon = ':green_book:';
+        $icon = ':open_book:';
     }
     sendqmsg($msg,$icon);
 }
@@ -697,7 +697,7 @@ function _cmd_echo($cmd, &$player)
     }
 
     // Turn the params back in to one string
-    sendqmsg($cmd[1], ':green_book:');
+    sendqmsg($cmd[1], ':open_book:');
 }
 
 //// !randpage <page 1> [page 2] [page 3] [...]
