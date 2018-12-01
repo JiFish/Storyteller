@@ -44,6 +44,8 @@ function register_commands($gamebook)
     register_command('debugset',    '_cmd_debugset',['s','s','os']);
     register_command('spellbook',   '_cmd_spellbook',['osl']);
     register_command('cast',        '_cmd_cast',['spell','oms','on','on']);
+    register_command('macro',       '_cmd_macro',['n']);
+    register_command('m',           '_cmd_macro',['n']);
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
 
@@ -782,6 +784,18 @@ function _cmd_easteregg($cmd, &$player)
 {
     $eggs = file('resources/easter_eggs.txt');
     $fullcmd = trim($eggs[array_rand($eggs)]);
+
+    $cmdlist = explode(";",$fullcmd);
+    for ($k = count($cmdlist)-1; $k >= 0; $k--) {
+        addcommand($cmdlist[$k]);
+    }
+}
+
+//// !macro - Run macro from macro.txt
+function _cmd_macro($cmd, &$player)
+{
+    $macros = file('macros.txt');
+    $fullcmd = trim($macros[$cmd[1]]);
 
     $cmdlist = explode(";",$fullcmd);
     for ($k = count($cmdlist)-1; $k >= 0; $k--) {
