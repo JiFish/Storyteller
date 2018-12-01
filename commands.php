@@ -627,13 +627,13 @@ function _cmd_vs($cmd, &$player)
     $out = "";
     $round = 1;
     while ($mstam > 0 && $m2stam > 0) {
-        $mroll = rand(1,6);
-        $m2roll = rand(1,6);
-        $mattack = $mskill+$mroll;
-        $m2attack = $m2skill+$m2roll;
+        $mroll = rand(1,6); $mroll2 = rand(1,6);
+        $m2roll = rand(1,6); $m2roll2 = rand(1,6);
+        $mattack = $mskill+$mroll+$mroll2;
+        $m2attack = $m2skill+$m2roll+$m2roll2;
 
-        $memoji = diceemoji($mroll);
-        $m2emoji = diceemoji($m2roll);
+        $memoji = diceemoji($mroll).diceemoji($mroll2);
+        $m2emoji = diceemoji($m2roll).diceemoji($m2roll2);
 
         if ($m2attack > $mattack) {
             $out .= "_$m2 hit $m. (_ $m2emoji _ $m2attack vs _ $memoji _ $mattack)_\n";

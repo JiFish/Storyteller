@@ -23,22 +23,23 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
     $round = 0;
     while ($player['stam'] > 0 && $mstam > 0) {
         $round++;
-        $mroll = rand(1,6);
-        $proll = rand(1,6);
-        $memoji = diceemoji($mroll);
-        $pemoji = diceemoji($proll);
+        $mroll = rand(1,6); $mroll2 = rand(1,6);
+        $proll = rand(1,6); $proll2 = rand(1,6);
+        $memoji = diceemoji($mroll).diceemoji($mroll2);
+        $pemoji = diceemoji($proll).diceemoji($proll2);
 
-        $mattack = $mskill+$mroll;
-        $pattack = $player['skill']+$player['weapon']+$proll;
+        $mattack = $mskill+$mroll+$mroll2;
+        $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
 
         // Fast hands gives 1 extra dice, drop lowest for attack power
         if ($fasthands) {
-            $fhroll = rand(1,6);
-            if ($fhroll > $proll) {
+            $fhroll  = rand(1,6);
+            $fhroll2 = rand(1,6);
+            if ($fhroll+$fhroll2 > $proll+$proll2) {
                 $pattack = $player['skill']+$player['weapon']+$fhroll;
-                $pemoji = "~".$pemoji."~ :fireworks:".diceemoji($fhroll);
+                $pemoji = "~".$pemoji."~ :fireworks:".diceemoji($fhroll).diceemoji($fhroll2);
             } else {
-                $pemoji .= " ~:fireworks:".diceemoji($fhroll)."~";
+                $pemoji .= " ~:fireworks:".diceemoji($fhroll).diceemoji($fhroll2)."~";
             }
             if ($round >= 3) {
                 $fasthands = false;
@@ -93,13 +94,13 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
 
         // Monster 2 attack
         if ($m2) {
-            $mroll = rand(1,6);
-            $proll = rand(1,6);
-            $mattack = $mskill2+$mroll;
-            $pattack = $player['skill']+$player['weapon']+$proll;
+            $mroll = rand(1,6); $mroll2 = rand(1,6);
+            $proll = rand(1,6); $proll2 = rand(1,6);
+            $mattack = $mskill2+$mroll+$mroll2;
+            $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
 
-            $memoji = diceemoji($mroll);
-            $pemoji = diceemoji($proll);
+            $memoji = diceemoji($mroll).diceemoji($mroll2);
+            $pemoji = diceemoji($proll).diceemoji($proll2);
 
             if ($pattack > $mattack) {
                 $out .= "_You block $m2's attack. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
@@ -170,13 +171,13 @@ function run_single_attack(&$player, $mname, $mskill, $mstam, $mdamage = 2, $pda
     // Apply temp bonuses, if any
     apply_temp_stats($player);
 
-    $mroll = rand(1,6);
-    $proll = rand(1,6);
-    $mattack = $mskill+$mroll;
-    $pattack = $player['skill']+$player['weapon']+$proll;
+    $mroll = rand(1,6); $mroll2 = rand(1,6);
+    $proll = rand(1,6); $proll2 = rand(1,6);
+    $mattack = $mskill+$mroll+$mroll2;
+    $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
 
-    $memoji = diceemoji($mroll);
-    $pemoji = diceemoji($proll);
+    $memoji = diceemoji($mroll).diceemoji($mroll2);
+    $pemoji = diceemoji($proll).diceemoji($proll2);
 
     if ($pattack > $mattack) {
         $out = "_You hit $mname. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
