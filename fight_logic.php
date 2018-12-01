@@ -1,6 +1,9 @@
 <?php
 
 function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0) {
+    // Apply temp bonuses, if any
+    apply_temp_stats($player);
+
     // Process maxrounds special cases
     $stop_when_hit_you = false;
     $stop_when_hit_them = false;
@@ -141,6 +144,54 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
         }
         $out .= "_($m's remaining stamina: $mstam. Your remaining stamina: ".$player['stam'].")_";
     }
-    
+
+    // Remove temp bonuses, if any and clear temp bonus array
+    unapply_temp_stats($player);
+
+    return $out;
+}
+
+function run_single_attack(&$player, $mname, $mskill, $mstam, $mdamage = 2, $pdamage = 2)
+{
+    // Apply temp bonuses, if any
+    apply_temp_stats($player);
+
+    $mroll = rand(1,6);
+    $proll = rand(1,6);
+    $mattack = $mskill+$mroll;
+    $pattack = $player['skill']+$player['weapon']+$proll;
+
+    $memoji = diceemoji($mroll);
+    $pemoji = diceemoji($proll);
+
+    if ($pattack > $mattack) {
+        $out = "_You hit $mname. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+        if ($pdamage > 0) {
+            $mstam -= $pdamage;
+            if ($mstam > 0) {
+                $out .= "_($mname's remaining stamina: $mstam)_";
+            } else {
+                $out .= "_*You have defeated $mname!*_\n";
+            }
+        }
+    }
+    else if ($pattack < $mattack) {
+        $out = "_$mname hits you! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+        if ($mdamage > 0) {
+            $player['stam'] -= $mdamage;
+            if ($player['stam'] > 0) {
+                $out .= "_(Your remaining stamina: ".$player['stam'].")_";
+            } else {
+                $out .= "_*$mname has defeated you!*_\n";
+            }
+        }
+    }
+    else {
+        $out = "_You avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+    }
+
+    // Remove temp bonuses, if any and clear temp bonus array
+    unapply_temp_stats($player);
+
     return $out;
 }

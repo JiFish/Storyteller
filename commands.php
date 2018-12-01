@@ -167,7 +167,12 @@ function _cmd_stat_adjust($cmd, &$player)
     if (strtolower($cmd[1]) == "max") {
         $statref = &$player['max'][$cmd[0]];
         $max = 999;
-        $statname = 'maximum '.$statname;
+        $statname = "Maximum $statname";
+    } elseif (strtolower($cmd[1]) == "temp") {
+        $player['temp'][$cmd[0]] = 0;
+        $statref = &$player['temp'][$cmd[0]];
+        $max = 999;
+        $statname = "Temp $statname Bonus";
     } elseif (!$cmd[1]) {
         $statref = &$player[$cmd[0]];
         $max = $player['max'][$cmd[0]];
@@ -186,8 +191,8 @@ function _cmd_stat_adjust($cmd, &$player)
     } else if ($val[0] == "-") {
         $val = substr($val,1);
         $statref -= (int)$val;
-        // Allow negative weapon bonuses, but others have a min 0.
-        if ($statref < 0 && $cmd[0] != 'weapon') {
+        // Allow negative weapon bonuses and temp values, but others have a min 0.
+        if ($statref < 0 && $cmd[0] != 'weapon' && $cmd[1] != 'temp') {
             $statref = 0;
         }
         $msg = "*Subtracted $val from $statname, now $statref.*";
@@ -205,6 +210,11 @@ function _cmd_stat_adjust($cmd, &$player)
         ($player[$cmd[0]] > $statref))
     {
         $player[$cmd[0]] = $statref;
+    }
+
+    // Extra message when using temp stat adjustment
+    if (strtolower($cmd[1]) == "temp") {
+        $msg .= " _(This will reset after the next fight or test.)_";
     }
 
     if ($oldval <= $statref && strtolower($cmd[1]) == "max") {
@@ -417,6 +427,9 @@ function _cmd_test($cmd, &$player)
         return;
     }
 
+    // Apply temp bonuses, if any
+    apply_temp_stats($player);
+
     // Setup outcome pages to read if provided
     if (isset($cmd[2])) {
         $success_page = "!".$cmd[2];
@@ -471,6 +484,9 @@ function _cmd_test($cmd, &$player)
             addcommand($fail_page);
         }
     }
+
+    // Remove temp bonuses, if any and clear temp bonus array
+    unapply_temp_stats($player);
 }
 
 //// !newgame (roll new character)
@@ -661,38 +677,15 @@ function _cmd_fighttwo($cmd, &$player)
 //// !attack <skill>
 function _cmd_attack($cmd, &$player)
 {
+
     if (isset($cmd[2])) {
         $dmg = $cmd[2];
     } else {
         $dmg = 0;
     }
 
-    $mskill = $cmd[1];
-    $mroll = rand(1,6);
-    $proll = rand(1,6);
-    $mattack = $mskill+$mroll;
-    $pattack = $player['skill']+$player['weapon']+$proll;
+    $out = run_single_attack($player, 'Opponent', $cmd[1], 999, $dmg, 0);
 
-    $memoji = diceemoji($mroll);
-    $pemoji = diceemoji($proll);
-
-    if ($pattack > $mattack) {
-        $out = "_You hit The Opponent. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
-    }
-    else if ($pattack < $mattack) {
-        $out = "_The Opponent hits you! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
-        if ($dmg > 0) {
-            $player['stam'] -= $dmg;
-            if ($player['stam'] > 0) {
-                $out .= "_(Remaining stamina: ".$player['stam'].")_";
-            } else {
-                $out .= "_*The Opponent has defeated you!*_\n";
-            }
-        }
-    }
-    else {
-        $out = "_You avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
-    }
     sendqmsg($out,":crossed_swords:");
 }
 

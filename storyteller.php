@@ -496,3 +496,22 @@ function make_seed()
   list($usec, $sec) = explode(' ', microtime());
   return (int)($sec + $usec * 1000000);
 }
+
+function apply_temp_stats(&$player)
+{
+    foreach ($player['temp'] as $k => $v) {
+        if (array_key_exists($k,$player)) {
+            $player[$k] += $v;
+        }
+    }
+}
+
+function unapply_temp_stats(&$player)
+{
+    foreach ($player['temp'] as $k => $v) {
+        if (array_key_exists($k,$player)) {
+            $player[$k] -= $v;
+        }
+    }
+    $player['temp'] = array();
+}
