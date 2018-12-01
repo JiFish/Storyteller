@@ -209,22 +209,23 @@ function register_command($name, $function, $args = [])
 // wofm-strict: As above, with no starting gold.
 // rtfm: Return to Firetop Mountain
 // rtfm-strict: As above, with no starting provisions.
+// loz: Legend of Zagor
 function getbook()
 {
     require("book.php");
-    
-    if (!isset($gamebook)) {
+
+    if (!defined("BOOK_TYPE")) {
         return 'none';
     }
 
     $supported_books = array(
         'none','wofm','wofm-strict','rtfm','rtfm-strict','loz');
-        
-    if (!in_array($gamebook, $supported_books)) {
+
+    if (!in_array(BOOK_TYPE, $supported_books)) {
         return 'none';
     }
-    
-    return $gamebook;
+
+    return BOOK_TYPE;
 }
 
 
