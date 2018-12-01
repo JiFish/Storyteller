@@ -1,0 +1,213 @@
+<?php
+
+// Roll a new random character and return a 'player' array ready to be used elsewhere
+function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = null)
+{
+    // Seed random
+    if (!$seed) {
+        $seed = make_seed();
+    }
+    srand($seed);
+
+    // Roll dice!
+    for ($c = 0; $c < 4; $c++) {
+        $dice[$c] = rand(1,6);
+    }
+
+    // Get the type of book
+    $gamebook = getbook();
+
+    $p = array('skill' => $dice[0] + 6,             //1d6+6
+               'stam' => $dice[1] + $dice[2] + 12, //2d6+12
+               'luck' => $dice[3] + 6,              //1d6+6
+               'prov' => 10,
+               'gold' => 0,
+               'weapon' => 0,
+               'shield' => false,
+               'lastpage' => 1,
+               'stuff' => array('Sword (+0)','Leather Armor','Lantern'),
+               'gamebook' => $gamebook,
+               'creationdice' => $dice,
+               'temp' => array(),
+               'seed' => $seed);
+
+    // Set maximums
+    // The game won't (normally) allow you to exceed your initial scores
+    $p['max']['skill']  = $p['skill'];
+    $p['max']['stam']   = $p['stam'];
+    $p['max']['luck']   = $p['luck'];
+    $p['max']['prov']   = 999;
+    $p['max']['gold']   = 999;
+    $p['max']['weapon'] = 999;
+
+    // Character Fluff - Gender, name, race etc.
+    if (!$gender || $gender == '?') {
+        $gender = (rand(0,1)?'Male':'Female');
+        if (rand(0,99) == 0) {
+            $gender = array('Agender','Androgynous','Gender neutral', 'Genderfluid',
+                            'Genderless','Non-binary','Transgender')[rand(0,6)];
+        }
+    } elseif ($gender == 'm' || $gender == 'M') {
+        $gender = 'Male';
+    } elseif ($gender == 'f' || $gender == 'F') {
+        $gender = 'Female';
+    }
+    $p['gender'] = ucfirst(strtolower($gender));
+    if (!$name || $name == '?') {
+        $names = file($gender=='Male'?'resources/male_names.txt':'resources/female_names.txt');
+        $p['name'] = trim($names[array_rand($names)]);
+    } else {
+        $p['name'] = ucfirst($name);
+    }
+    if (!$adjective || $adjective == '?') {
+        $adjectives = file('resources/adjectives.txt');
+        $p['adjective'] = ucfirst(trim($adjectives[array_rand($adjectives)]));
+    } else {
+        $p['adjective'] = ucfirst($adjective);
+    }
+
+    // Race, Gender and emoji are linked
+    // Note this array should match with the emoji arrays below
+    $races = array('Human','Human','Human','Elf','Djinnin','Catling','Dwarf');
+    // Determine race
+    if (in_array(ucfirst(strtolower($race)),$races)) {
+        $keys = array_keys($races, ucfirst(strtolower($race)));
+        $selection = $keys[array_rand($keys)];
+        $p['race'] = ucfirst(strtolower($race));
+    } elseif (!$race || $race == '?') {
+        $selection = array_rand($races);
+        $p['race'] = $races[$selection];
+    } else {
+        $selection = array_rand($races);
+        $p['race'] = ucfirst(strtolower($race));
+    }
+    // Determine emoji
+    if (!$emoji || $emoji == '?') {
+        $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:',':skin-tone-2:');
+        if ($gender == 'Male') {
+            $emojilist = array(':man:',':blond-haired-man:',':older_man:',':male_elf:',':male_genie:',':smirk_cat:',':bearded_person:');
+        } elseif ($gender == 'Female') {
+            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:',':female_elf:',':female_genie:',':smile_cat:',':bearded_person:');
+        } else {
+            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:',':elf:',':genie:',':smiley_cat:',':bearded_person:');
+        }
+        $p['emoji'] = $emojilist[$selection].$skintone[array_rand($skintone)];
+    } else {
+        $p['emoji'] = $emoji;
+    }
+
+    // End of bare character generation.
+
+    // Book customisations
+    if ($gamebook == 'wofm' || $gamebook == 'wofm-strict') {
+        // Random Potion
+        // The book rules actually give you a choice, but this is a bit more fun
+        $p['creationdice'][] = rand(1,6);
+        switch($p['creationdice'][4]) {
+            case 1: case 2:
+                $p['stuff'][] = 'Potion of Skill';
+                break;
+            case 3: case 4:
+                $p['stuff'][] = 'Potion of Strength';
+                break;
+            case 5: case 6:
+                $p['stuff'][] = 'Potion of Luck';
+                // If the potion of luck is chosen, the player get 1 bonus luck
+                $p['luck']++;
+                $p['max']['luck']++;
+                break;
+        }
+        if ($gamebook == 'wofm-strict') {
+            $p['gamebook'] = 'wofm';
+        } else {
+            // Random Gold (Note this is a customisation from the book's rules)
+            $p['creationdice'][] = rand(1,6);
+            $p['gold'] = $p['creationdice'][5]-1; //1d6-1
+        }
+    } elseif ($gamebook == 'rtfm' || $gamebook == 'rtfm-strict') {
+        $p['goldzagors'] = 0;
+        $p['max']['goldzagors'] = 999;
+        if ($gamebook == 'rtfm-strict') {
+            $p['gamebook'] = 'rtfm';
+        } else {
+            // Random Provisions (Note this is a customisation from the book's rules)
+            $p['creationdice'][] = rand(1,6);
+            $p['prov'] = $p['creationdice'][4]-1; // 1d6-1
+        }
+    } elseif ($gamebook == 'loz') {
+        $p['prov'] = 12;
+        $p['max']['prov'] = 12;
+        $p['talismans'] = 0;
+        $p['max']['talismans'] = 999;
+        $p['daggers'] = 0;
+        $p['max']['daggers'] = 999;
+
+        $p['stuff'] = array(
+            'Knife (+0, -1 dmg)',
+            'Leather Armor',
+            'Small Shield',
+            );
+
+        // Gold dice
+        $p['gold'] = 2;
+        for ($c = 0; $c < 3; $c++) {
+            $d = rand(1,6);
+            $p['creationdice'][] = $d;
+            $p['gold'] += $d;
+        }
+
+        // Reuse adjective as player class
+        // Miner is the old Dwarf class (to separate from races above)
+        $classes = ['Barbarian','Warrior','Miner','Wizard'];
+        if (in_array(ucfirst(strtolower($adjective)),$classes)) {
+            $p['adjective'] = ucfirst(strtolower($adjective));
+        } else {
+            $p['adjective'] = $classes[rand(0,3)];
+        }
+        switch ($p['adjective']) {
+            case 'Barbarian':
+                $p['magic'] = 1;
+                $p['advantages'] = "Can't be surprised.";
+                $p['disadvantages'] = "Can't wear plate mail. No bonus to attack strength with chain mail. Subtract 2 from attack strength with crossbow.";
+                $p['stuff'][] = "Axe (+0)";
+                break;
+            case 'Warrior':
+                $p['magic'] = 3;
+                $p['advantages'] = "Can use any weapons.";
+                $p['disadvantages'] = "None.";
+                $p['stuff'][] = "Sword (+0)";
+                break;
+            case 'Miner':
+                $p['magic'] = 2;
+                $p['advantages'] = "Add 2 to attack strength vs. stone monsters.";
+                $p['disadvantages'] = "Can't use longbow or two-handed weapons.";
+                $p['stuff'][] = "Axe (+0)";
+                $p['gold'] += 5;
+                break;
+            case 'Wizard':
+                $p['magic'] = 7;
+                $p['advantages'] = "Add 2 to skill when testing spot skill.";
+                $p['disadvantages'] = "Can't use metal armour, bow or two-handed weapons.";
+                $p['stuff'][] = "Wooden Staff (+0)";
+                break;
+        }
+        $p['max']['magic'] = $p['magic'];
+        // Special emoji for human wizards
+        if ((!$emoji || $emoji == '?') && $p['adjective'] == 'Wizard' && $p['race'] == 'Human') {
+                if ($p['gender'] == 'Male') {
+                    $p['emoji'] = ':male_mage:';
+                } elseif ($p['gender'] == 'Female') {
+                    $p['emoji'] = ':female_mage:';
+                } else {
+                    $p['emoji'] = ':mage:';
+                }
+                $p['emoji'] .= $skintone[array_rand($skintone)];
+        }
+    } else {
+        $p['creationdice'][] = rand(1,6);
+        $p['magic'] = max(0,$p['creationdice'][4]-3); // 1d6-3
+        $p['max']['magic'] = $p['magic'];
+    }
+
+    return $p;
+}

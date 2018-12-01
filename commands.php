@@ -476,6 +476,8 @@ function _cmd_test($cmd, &$player)
 //// !newgame (roll new character)
 function _cmd_newgame($cmd, &$player)
 {
+    require('roll_character.php');
+
     $cmd = array_pad($cmd, 6, '?');
     $player = roll_character($cmd[1],$cmd[2],$cmd[3],$cmd[4],$cmd[5]);
     send_charsheet($player, "_*NEW CHARACTER!*_ ".implode(' ',array_map("diceemoji",$player['creationdice'])));
