@@ -44,7 +44,7 @@ function register_commands($gamebook)
     register_command('debugset',    '_cmd_debugset',['s','s','os']);
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
-    
+
     // Stats commands
     $stats = array('skill', 'stam', 'stamina', 'luck', 'prov',
                    'provisons', 'gold', 'weapon', 'weaponbonus', 'bonus');
@@ -538,7 +538,7 @@ function _cmd_critfight($cmd, &$player)
     $mskill = $cmd[2];
     $critsfor = ($cmd[3]?$cmd[3]:'me');
     $critchance = ($cmd[4]?$cmd[4]:2);
-    
+
     if (!in_array($critsfor,['both','me'])) {
         $critsfor = 'me';
     }
@@ -570,7 +570,7 @@ function _cmd_vs($cmd, &$player)
     if (!is_numeric($cmd[2]) || !is_numeric($cmd[3]) || !is_numeric($cmd[5]) || !is_numeric($cmd[6])) {
         return;
     }
-    
+
     $m = $cmd[1];
     $mskill = $cmd[2];
     $mstam = $cmd[3];
@@ -642,7 +642,7 @@ function _cmd_fighttwo($cmd, &$player)
         $mskill2 = $mskill;
         $mstam2 = $mstam;
     }
-    
+
     // Differentiate monsters
     if ($m == $m2) {
         $m = "First ".$m;
@@ -742,7 +742,7 @@ function _cmd_shield($cmd, &$player)
     } else {
         $state = strtolower($cmd[1]);
     }
-    
+
     if ($state != 'on' && $state != 'off') {
         $state = ($player['shield']?'off':'on');
     }

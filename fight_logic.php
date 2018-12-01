@@ -15,7 +15,7 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
     if (!is_numeric($maxrounds)) {
         $maxrounds = 50;
     }
-    
+
     $out = "";
     $round = 0;
     while ($player['stam'] > 0 && $mstam > 0) {
@@ -24,7 +24,7 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
         $proll = rand(1,6);
         $memoji = diceemoji($mroll);
         $pemoji = diceemoji($proll);
-        
+
         $mattack = $mskill+$mroll;
         $pattack = $player['skill']+$player['weapon']+$proll;
         
@@ -73,7 +73,7 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
         else {
             $out .= "_You avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
         }
-        
+
         // Monster 2 attack
         if ($m2) {
             $mroll = rand(1,6);
@@ -129,7 +129,7 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
             break;
         }
     }
-    
+
     if ($player['stam'] < 1) {
         $out .= "_*$m has defeated you!*_\n";
     } elseif ($mstam < 1) {

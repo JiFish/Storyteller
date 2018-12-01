@@ -56,7 +56,7 @@ die();
 function processcommand($command, &$player)
 {
     global $commandslist, $commandsargs;
-    
+
     // If we have a trigger word right at the start, strip it now
     if (stripos($command,$_POST['trigger_word']) === 0) {
         $command = substr($command,strlen($_POST['trigger_word']));
@@ -133,7 +133,7 @@ function pre_processes_magic($command, &$player)
         },
         $command
     );
-    
+
     return $command;
 }
 
@@ -178,11 +178,11 @@ function advanced_command_split($command,$def)
     }
     $regex .= '\s*$/';
     $matches = array();
-    
+
     if (!preg_match($regex, $command, $matches)) {
         return false;
     }
-    
+
     array_shift($matches);
     $matches = array_map('trim', $matches);
     print_r($matches);
@@ -403,7 +403,7 @@ function getbook()
     if (!isset($gamebook)) {
         return 'none';
     }
-    
+
     $supported_books = array(
         'none','wofm','wofm-strict','rtfm','rtfm-strict','loz');
         
@@ -551,7 +551,7 @@ function send_stuff($player)
         natcasesort($s);
         $s = array_map("ucfirst",$s);
     }
-    
+
     if ($player['shield']) {
         $s[] .= '*Shield* _(Equipped)_';
     }
@@ -643,7 +643,7 @@ function format_story($page,$text) {
     $story = preg_replace('/\(?turn(ing)? to [0-9]+\)?/i', '*${0}*', $text);
     $story = preg_replace('/Your (adventure|quest) (is over|ends here)\.?/i', '*${0}*', $story);
     $story = preg_replace('/((Add|Subject|Deduct|Regain|Gain|Lose) )?([1-9] (points? )?from your (SKILL|LUCK|STAMINA)|([1-9] )?(SKILL|LUCK|STAMINA) points?|your (SKILL|LUCK|STAMINA))/', '*${0}*', $story);
-    
+
     // Wrapping and formatting
     $story = str_replace("\n","\n\n",$story);
     $story = wordwrap($story,100);
@@ -674,7 +674,7 @@ function format_story($page,$text) {
         }
     }
     $story = "> ~ *$page* ~\n".implode("\n",$story);
-    
+
     return $story;
 }
 
