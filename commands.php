@@ -20,8 +20,8 @@ function register_commands($gamebook)
     register_command('use',         '_cmd_drop',['l']);
     register_command('roll',        '_cmd_roll',['on']);
     register_command('test',        '_cmd_test',['s','on','on']);
-    register_command('ng',          '_cmd_newgame',['osl','osl','osl','osl','osl']);
-    register_command('newgame',     '_cmd_newgame',['osl','osl','osl','osl','osl']);
+    register_command('ng',          '_cmd_newgame',['osl','osl','osl','osl','osl','on']);
+    register_command('newgame',     '_cmd_newgame',['osl','osl','osl','osl','osl','on']);
     register_command('info',        '_cmd_info');
     register_command('status',      '_cmd_info');
     register_command('stats',       '_cmd_stats');
@@ -499,7 +499,7 @@ function _cmd_newgame($cmd, &$player)
     require('roll_character.php');
 
     $cmd = array_pad($cmd, 6, '?');
-    $player = roll_character($cmd[1],$cmd[2],$cmd[3],$cmd[4],$cmd[5]);
+    $player = roll_character($cmd[1],$cmd[2],$cmd[3],$cmd[4],$cmd[5],$cmd[6]);
     send_charsheet($player, "_*NEW CHARACTER!*_ ".implode(' ',array_map("diceemoji",$player['creationdice'])));
     send_stuff($player);
 }
