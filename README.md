@@ -74,7 +74,6 @@ Includes instant kills on double attack dice.
 - Creature of Havoc _(Designed for this book.)_
 
 #### rtfm
-Designed for _Return to Firetop Mountain_.
 - Return to Firetop Mountain _(Designed for this book.)_
 
 #### loz
