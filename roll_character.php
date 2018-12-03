@@ -124,7 +124,41 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
             $p['creationdice'][] = rand(1,6);
             $p['gold'] = $p['creationdice'][5]-1; //1d6-1
         }
-    } elseif ($gamebook == 'rtfm' || $gamebook == 'rtfm-strict') {
+    }  elseif ($gamebook == 'dotd') {
+        // Make human
+        if ($gender == 'Male') {
+            $emojilist = array(':man:',':blond-haired-man:',':older_man:');
+        } elseif ($gender == 'Female') {
+            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
+        } else {
+            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
+        }
+        $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
+        $p['race'] = array('Sailor','Pirate','Seafarer','Mariner','Seaswab','Deck Hand','Navigator')[rand(0,6)];
+        // Remove lantern
+        unset($p['stuff'][2]);
+    }  elseif ($gamebook == 'toc') {
+        // No starting anything!
+        $p['prov'] = 0;
+        $p['stuff'] = array();
+    }  elseif ($gamebook == 'coh') {
+        // No starting anything!
+        $p['prov'] = 0;
+        $p['stuff'] = array();
+        // Change fluff
+        $p['race'] = 'Beast';
+        $p['adjective'] = 'Creature of Havoc';
+        $p['realname'] = $p['name'];
+        $p['name'] = '';
+        for ($c = 0; $c < strlen($p['realname']); $c++) {
+            if ($c == 0 || rand(0,3) == 0) {
+                $p['name'] .= $p['realname'][$c];
+            } else {
+                $p['name'] .= '?';
+            }
+        }
+        $p['emoji'] = ':japanese_ogre:';
+    }  elseif ($gamebook == 'rtfm' || $gamebook == 'rtfm-strict') {
         $p['goldzagors'] = 0;
         $p['max']['goldzagors'] = 999;
         if ($gamebook == 'rtfm-strict') {
@@ -203,7 +237,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                 }
                 $p['emoji'] .= $skintone[array_rand($skintone)];
         }
-    } else {
+    } elseif ($gamebook == 'custom') {
         $p['creationdice'][] = rand(1,6);
         $p['magic'] = max(0,$p['creationdice'][4]-3); // 1d6-3
         $p['max']['magic'] = $p['magic'];

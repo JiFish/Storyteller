@@ -1,8 +1,8 @@
 # Storyteller
-## A Slack Bot for playing Fighting Fantasy Gamebooks (v1.01)
+## A Slack Bot for playing Fighting Fantasy Gamebooks (v1.2)
 
 ## Introduction
-Storyteller is a bot for use with Slack which helps a group of people play through a Fighting Fantasy gamebook co-operatively. It was designed for _Warlock on Firetop Mountain_, but should work fine with any other book using compatible rules.
+Storyteller is a bot for use with Slack which helps a group of people play through a Fighting Fantasy gamebook co-operatively. It was designed for _Warlock on Firetop Mountain_, and has been expanded for a few other books. It should work OK with any choose-your-own adventure book, provided you don't mind a more manual experience.
 
 Storyteller adds commands to read the story, manage your character and roll dice for fights and other challenges. It will assist you in playing the game but does not strictly enforce rules - replicating the experience of playing with a real book and dice.
 
@@ -41,10 +41,47 @@ Importing from an official source is painful (see the next section.) So I am rel
 This link will be removed hastily if anyone ever objects. Don't be a jerk. If use this, make sure you own the books. [WoFM Amazon link](https://www.amazon.co.uk/Fighting-Fantasy-Warlock-Firetop-Mountain/dp/1407181300/), [RtFM Amazon link](https://www.amazon.co.uk/Return-Firetop-Mountain-Fighting-Fantasy/dp/184046481X/)
 
 #### Option 2: Import a book you own
-Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook format. If they were, I'd provide a script to automate extraction. Since they aren't your only option is to scan, OCR and input the text yourself from a paper book. If you're mad enough to attempt this, see `book.php` for details.
+Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook format. If they were, I'd provide a script to automate extraction. Since they aren't your only option is to scan, OCR and input the text yourself from a paper book. If you're mad enough to attempt this, see `book.php` for an example.
 
 #### Option 3: Write your own adventure
 Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
+
+### 2a. Set the booktype
+Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules.
+
+##### wofm
+Designed for _Warlock on Firetop Mountain_. Also used as the rules for the default sample adventure _Janitor of Firetop Mountain_. It will also work with:
+- Forest of Doom
+- City of Thieves
+- Deathtrap Dungeon
+- Island of the Lizard King
+- Caverns of the Snow Witch
+- Talisman of Death
+- Masks of Mayhem
+
+##### dotd
+Designed for _Demons of the Deep_.
+
+##### toc
+Designed for _Trail of Champions_. This book starts you with no inventory or provisions. This is a good choice for books not listed here. It will also work with:
+- Crypts of the Sorcerer
+- Battleblade Warrior
+
+##### coh
+Designed for _Creature of Havoc_. Includes instant kills on double attack dice.
+
+##### rtfm
+Designed for _Return to Firetop Mountain_.
+
+##### loz
+Designed for _Legend of Zagor_.
+
+##### none
+No special generation rules. This is also the fall-back is the booktype is not recognised. Works with:
+- Stealer of Souls
+
+##### custom
+Intended for use with custom adventures. Much like _none_, but with a chance of generating a magic-using character like _loz_.
 
 ### 3. Get the code online
 - Upload the installation to your PHP enabled web-server. No database is needed. The uploaded directory must be writeable.
@@ -56,11 +93,10 @@ Type `!newgame` in the channel you chose for the webhook to get started. Type `!
 
 ## Usage Tips and Hints
 - Remember, you have to enforce the rules!
+- `!help` to see some basic commands. Or see commands.md or commands.html for the full list
 - If the book asks you to do something there isn't a command for, you can always roll dice with `!roll` and apply any effects manually.
-- To easily restore a stat to max, just set it to 99 and it'll get set to the highest possible value.
 - `!use` doesn't do anything on it's own. You must still apply the item's effects manually. e.g. `!use Potion of Skill;!skill 99`
 - If the book asks you to do something after a certain number of rounds in a fight, you can make the fight end early by putting the number of rounds end the end of the command. e.g. To stop after 3 rounds: `!fight Squirrel 5 5 3`
-- If the book says you get a bonus to your attack for just one fight, you can apply it to your weapon bonus and remove it at the end. e.g. `!weapon +1;!fight Squirrel 5 5;!weapon -1`
 
 ## Technical Information
 **Do you accept bug reports?**
@@ -79,6 +115,6 @@ Gladly.
 
 There isn't any. This was pretty much a single use script that I've genericised just enough that it can be installed elsewhere. I've tried to clean the code up enough to allow easy hackablity, but drastic expansions will likely require a refactor.
 
-**What about support for other chat software (Discord, IRC etc.) or other books/systems?**
+**What about support for other chat software (Discord, IRC etc.)?**
 
-All these would be nice. But I'll have to refactor the code before considering them.
+This would be nice. But the code would need a refactor.

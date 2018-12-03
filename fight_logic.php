@@ -31,6 +31,13 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
         $mattack = $mskill+$mroll+$mroll2;
         $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
 
+        // Special case for Creature of Havok instant kills
+        if ($player['gamebook'] == 'coh' && $proll == $proll2) {
+            $out .= "_*Instant Kill*_ $pemoji\n";
+            $mstam = 0;
+            break;
+        }
+
         // Fast hands gives 1 extra dice, drop lowest for attack power
         if ($fasthands) {
             $fhroll  = rand(1,6);
