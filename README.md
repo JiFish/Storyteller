@@ -46,10 +46,10 @@ Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook 
 #### Option 3: Write your own adventure
 Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
 
-### 2a. Set the booktype
+### 3. Set the booktype
 Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules.
 
-##### wofm
+#### wofm
 Designed for _Warlock on Firetop Mountain_. Also used as the rules for the default sample adventure _Janitor of Firetop Mountain_. It will also work with:
 - Forest of Doom
 - City of Thieves
@@ -59,36 +59,36 @@ Designed for _Warlock on Firetop Mountain_. Also used as the rules for the defau
 - Talisman of Death
 - Masks of Mayhem
 
-##### dotd
+#### dotd
 Designed for _Demons of the Deep_.
 
-##### toc
+#### toc
 Designed for _Trail of Champions_. This book starts you with no inventory or provisions. This is a good choice for books not listed here. It will also work with:
 - Crypts of the Sorcerer
 - Battleblade Warrior
 
-##### coh
+#### coh
 Designed for _Creature of Havoc_. Includes instant kills on double attack dice.
 
-##### rtfm
+#### rtfm
 Designed for _Return to Firetop Mountain_.
 
-##### loz
+#### loz
 Designed for _Legend of Zagor_.
 
-##### none
+#### none
 No special generation rules. This is also the fall-back is the booktype is not recognised. Works with:
 - Stealer of Souls
 
-##### custom
+#### custom
 Intended for use with custom adventures. Much like _none_, but with a chance of generating a magic-using character like _loz_.
 
-### 3. Get the code online
+### 4. Get the code online
 - Upload the installation to your PHP enabled web-server. No database is needed. The uploaded directory must be writeable.
 - Make sure it's location matches what you step up for the outgoing hook in step 1. If it's different go back and alter the hook.
 - If you are _not_ using apache, you must replicate the rules in `.htaccess` to ensure the installation is secure.
 
-### 4. Ready to play!
+### 5. Ready to play!
 Type `!newgame` in the channel you chose for the webhook to get started. Type `!help` to see the basic commands or `!helpmore` for the complete list.
 
 ## Usage Tips and Hints
