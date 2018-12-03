@@ -50,7 +50,8 @@ Storyteller doesn't have to play the official books. Perhaps one of the best way
 Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules.
 
 #### wofm
-Designed for _Warlock on Firetop Mountain_. Also used as the rules for the default sample adventure _Janitor of Firetop Mountain_. It will also work with:
+- Warlock on Firetop Mountain _(Designed for this book.)_
+- Janitor of Firetop Mountain _(The short default example adventure.)_
 - Forest of Doom
 - City of Thieves
 - Deathtrap Dungeon
@@ -60,24 +61,27 @@ Designed for _Warlock on Firetop Mountain_. Also used as the rules for the defau
 - Masks of Mayhem
 
 #### dotd
-Designed for _Demons of the Deep_.
+- Demons of the Deep _(Designed for this book.)_
 
 #### toc
-Designed for _Trail of Champions_. This book starts you with no inventory or provisions. This is a good choice for books not listed here. It will also work with:
+This book starts you with no inventory or provisions. This is a good choice for books not listed here.
+- Trail of Champions _(Designed for this book.)_
 - Crypts of the Sorcerer
 - Battleblade Warrior
 
 #### coh
-Designed for _Creature of Havoc_. Includes instant kills on double attack dice.
+Includes instant kills on double attack dice.
+- Creature of Havoc _(Designed for this book.)_
 
 #### rtfm
 Designed for _Return to Firetop Mountain_.
+- Return to Firetop Mountain _(Designed for this book.)_
 
 #### loz
-Designed for _Legend of Zagor_.
+- Legend of Zagor _(Designed for this book.)_
 
 #### none
-No special generation rules. This is also the fall-back is the booktype is not recognised. Works with:
+No special generation rules. This is also the fall-back is the booktype is not recognised.
 - Stealer of Souls
 
 #### custom
