@@ -1,7 +1,5 @@
 <?php
 
-require('fight_logic.php');
-
 /// This is messy. But it was quick.
 function register_commands($gamebook)
 {
