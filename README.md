@@ -64,14 +64,21 @@ Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are 
 - Demons of the Deep _(Designed for this book.)_
 
 #### toc
-This book starts you with no inventory or provisions. This is a good choice for books not listed here.
-- Trail of Champions _(Designed for this book.)_
+This booktype starts you with no inventory or provisions. This is a good choice for books not listed here at all.
+- Trail of Champions
 - Crypts of the Sorcerer
 - Battleblade Warrior
 
 #### coh
-Includes instant kills on double attack dice.
+This booktype includes instant kills on double attack dice.
 - Creature of Havoc _(Designed for this book.)_
+
+#### poe
+- Portal of Evil _(Designed for this book.)_
+
+#### bvp
+This booktype starts you with no inventory or provisions and your stats all start at max 1. Stats are determined during the adventure.
+- Blackvein Prophecy _(Designed for this book.)_
 
 #### rtfm
 - Return to Firetop Mountain _(Designed for this book.)_

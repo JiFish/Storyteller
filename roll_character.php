@@ -141,6 +141,15 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         // No starting anything!
         $p['prov'] = 0;
         $p['stuff'] = array();
+    }  elseif ($gamebook == 'poe') {
+        $p['prov'] = 2;
+    }  elseif ($gamebook == 'bvp') {
+        $p['creationdice'] = array();
+        $p['stam'] = $p['max']['stam'] = 1;
+        $p['skill'] = $p['max']['skill'] = 1;
+        $p['luck'] = $p['max']['luck'] = 1;
+        $p['prov'] = 0;
+        $p['stuff'] = array();
     }  elseif ($gamebook == 'coh') {
         // No starting anything!
         $p['prov'] = 0;

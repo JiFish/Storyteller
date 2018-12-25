@@ -180,7 +180,7 @@ function getbook()
     }
 
     $supported_books = array(
-        'none','wofm','wofm-strict','dotd','toc','coh','rtfm','rtfm-strict','loz');
+        'none','wofm','wofm-strict','dotd','toc','coh','poe','bvp','rtfm','rtfm-strict','loz');
 
     if (!in_array(BOOK_TYPE, $supported_books)) {
         return 'none';
