@@ -69,6 +69,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     // Race, Gender and emoji are linked
     // Note this array should match with the emoji arrays below
     $races = array('Human','Human','Human','Elf','Djinnin','Catling','Dwarf');
+    $needsskintone = array(true,true,true,true,false,false,true);
     // Determine race
     if (in_array(ucfirst(strtolower($race)),$races)) {
         $keys = array_keys($races, ucfirst(strtolower($race)));
@@ -91,7 +92,10 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         } else {
             $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:',':elf:',':genie:',':smiley_cat:',':bearded_person:');
         }
-        $p['emoji'] = $emojilist[$selection].$skintone[array_rand($skintone)];
+        $p['emoji'] = $emojilist[$selection];
+        if ($needsskintone[$selection]) {
+            $p['emoji'] .= $skintone[array_rand($skintone)];
+        }
     } else {
         $p['emoji'] = $emoji;
     }

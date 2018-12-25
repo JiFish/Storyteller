@@ -8,3 +8,4 @@ define("SLACK_TOKEN","YOURTOKENHERE");
 define("BOOK_TYPE",'wofm');
 
 define("MAX_EXECUTIONS",30);
+define("DISCORD_MODE",false);

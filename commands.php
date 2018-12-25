@@ -224,9 +224,7 @@ function _cmd_stat_adjust($cmd, &$player)
         $icon = ':arrow_up:';
     } elseif ($oldval > $statref && strtolower($cmd[1]) == "max") {
         $icon = ':arrow_down:';
-    } elseif ($oldval <= $statref && $cmd[0] == 'stam') {
-        $icon = ':medical_symbol:';
-    } elseif ($oldval > $statref && $cmd[0] == 'stam') {
+    } elseif ($cmd[0] == 'stam') {
         $icon = ':face_with_head_bandage:';
     } elseif ($oldval <= $statref && $cmd[0] == 'luck') {
         $icon = ':four_leaf_clover:';

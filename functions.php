@@ -316,7 +316,7 @@ function send_charsheet($player, $text = "")
         $icon = $player['emoji'];
     }
 
-    sendmsg($text."\n*".$player['name']."* the ".$player['adjective']." _(".$player['race']." ".$player['gender'].")_",$attachments,$icon);
+    sendmsg($text.$player['name']."* the ".$player['adjective']." _(".$player['race']." ".$player['gender'].")_",$attachments,$icon);
 }
 
 // Send to slack a list of the player's stuff (inventory)
@@ -396,6 +396,10 @@ function format_story($page,$text) {
         }
     }
     $story = "> ~ *$page* ~\n".implode("\n",$story);
+
+    if (DISCORD_MODE) {
+        $story = str_replace('> ','',$story);
+    }
 
     return $story;
 }

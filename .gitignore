@@ -1,2 +1,5 @@
 # ignore the save
 save.txt
+
+# ignore images
+images/*
