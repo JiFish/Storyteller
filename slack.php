@@ -108,9 +108,9 @@ function discordize_emoji($e) {
         $lookup .= $e;
     }
     // Special cases, bleh
-    if ($emojis[1] == 'male_elf' || $emojis[1] == 'blond-haired-man') {
+    if ($emojis[1] == 'male_elf' || $emojis[1] == 'blond-haired-man' || $emojis[1] == 'male_mage') {
         $lookup .= html_entity_decode('&#x200D;&#x2642;');
-    } else if ($emojis[1] == 'female_elf' || $emojis[1] == 'blond-haired-woman') {
+    } else if ($emojis[1] == 'female_elf' || $emojis[1] == 'blond-haired-woman' || $emojis[1] == 'female_mage') {
         $lookup .= html_entity_decode('&#x200D;&#x2640;');
     }
     $lookup = "https://xn--i-7iq.ws/emoji-image/".urlencode($lookup).".png";//?format=emojione&ar=1x1";
