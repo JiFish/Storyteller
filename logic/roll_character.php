@@ -141,12 +141,34 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['race'] = array('Sailor','Pirate','Seafarer','Mariner','Seaswab','Deck Hand','Navigator')[rand(0,6)];
         // Remove lantern
         unset($p['stuff'][2]);
-    }  elseif ($gamebook == 'toc') {
+    }  elseif ($gamebook == 'hoh') {
+        // Make human
+        if ($gender == 'Male') {
+            $emojilist = array(':man:',':blond-haired-man:',':older_man:');
+        } elseif ($gender == 'Female') {
+            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
+        } else {
+            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
+        }
+        $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
+        $p['stuff'] = array();
+        $p['prov'] = 0;
+        $p['weapon'] = -3;
+        $p['creationdice'][] = rand(1,6);
+        $p['fear'] = 0;
+        $p['max']['fear'] = $p['creationdice'][4]+6; // 1d6+6
+        $p['race'] = array('Cowardly','Ordinary','Sceptical','Open-Minded','Believer','Enlightened')[$p['creationdice'][4]-1];
+    }  elseif ($gamebook == 'none') {
         // No starting anything!
         $p['prov'] = 0;
         $p['stuff'] = array();
     }  elseif ($gamebook == 'poe') {
         $p['prov'] = 2;
+    }  elseif ($gamebook == 'coc') {
+        $p['prov'] = 0;
+    }  elseif ($gamebook == 'ss') {
+        $p['prov'] = 0;
+        $p['stuff'] = array('Sword (+0)','Chainmail Armor');
     }  elseif ($gamebook == 'bvp') {
         $p['creationdice'] = array();
         $p['stam'] = $p['max']['stam'] = 1;
@@ -250,6 +272,9 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                 }
                 $p['emoji'] .= $skintone[array_rand($skintone)];
         }
+    } elseif ($gamebook == 'tot') {
+        //nothing to do
+        null;
     } elseif ($gamebook == 'custom') {
         $p['creationdice'][] = rand(1,6);
         $p['magic'] = max(0,$p['creationdice'][4]-3); // 1d6-3

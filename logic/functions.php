@@ -180,7 +180,7 @@ function getbook()
     }
 
     $supported_books = array(
-        'none','wofm','wofm-strict','dotd','toc','coh','poe','bvp','rtfm','rtfm-strict','loz');
+        'none','wofm','wofm-strict','dotd','toc','coh','poe','bvp','rtfm','rtfm-strict','loz','tot','hoh');
 
     if (!in_array(BOOK_TYPE, $supported_books)) {
         return 'none';
@@ -308,6 +308,15 @@ function send_charsheet($player, $text = "")
                 'short' => false
             ])
         );
+    }
+
+    if ($player['gamebook'] == 'hoh') {
+        $attachments[0]['fields'][4] = array (
+            'title' => 'Fear',
+            'value' => $player['fear']." / ".$player['max']['fear'],
+            'short' => true
+        );
+        unset($attachments[0]['fields'][5]);
     }
 
     if ($player['stam'] < 1) {

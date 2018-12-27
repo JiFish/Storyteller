@@ -56,6 +56,8 @@ function register_commands($gamebook)
         $stats = array_merge($stats,['goldzagors','gz']);
     } elseif ($gamebook == 'loz') {
         $stats = array_merge($stats,['magic','talismans','daggers']);
+    } elseif ($gamebook == 'hoh') {
+        $stats = array_merge($stats,['fear']);
     }
     foreach($stats as $s) {
         register_command($s, '_cmd_stat_adjust',['os','nm']);
@@ -227,6 +229,12 @@ function _cmd_stat_adjust($cmd, &$player)
         $msg .= " _(This will reset after the next fight or test.)_";
     }
 
+    // Extra test for max fear
+    if ($cmd[0] == 'fear' && $statref == $max) {
+        $msg .= "\n*You are frightened to death!*";
+        $player['stam'] = 0;
+    }
+
     if ($oldval <= $statref && strtolower($cmd[1]) == "max") {
         $icon = ':arrow_up:';
     } elseif ($oldval > $statref && strtolower($cmd[1]) == "max") {
@@ -245,9 +253,12 @@ function _cmd_stat_adjust($cmd, &$player)
         $icon = ':bread:';
     } elseif ($cmd[0] == 'skill') {
         $icon = ':juggling:';
+    } elseif ($cmd[0] == 'fear') {
+        $icon = ':scream:';
     } else {
         $icon = ':open_book:';
     }
+
     sendqmsg($msg,$icon);
 }
 
