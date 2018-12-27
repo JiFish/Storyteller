@@ -19,6 +19,7 @@ register_commands($player['gamebook']);
 // Note, some commands will queue other commands
 // Note $commandlist is referenced as a global variable
 $commandlist = explode(";",html_entity_decode($_POST['text']));
+$limittime = false;
 
 $executions = 0;
 while (sizeof($commandlist) > 0)

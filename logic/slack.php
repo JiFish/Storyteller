@@ -46,6 +46,14 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
         }
         return;
     }
+
+    // Respect any rate limit
+    global $limittime;
+    if (DISCORD_MODE && $limittime) {
+        time_sleep_until($limittime);
+        $limittime = false;
+    }
+
     $data['text'] = $message;
     if (is_array($attachments)) {
         $data['attachments'] = $attachments;
@@ -66,13 +74,39 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
             'Content-Length: ' . strlen($data_string))
         );
     //Execute CURL
-    $result = curl_exec($ch);
-    return $result;
+    $result = get_headers_from_curl_response(curl_exec($ch));
+
+    // Look for discord rate limit header
+    if (DISCORD_MODE && isset($result['x-ratelimit-remaining']) && $result['x-ratelimit-remaining'] == 0) {
+        $limittime = $result['x-ratelimit-reset'];
+    }
+
+    return true;
+}
+
+function get_headers_from_curl_response($response)
+{
+    $headers = array();
+
+    $header_text = substr($response, 0, strpos($response, "\r\n\r\n"));
+
+    foreach (explode("\r\n", $header_text) as $i => $line)
+        if ($i === 0)
+            $headers['http_code'] = $line;
+        else
+        {
+            list ($key, $value) = explode(': ', $line);
+
+            $headers[strtolower($key)] = $value;
+        }
+
+    return $headers;
 }
 
 function discordize(&$data) {
