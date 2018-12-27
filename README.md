@@ -1,12 +1,12 @@
 # Storyteller
-## A Slack Bot for playing Fighting Fantasy Gamebooks (v1.2)
+## A Slack / Discord* Bot for playing Fighting Fantasy Gamebooks (v1.3)
 
 ## Introduction
-Storyteller is a bot for use with Slack which helps a group of people play through a Fighting Fantasy gamebook co-operatively. It was designed for _Warlock on Firetop Mountain_, and has been expanded for a few other books. It should work OK with any choose-your-own adventure book, provided you don't mind a more manual experience.
+Storyteller is a bot for use with Slack which helps a group of people play through a Fighting Fantasy gamebook co-operatively. It was designed for _Warlock on Firetop Mountain_, and has been optimised for a few other books. It should work OK with any choose-your-own adventure book.
 
 Storyteller adds commands to read the story, manage your character and roll dice for fights and other challenges. It will assist you in playing the game but does not strictly enforce rules - replicating the experience of playing with a real book and dice.
 
-Storyteller is programmed in PHP, requires no database and is state-based. This means it can be installed on an ordinary web-server, without the need to setup a complicated chat-bot.
+Storyteller is programmed in PHP, requires no database and is state-based. This means it can be installed on an ordinary web-server, without the need to setup a complicated chat-bot. *Discord is also supported, with some caveats, see Using Discord below.
 
 ## Set-Up
 Download and extract the bot to start.
@@ -15,14 +15,14 @@ Download and extract the bot to start.
 First you must create an incoming and outgoing webhook. In Slack, go to **Administration > Manage Apps > Custom Integrations**.
 
 #### Incoming Webhook
-![Incoming hook example](../master/example-slack-webhooks/slack_incoming_hook_example.jpg)
+![Incoming hook example](../master/extras/slack_incoming_hook_example.jpg)
 
 - Set the channel to where you want the story to be told. You will probably want to dedicate a channel to the story.
 - Give the bot a good name. I suggest Storyteller or StorytellerBot.
 - **Make a note of the Webhook URL.** Open `config.php` and set `SLACK_HOOK` to this URL.
 
 #### Outgoing Webhook
-![Outgoing hook example](../master/example-slack-webhooks/slack_outgoing_hook_example.jpg)
+![Outgoing hook example](../master/extras/slack_outgoing_hook_example.jpg)
 
 - Set the channel to the same channel as the incoming hook.
 - Set the trigger word. I suggest using `!` to keep things simple. The trigger word must be prefixed to every command.
@@ -41,7 +41,7 @@ Importing from an official source is painful (see the next section.) So I am rel
 This link will be removed hastily if anyone ever objects. Don't be a jerk. If use this, make sure you own the books. [WoFM Amazon link](https://www.amazon.co.uk/Fighting-Fantasy-Warlock-Firetop-Mountain/dp/1407181300/), [RtFM Amazon link](https://www.amazon.co.uk/Return-Firetop-Mountain-Fighting-Fantasy/dp/184046481X/)
 
 #### Option 2: Import a book you own
-Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook format. If they were, I'd provide a script to automate extraction. Since they aren't your only option is to scan, OCR and input the text yourself from a paper book. If you're mad enough to attempt this, see `book.php` for an example.
+Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook format. If they were, I'd provide a script to automate extraction. Since they aren't your only option is to scan, OCR and input the text yourself from a paper book. If you're mad enough to attempt this, see `book.php` for an example. Use can use the `bookconvert.php` script in the *extras* directory to help you convert raw text to this format. e.g. `php bookconvert.php mybook.txt > book.php`
 
 #### Option 3: Write your own adventure
 Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
@@ -100,6 +100,19 @@ Intended for use with custom adventures. Much like _none_, but with a chance of 
 
 ### 5. Ready to play!
 Type `!newgame` in the channel you chose for the webhook to get started. Type `!help` to see the basic commands or `!helpmore` for the complete list.
+
+## Using Discord
+
+### 1. Outgoing hook replacement
+The bot can also be used for Discord. The biggest limitation is Discord does not support outgoing hooks. You can work around this one of two ways:
+1. Run a discord bot to emulate outgoing hooks. There's a working python example `discord_oghook_bot.py` in the *extras* directory. Setting up a discord app account and getting tokens ready etc. is left as an exercise for the reader.
+2. Expose `input.php` by editing `.htaccess`. This will allow entering commands by submitting a URL like `http:\\yourdomain.com\storyteller\input.php?c=!echo%20Hello%20World!` You could submit this with a form (see `example-form.html` in the *extras* directory.) Or use your imagination!
+If you come up with a creative input method, please consider submitting it back here!
+
+### 2. Other complications
+- Don't forget to add `/slack` to the end of your discord incoming hook to make it slack compatible. It will look like `https://discordapp.com/api/webhooks/0123456789/YOURCODEHERE/slack`
+- Set `DISCORD_MODE` to true in `config.php`. This will ensure messages are formatted correctly for Discord.
+- Ensure `images/emoji_cache` is writeable. Discord does not support emoji avatars, so emoji PNGs are cached and sent instead. This will cause a short delay when using an emoji for the first time.
 
 ## Usage Tips and Hints
 - Remember, you have to enforce the rules!

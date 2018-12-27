@@ -20,3 +20,4 @@ $_POST['trigger_word'] = '!';
 $_POST['token'] = SLACK_TOKEN;
 
 require('storyteller.php');
+echo "OK";
