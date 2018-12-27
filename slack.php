@@ -28,6 +28,24 @@ function sendimgmsg($message, $imgurl, $icon = ':open_book:')
 // Normally use one of the convenience functions above
 function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = false)
 {
+    // Split long messages for discord
+    if (DISCORD_MODE && strlen($message) > 1975) {
+        $m = str_replace(' ','%',$message);
+        $m = str_replace("\n"," ",$m);
+        $m = wordwrap($m,1950,"[BREAK]");
+        $m = str_replace(' ',"\n",$m);
+        $m = str_replace('%',' ',$m);
+        $m = explode("[BREAK]",$m);
+        $lastm = count($m)-1;
+        foreach($m as $key => $val) {
+            if ($key != $lastm) {
+                sendmsg($val, false, $icon, $chan);
+            } else {
+                sendmsg($val, $attachments, $icon, $chan);
+            }
+        }
+        return;
+    }
     $data['text'] = $message;
     if (is_array($attachments)) {
         $data['attachments'] = $attachments;
