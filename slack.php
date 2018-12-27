@@ -77,11 +77,13 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
 
 function discordize(&$data) {
     $data['text'] = str_replace('*','**',$data['text']);
-    foreach ($data['attachments'][0]['fields'] as $fkey => $fval) {
-        if ($data['attachments'][0]['fields'][$fkey]['title']) {
-            $data['attachments'][0]['fields'][$fkey]['title'] = '**'.$data['attachments'][0]['fields'][$fkey]['title'].'**';
+    if (isset($data['attachments'])) {
+        foreach ($data['attachments'][0]['fields'] as $fkey => $fval) {
+            if ($data['attachments'][0]['fields'][$fkey]['title']) {
+                $data['attachments'][0]['fields'][$fkey]['title'] = '**'.$data['attachments'][0]['fields'][$fkey]['title'].'**';
+            }
+            $data['attachments'][0]['fields'][$fkey]['value'] = str_replace('*','**',$data['attachments'][0]['fields'][$fkey]['value']);
         }
-        $data['attachments'][0]['fields'][$fkey]['value'] = str_replace('*','**',$data['attachments'][0]['fields'][$fkey]['value']);
     }
 
     if ($data['icon_emoji']) {
@@ -93,6 +95,10 @@ function discordize(&$data) {
 function discordize_emoji($e) {
     $clean = str_replace(':','',$e);
     $path = 'images'.DIRECTORY_SEPARATOR.'emoji_cache'.DIRECTORY_SEPARATOR.$clean.'.png';
+    if (!isset($_SERVER['HTTP_HOST'])) {
+        // Must be running from command line, can't send emoji
+        return '';
+    }
     $url = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/emoji_cache/'.$clean.'.png';
     if (file_exists($path)) {
         return $url;
