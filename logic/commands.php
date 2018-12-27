@@ -83,7 +83,7 @@ function _cmd_page($cmd, &$player)
     if (array_key_exists($cmd[1], $book)) {
         // Save a backup of the player for undo
         if ($backup) {
-            backup_player();
+            backup_player($player);
         }
 
         $player['lastpage'] = $cmd[1];
@@ -927,12 +927,10 @@ function _cmd_undo($cmd, &$player)
     if ($player['stam'] > 0) {
         sendqmsg("*You can only undo when dead.*", ':interrobang:');
         return;
-    }
-
-    if (restore_player($player)) {
+    } else if (restore_player($player)) {
         sendqmsg("*...or maybe this happened...*", ':rewind:');
         addcommand("look");
     } else {
-        sendqmsg("*You cannot undo!*", ':interrobang:');
+        sendqmsg("*There are some things that cannot be undone...*", ':skull:');
     }
 }

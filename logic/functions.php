@@ -206,9 +206,9 @@ function load()
 }
 
 // Serialize and save player array
-function save($p)
+function save(&$p, $file="save.txt")
 {
-    file_put_contents("save.txt",serialize($p));
+    file_put_contents($file,serialize($p));
 }
 
 // Convert number to html entity of dice emoji
@@ -429,12 +429,9 @@ function unapply_temp_stats(&$player)
     $player['temp'] = array();
 }
 
-function backup_player()
+function backup_player(&$p)
 {
-    if (file_exists('save_backup.txt')) {
-        unlink('save_backup.txt');
-    }
-    copy('save.txt','save_backup.txt');
+    save($p, 'save_backup.txt');
 }
 
 function backup_remove()
