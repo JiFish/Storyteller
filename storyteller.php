@@ -1,22 +1,16 @@
 <?php
 
-require('config.php');
-require('commands.php');
-require('functions.php');
-require('slack.php');
-require('fight_logic.php');
+require_once('config.php');
+require_once('commands.php');
+require_once('functions.php');
+require_once('slack.php');
+require_once('fight_logic.php');
 
 // Check the incoming data for the secret slack token
 if ($_POST['token'] != SLACK_TOKEN) {
     header('HTTP/1.0 403 Forbidden');
     die('Access Denied. Token does not match');
 }
-
-// Uncomment for command-line debugging
-/*if (isset($argv[1])) {
-    $_POST['text'] = implode(" ",array_slice($argv,1));
-    $_POST['trigger_word'] = '!';
-}*/
 
 $player = load();
 register_commands($player['gamebook']);
@@ -46,5 +40,3 @@ while (sizeof($commandlist) > 0)
 }
 
 save($player);
-
-die();
