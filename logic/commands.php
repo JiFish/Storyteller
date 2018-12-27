@@ -524,7 +524,7 @@ function _cmd_test($cmd, &$player)
 //// !newgame (roll new character)
 function _cmd_newgame($cmd, &$player)
 {
-    require('roll_character.php');
+    require('logic/roll_character.php');
 
     $cmd = array_pad($cmd, 6, '?');
     $player = roll_character($cmd[1],$cmd[2],$cmd[3],$cmd[4],$cmd[5],$cmd[6]);
@@ -840,7 +840,7 @@ function _cmd_macro($cmd, &$player)
 //// !spellbook - read spellbook
 function _cmd_spellbook($cmd, &$player)
 {
-    require('spells.php');
+    require('logic/spells.php');
 
     $typeslist = array();
     foreach ($spells as $s) {
@@ -900,7 +900,7 @@ function _cmd_spellbook($cmd, &$player)
 //// !echo - simply repeat the input text
 function _cmd_cast($cmd, &$player)
 {
-    require('spells.php');
+    require('logic/spells.php');
 
     foreach ($spells as $s) {
         if (strtolower($s['name']) == strtolower($cmd[1])) {

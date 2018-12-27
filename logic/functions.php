@@ -125,7 +125,7 @@ function advanced_command_split($command,$def)
                 $regex .= "\s+([+\-]?[0-9]+)";
                 break;
             case 'spell': //spell name
-                require('spells.php');
+                require('logic/spells.php');
                 $regex .= "\s+(";
                 foreach ($spells as $s) {
                     $regex .= preg_quote($s['name']).'|';

@@ -1,10 +1,10 @@
 <?php
 
 require_once('config.php');
-require_once('commands.php');
-require_once('functions.php');
-require_once('slack.php');
-require_once('fight_logic.php');
+require_once('logic/commands.php');
+require_once('logic/functions.php');
+require_once('logic/slack.php');
+require_once('logic/fight_logic.php');
 
 // Check the incoming data for the secret slack token
 if ($_POST['token'] != SLACK_TOKEN) {
