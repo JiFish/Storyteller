@@ -46,6 +46,7 @@ function register_commands($gamebook)
     register_command('macro',       '_cmd_macro',['n']);
     register_command('m',           '_cmd_macro',['n']);
     register_command('undo',        '_cmd_undo');
+    register_command('map',         '_cmd_map');
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
 
@@ -943,5 +944,15 @@ function _cmd_undo($cmd, &$player)
         addcommand("look");
     } else {
         sendqmsg("*There are some things that cannot be undone...*", ':skull:');
+    }
+}
+
+//// !map - Sends a map image if map.jpg exists in images dir
+function _cmd_map($cmd, &$player)
+{
+    if (file_exists('images'.DIRECTORY_SEPARATOR.'map.jpg')) {
+        sendimgmsg("*Map*",'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.jpg');
+    } else {
+        sendqmsg("*No map found!*", ':interrobang:');
     }
 }

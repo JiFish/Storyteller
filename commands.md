@@ -5,6 +5,7 @@ Mostly everything you'll need to know.
 ### Reading
 - `!<number>` Read page <number>. e.g. !42. `!look` Re-read last page.
 - `!info` Show character sheet. `!stats` just shows stats, `!stuff` just shows inventory.
+- `!map` Send the map image, if available.
 
 ### Rolling Dice
 - `!fight [name] <skill> <stamina>` Fight a monster with skill <skill> and stamina <stamina>. Name is optional and can contain spaces. e.g. `!fight Giant Spider 4 5`
@@ -35,6 +36,7 @@ For the nerds
 ### Reading
 - `!<number>` or `!page <number>` Read page <number>. e.g. `!42`
 - `!look` Re-read last page.
+- `!map` Send the map image, if available.
 
 ### Character Information
 - `!info` or `!status` Show character stats and inventory.
