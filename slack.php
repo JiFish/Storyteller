@@ -97,10 +97,15 @@ function discordize_emoji($e) {
     }
     $lookup = "https://xn--i-7iq.ws/emoji-image/".urlencode($lookup).".png";//?format=emojione&ar=1x1";
 
-    $img = file_get_contents($lookup);
-    if (!$img) {
+    // Resize emoji to 90x90
+    list($width, $height) = getimagesize($lookup);
+    if (!$width) {
         return '';
     }
-    file_put_contents($path, $img);
+    $src = imagecreatefrompng($lookup);
+    $dst = imagecreatetruecolor(90, 90);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, 90, 90, $width, $height);
+    imagepng($dst, $path);
+
     return $url;
 }
