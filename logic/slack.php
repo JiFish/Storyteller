@@ -112,11 +112,13 @@ function get_headers_from_curl_response($response)
 function discordize(&$data) {
     $data['text'] = str_replace('*','**',$data['text']);
     if (isset($data['attachments'])) {
-        foreach ($data['attachments'][0]['fields'] as $fkey => $fval) {
-            if ($data['attachments'][0]['fields'][$fkey]['title']) {
-                $data['attachments'][0]['fields'][$fkey]['title'] = '**'.$data['attachments'][0]['fields'][$fkey]['title'].'**';
+        foreach ($data['attachments'] as $akey => $aval) {
+            foreach ($aval['fields'] as $fkey => $fval) {
+                if ($fval['title']) {
+                    $data['attachments'][$akey]['fields'][$fkey]['title'] = '**'.$data['attachments'][$akey]['fields'][$fkey]['title'].'**';
+                }
+                $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace('*','**',$data['attachments'][$akey]['fields'][$fkey]['value']);
             }
-            $data['attachments'][0]['fields'][$fkey]['value'] = str_replace('*','**',$data['attachments'][0]['fields'][$fkey]['value']);
         }
     }
 
