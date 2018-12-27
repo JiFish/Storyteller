@@ -30,11 +30,11 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
 {
     // Split long messages for discord
     if (DISCORD_MODE && strlen($message) > 1975) {
-        $m = str_replace(' ','%',$message);
+        $m = str_replace(' ','¥',$message);
         $m = str_replace("\n"," ",$m);
         $m = wordwrap($m,1950,"[BREAK]");
         $m = str_replace(' ',"\n",$m);
-        $m = str_replace('%',' ',$m);
+        $m = str_replace('¥',' ',$m);
         $m = explode("[BREAK]",$m);
         $lastm = count($m)-1;
         foreach($m as $key => $val) {
