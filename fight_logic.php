@@ -1,6 +1,9 @@
 <?php
 
 function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0, $fasthands = false) {
+    // Prevent restore
+    backup_remove();
+
     // Apply temp bonuses, if any
     apply_temp_stats($player);
 

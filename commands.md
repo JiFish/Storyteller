@@ -23,6 +23,7 @@ Mostly everything you'll need to know.
 - `!buy <item> [cost]` Add <item> to your inventory and subtracts [cost] gold. If cost is missing, 2 gold will be taken.
 - `!shield <on/off>` Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using !fight.
 - `!dead` Reduce stamina to 0.
+- `!undo` When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
 
 You can chain multiple commands together in one go with semicolons e.g. `!newgame; !1`
 
@@ -40,6 +41,7 @@ For the nerds
 - `!stats` or `!s` Show character stats only.
 - `!stuff` or `!i` Show character inventory.
 - `!newgame [name] [gender] [emoji] [race] [adjective] [seed]` or `!ng` Rolls a new character and resets the game. Optionally customise the new character. Use `?` to randomise a field. A numeric [seed] may be given in case you want to generate the same character again and again.
+- `!undo` When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
 
 ##### Some fun character ideas:
 - `!ng ? m :male_mage::skin-tone-5: Human Wizard`

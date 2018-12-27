@@ -4,7 +4,7 @@
 function register_commands($gamebook)
 {
     register_command('look',        '_cmd_look');
-    register_command('page',        '_cmd_page',['n']);
+    register_command('page',        '_cmd_page',['n','os']);
     register_command('background',  '_cmd_background');
     register_command('eat',         '_cmd_eat');
     register_command('pay',         '_cmd_pay',['n']);
@@ -45,6 +45,7 @@ function register_commands($gamebook)
     register_command('cast',        '_cmd_cast',['spell','oms','on','on']);
     register_command('macro',       '_cmd_macro',['n']);
     register_command('m',           '_cmd_macro',['n']);
+    register_command('undo',        '_cmd_undo');
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
 
@@ -75,10 +76,16 @@ function _cmd_page($cmd, &$player)
     if (!is_numeric($cmd[1])) {
         return;
     }
+    $backup = (isset($cmd[2]) || strtolower($cmd[2])!='nobackup');
 
     require("book.php");
 
     if (array_key_exists($cmd[1], $book)) {
+        // Save a backup of the player for undo
+        if ($backup) {
+            backup_player();
+        }
+
         $player['lastpage'] = $cmd[1];
         $story = $book[$cmd[1]];
 
@@ -90,7 +97,7 @@ function _cmd_page($cmd, &$player)
             // Find pages with only one turn to and add that page to the command list
             preg_match_all('/turn to ([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
             if (sizeof($matches) == 1) {
-                    addcommand("page ".$matches[0][1]);
+                    addcommand("page ".$matches[0][1]." nobackup");
                 }
             // Attempt to find pages that end the story, kill the player if found
             elseif (sizeof($matches) < 1 &&
@@ -439,6 +446,9 @@ function _cmd_roll($cmd, &$player)
 //// !test <luck/skill/stam> (run a skill test)
 function _cmd_test($cmd, &$player)
 {
+    // Prevent restore
+    backup_remove();
+
     $cmd[1] = strtolower($cmd[1]);
     // Alias for stam
     if ($cmd[1] == "stamina") $cmd[1] = "stam";
@@ -454,10 +464,10 @@ function _cmd_test($cmd, &$player)
 
     // Setup outcome pages to read if provided
     if (isset($cmd[2])) {
-        $success_page = "!".$cmd[2];
+        $success_page = "page ".$cmd[2]." nobackup";
     }
     if (isset($cmd[3])) {
-        $fail_page = "!".$cmd[3];
+        $fail_page = "page ".$cmd[3]." nobackup";
     }
 
     // roll 2d6 and set target from stat name ($cmd[1])
@@ -725,6 +735,9 @@ function _cmd_echo($cmd, &$player)
 //// !randpage <page 1> [page 2] [page 3] [...]
 function _cmd_randpage ($cmd, &$player)
 {
+    // Prevent restore
+    backup_remove();
+
     $pagelist = array();
     foreach ($cmd as $c) {
         if (is_numeric($c)) {
@@ -748,7 +761,7 @@ function _cmd_randpage ($cmd, &$player)
     }
 
     sendqmsg("Rolled $de",":game_die:");
-    addcommand("page ".$pagelist[$choice]);
+    addcommand("page ".$pagelist[$choice]." nobackup");
 }
 
 //// !shield [on/off] - Toggle shield
@@ -905,5 +918,21 @@ function _cmd_cast($cmd, &$player)
     } else {
         $player['magic'] -= $s['cost'];
         $s['func']();
+    }
+}
+
+//// !undo - restore to the previous save
+function _cmd_undo($cmd, &$player)
+{
+    if ($player['stam'] > 0) {
+        sendqmsg("*You can only undo when dead.*", ':interrobang:');
+        return;
+    }
+
+    if (restore_player($player)) {
+        sendqmsg("*...or maybe this happened...*", ':rewind:');
+        addcommand("look");
+    } else {
+        sendqmsg("*You cannot undo!*", ':interrobang:');
     }
 }

@@ -428,3 +428,29 @@ function unapply_temp_stats(&$player)
     }
     $player['temp'] = array();
 }
+
+function backup_player()
+{
+    if (file_exists('save_backup.txt')) {
+        unlink('save_backup.txt');
+    }
+    copy('save.txt','save_backup.txt');
+}
+
+function backup_remove()
+{
+    if (file_exists('save_backup.txt')) {
+        unlink('save_backup.txt');
+    }
+}
+
+function restore_player(&$p)
+{
+    if (file_exists('save_backup.txt')) {
+        unlink('save.txt');
+        copy('save_backup.txt','save.txt');
+        $p = load();
+        return true;
+    }
+    return false;
+}
