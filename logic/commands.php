@@ -79,7 +79,11 @@ function _cmd_page($cmd, &$player)
     if (!is_numeric($cmd[1])) {
         return;
     }
-    $backup = (isset($cmd[2]) || strtolower($cmd[2])!='nobackup');
+    if (isset($cmd[2])) {
+        $backup = (strtolower($cmd[2])!='nobackup');
+    } else {
+        $backup = false;
+    }
 
     require("book.php");
 
