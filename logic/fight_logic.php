@@ -1,6 +1,6 @@
 <?php
 
-function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0, $fasthands = false) {
+function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0, $fasthands = false, $healthstatname = 'stamina') {
     // Prevent restore
     backup_remove();
 
@@ -162,12 +162,12 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
         $out .= "_*$m has defeated you!*_\n";
     } elseif ($mstam < 1) {
         $out .= "_*You have defeated $m!*_\n";
-        $out .= "_(Remaining stamina: ".$player['stam'].")_";
+        $out .= "_(Remaining $healthstatname: ".$player['stam'].")_";
     } else {
         if ($round > 1) {
             $out .= "_*Combat stopped after $round rounds.*_\n";
         }
-        $out .= "_($m's remaining stamina: $mstam. Your remaining stamina: ".$player['stam'].")_";
+        $out .= "_($m's remaining $healthstatname: $mstam. Your remaining $healthstatname: ".$player['stam'].")_";
     }
 
     // Remove temp bonuses, if any and clear temp bonus array

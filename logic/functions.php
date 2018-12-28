@@ -319,6 +319,33 @@ function send_charsheet($player, $text = "")
         unset($attachments[0]['fields'][5]);
     }
 
+    if ($player['gamebook'] == 'sob') {
+        $attachments[0]['fields'][5] = array (
+            'title' => 'Log',
+            'value' => $player['log'],
+            'short' => true
+        );
+        $attachments[] = [
+            'color'    => '#8b4513',
+            'fields'   => array(
+            [
+                'title' => 'Ship Name',
+                'value' => $player['shipname'],
+                'short' => true
+            ],
+            [
+                'title' => 'Crew Strike (strike)',
+                'value' => $player['strike']." / ".$player['max']['strike'],
+                'short' => true
+            ],
+            [
+                'title' => 'Crew Strength (str)',
+                'value' => $player['str']." / ".$player['max']['str'],
+                'short' => true
+            ])
+        ];
+    }
+
     if ($player['stam'] < 1) {
         $icon = ":skull:";
     } else {

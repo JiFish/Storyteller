@@ -41,14 +41,21 @@ function register_commands($gamebook)
     register_command('shield',      '_cmd_shield',['os']);
     register_command('dead',        '_cmd_dead');
     register_command('debugset',    '_cmd_debugset',['s','s','os']);
-    register_command('spellbook',   '_cmd_spellbook',['osl']);
-    register_command('cast',        '_cmd_cast',['spell','oms','on','on']);
     register_command('macro',       '_cmd_macro',['n']);
     register_command('m',           '_cmd_macro',['n']);
     register_command('undo',        '_cmd_undo');
     register_command('map',         '_cmd_map');
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
+
+    if ($gamebook == 'loz' ||
+        $gamebook == 'custom') {
+            register_command('spellbook',   '_cmd_spellbook',['osl']);
+            register_command('cast',        '_cmd_cast',['spell','oms','on','on']);
+    }
+    if ($gamebook == 'sob') {
+            register_command('battle',      '_cmd_battle',['oms','n','n','osl']);
+    }
 
     // Stats commands
     $stats = array('skill', 'stam', 'stamina', 'luck', 'prov',
@@ -59,6 +66,8 @@ function register_commands($gamebook)
         $stats = array_merge($stats,['magic','talismans','daggers']);
     } elseif ($gamebook == 'hoh') {
         $stats = array_merge($stats,['fear']);
+    } elseif ($gamebook == 'sob') {
+        $stats = array_merge($stats,['str','strength','strike','log']);
     }
     foreach($stats as $s) {
         register_command($s, '_cmd_stat_adjust',['os','nm']);
@@ -159,6 +168,7 @@ function _cmd_stat_adjust($cmd, &$player)
     if ($cmd[0] == 'weaponbonus') $cmd[0] = 'weapon';
     if ($cmd[0] == 'bonus') $cmd[0] = 'weapon';
     if ($cmd[0] == 'gz') $cmd[0] = 'goldzagors';
+    if ($cmd[0] == 'strength') $cmd[0] = 'str';
 
     // Setup the details of the ajustment
     // $statref is a reference to the stat that will be changed
@@ -177,6 +187,12 @@ function _cmd_stat_adjust($cmd, &$player)
             break;
         case 'goldzagors':
             $statname = "Gold Zagors";
+            break;
+        case 'strike':
+            $statname = "Crew Strike";
+            break;
+        case 'str':
+            $statname = "Crew Strength";
             break;
         default:
             $statname = ucfirst($cmd[0]);
@@ -959,4 +975,41 @@ function _cmd_map($cmd, &$player)
     } else {
         sendqmsg("*No map found!*", ':interrobang:');
     }
+}
+
+//// !battle [name] <skill> <stamina> [maxrounds] (run battle logic)
+function _cmd_battle($cmd, &$player)
+{
+    if ($cmd[1]) {
+        $m = $cmd[1];
+    } else {
+        $m = "Opponent";
+    }
+    $mskill = $cmd[2];
+    $mstam = $cmd[3];
+    if (isset($cmd[4])) {
+        $maxrounds = $cmd[4];
+    } else {
+        $maxrounds = 50;
+    }
+
+    // Construct battle player
+    $bp = array(
+        'name' => $player['shipname'],
+        'skill' => $player['strike'],
+        'stam' => $player['str'],
+        'gamebook' => $player['gamebook'],
+        'luck' => 0,
+        'weapon' => 0,
+        'shield' => false,
+        'temp' => []
+    );
+    $out = run_fight($bp,$m,$mskill,$mstam,$maxrounds,'nobody',null,null,null,0,false,'crew strength');
+
+    $player['str'] = $bp['stam'];
+    if ($player['str'] < 1) {
+        $player['stam'] = 0;
+    }
+
+    sendqmsg($out,":crossed_swords:");
 }

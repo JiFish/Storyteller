@@ -141,6 +141,32 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['race'] = array('Sailor','Pirate','Seafarer','Mariner','Seaswab','Deck Hand','Navigator')[rand(0,6)];
         // Remove lantern
         unset($p['stuff'][2]);
+    }  elseif ($gamebook == 'sob') {
+        // Make human
+        if ($gender == 'Male') {
+            $emojilist = array(':man:',':blond-haired-man:',':older_man:');
+        } elseif ($gender == 'Female') {
+            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
+        } else {
+            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
+        }
+        $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
+        $p['race'] = 'Pirate';
+        $shipnames = file('resources/ship_names.txt');
+        $p['shipname'] = trim($shipnames[array_rand($shipnames)]);
+        // new stats
+        $p['creationdice'][] = rand(1,6);
+        $p['strike'] = $p['creationdice'][4]+6; // 1d6+6
+        $p['max']['strike'] = $p['strike'];
+        $p['creationdice'][] = rand(1,6);
+        $p['str'] = $p['creationdice'][5]+6; // 1d6+6
+        $p['max']['str'] = $p['str'];
+        $p['log'] = 0;
+        $p['max']['log'] = 999;
+        // starting items
+        $p['prov'] = 0;
+        $p['gold'] = 20;
+        $p['stuff'] = array('Sword (+0)');
     }  elseif ($gamebook == 'hoh') {
         // Make human
         if ($gender == 'Male') {

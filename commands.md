@@ -89,8 +89,10 @@ For the nerds
 - `!bonusfight [name] <skill> <stamina> <bonusdmg>` Fight a monster named [name] (optional) with skill <skill> and stamina <stamina>. After each round the monster has a 1/2 chance of doing <bonusdmg> damage.
 - `!fighttwo <name 1> <skill 1> <stamina 1> [<name 2> <skill 2> <stamina 2>]` Fight two opponents at the same time. If a second monster isn't provided, you'll fight two copies of the first.
 - `!vs <name 1> <skill 1> <stamina 1> <name 2> <skill 2> <stamina 2>` Fight two monsters against each other.
+- `!battle [name] <strike> <strength> [stopafter]` Fight a large scale battle with opponent named [name] (optional) with strike <strike> and strength <strength>, using your strike and strength. This command is only available for some books.
 
 ### Spellcasting
+(Only available for some books.)
 - `!spellbook [page]` Read your spellbook. [Page] can be a number; or it can be one of the four spell types: `combat`, `self`, `object` and `utility`; or the word `all` to see every spell. (Warning: using `all` will result in a long post.)
 - `!cast <spell name>` Cast the spell <spell name>! Magic points will be deducted and stats effects applied where appropriate.
 - `!cast <spell name> [name] <skill> <stamina>` Some spell require a combat target. These 3 values work the same as the !fight command.
