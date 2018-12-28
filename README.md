@@ -47,51 +47,11 @@ Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook 
 Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
 
 ### 3. Set the booktype
-Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules.
+Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules. You can look up the correct book type for the Fighting Fantasy book you are playing in `book_support.html` found in the *extras* directory.
 
-#### wofm
-- Warlock on Firetop Mountain _(Designed for this book.)_
-- Janitor of Firetop Mountain _(The short default example adventure.)_
-- Forest of Doom
-- City of Thieves
-- Deathtrap Dungeon
-- Island of the Lizard King
-- Caverns of the Snow Witch
-- Talisman of Death
-- Masks of Mayhem
+If in doubt set `BOOK_TYPE` to `none`. This will generate a minimal character that can be used for most stories. A special type `custom` is provided for anyone who wishes to create a their own adventure.
 
-#### dotd
-- Demons of the Deep _(Designed for this book.)_
-
-#### toc
-This booktype starts you with no inventory or provisions. This is a good choice for books not listed here at all.
-- Trail of Champions
-- Crypts of the Sorcerer
-- Battleblade Warrior
-
-#### coh
-This booktype includes instant kills on double attack dice.
-- Creature of Havoc _(Designed for this book.)_
-
-#### poe
-- Portal of Evil _(Designed for this book.)_
-
-#### bvp
-This booktype starts you with no inventory or provisions and your stats all start at max 1. Stats are determined during the adventure.
-- Blackvein Prophecy _(Designed for this book.)_
-
-#### rtfm
-- Return to Firetop Mountain _(Designed for this book.)_
-
-#### loz
-- Legend of Zagor _(Designed for this book.)_
-
-#### none
-No special generation rules. This is also the fall-back is the booktype is not recognised.
-- Stealer of Souls
-
-#### custom
-Intended for use with custom adventures. Much like _none_, but with a chance of generating a magic-using character like _loz_.
+The following books currently work very well: Battleblade Warrior; Black Vein Prophecy; Caverns of the Snow Witch; City of Thieves; Creature of Havoc; Crypt of the Sorcerer; Deathmoor; Deathtrap Dungeon; Demons of the Deep; Eye of the Dragon; The Forest of Doom; House of Hell; Island of the Lizard King; Legend of Zagor; Masks of Mayhem; Portal of Evil; Return to Firetop Mountain; Seas of Blood; Stealer of Souls; Talisman of Death; Temple of Terror; Trial of Champions; The Warlock of Firetop Mountain.
 
 ### 4. Get the code online
 - Upload the installation to your PHP enabled web-server. No database is needed. The uploaded directory must be writeable.
