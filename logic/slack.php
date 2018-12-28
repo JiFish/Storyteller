@@ -122,7 +122,7 @@ function discordize(&$data) {
         }
     }
 
-    if ($data['icon_emoji']) {
+    if (isset($data['icon_emoji'])) {
         $data['icon_url'] = discordize_emoji($data['icon_emoji']);
         unset($data['icon_emoji']);
     }
