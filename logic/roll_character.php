@@ -311,5 +311,10 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['max']['magic'] = $p['magic'];
     }
 
+    // Undocumented hook to allow the config file to alter new players
+    if (function_exists('hook_alter_new_player')) {
+        hook_alter_new_player($p);
+    }
+
     return $p;
 }
