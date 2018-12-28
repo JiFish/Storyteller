@@ -232,7 +232,7 @@ function addcommand($cmd)
 
 // Convert the player array to a character sheet and send it to slack
 // along with message $text
-function send_charsheet($player, $text = "")
+function send_charsheet($player, $text = "", $sendstuff = false)
 {
     $attachments = array([
         'color'    => '#ff6600',
@@ -319,6 +319,7 @@ function send_charsheet($player, $text = "")
         unset($attachments[0]['fields'][5]);
     }
 
+    // Sea of Blood Ship Stats
     if ($player['gamebook'] == 'sob') {
         $attachments[0]['fields'][5] = array (
             'title' => 'Log',
@@ -346,6 +347,10 @@ function send_charsheet($player, $text = "")
         ];
     }
 
+    if ($sendstuff) {
+        $attachments[] = get_stuff_attachment($player);
+    }
+
     if ($player['stam'] < 1) {
         $icon = ":skull:";
     } else {
@@ -358,6 +363,18 @@ function send_charsheet($player, $text = "")
 // Send to slack a list of the player's stuff (inventory)
 function send_stuff($player)
 {
+    $attachments[] = get_stuff_attachment($player);
+
+    if ($player['stam'] < 1) {
+        $icon = ":skull:";
+    } else {
+        $icon = $player['emoji'];
+    }
+
+    sendmsg("",$attachments,$icon);
+}
+
+function get_stuff_attachment(&$player) {
     $s = $player['stuff'];
     if (sizeof($s) == 0) {
         $s[] = "(Nothing!)";
@@ -370,7 +387,7 @@ function send_stuff($player)
         $s[] .= '*Shield* _(Equipped)_';
     }
 
-    $attachments = array([
+    $attachments = array(
             'color'    => '#0066ff',
             'fields'   => array(
             [
@@ -383,15 +400,9 @@ function send_stuff($player)
                 'value' => html_entity_decode("&nbsp;")."\n".implode("\n",array_slice($s, ceil(sizeof($s) / 2))),
                 'short' => true
             ])
-    ]);
+    );
 
-    if ($player['stam'] < 1) {
-        $icon = ":skull:";
-    } else {
-        $icon = $player['emoji'];
-    }
-
-    sendmsg("",$attachments,$icon);
+    return $attachments;
 }
 
 function format_story($page,$text) {
