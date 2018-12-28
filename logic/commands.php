@@ -542,7 +542,7 @@ function _cmd_newgame($cmd, &$player)
 {
     require('logic/roll_character.php');
 
-    $cmd = array_pad($cmd, 6, '?');
+    $cmd = array_pad($cmd, 7, '?');
     $player = roll_character($cmd[1],$cmd[2],$cmd[3],$cmd[4],$cmd[5],$cmd[6]);
     send_charsheet($player, "_*NEW CHARACTER!*_ ".implode(' ',array_map("diceemoji",$player['creationdice'])));
     send_stuff($player);

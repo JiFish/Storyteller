@@ -269,7 +269,7 @@ function send_charsheet($player, $text = "")
         ])
     ]);
 
-    if ($player['max']['magic'] > 0) {
+    if (isset($player['max']['magic'])) {
         array_splice($attachments[0]['fields'], 3, 0,
             array([
                 'title' => 'Magic',

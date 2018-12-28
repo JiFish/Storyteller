@@ -1,10 +1,10 @@
 <?php
 
 // Roll a new random character and return a 'player' array ready to be used elsewhere
-function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = null)
+function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?')
 {
     // Seed random
-    if (!$seed) {
+    if (!is_numeric($seed)) {
         $seed = make_seed();
     }
     srand($seed);
