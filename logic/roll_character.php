@@ -154,9 +154,9 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['race'] = 'Pirate';
         $shipnames = file('resources/ship_names.txt');
         $p['shipname'] = trim($shipnames[array_rand($shipnames)]);
-        $adjectives = array('Bold','Bloodthirsty','Cut-throat','Despicable','Foul','Fearsome','Horrible','Killer','Loathsome','Low',
-                            'Mad','Murderous','Nasty','Navigator','Peg-legged','Reviled','Ruthless','Strong','Scurviest','Tough',
-                            'Terrible','Weird');
+        $adjectives = array('Bold','Bloodthirsty','Cut-throat','Despicable','Dread-Pirate','Foul','Fearsome','Horrible',
+                            'Hook-handed','Killer','Loathsome','Low','Mad','Murderous','Nasty','Navigator','Peg-legged',
+                            'Reviled','Ruthless','Strong','Scurviest','Tough','Terrible','Weird','Vile','Villainous');
         $p['adjective'] = trim($adjectives[array_rand($adjectives)]);
         // new stats
         $p['creationdice'][] = rand(1,6);
@@ -170,7 +170,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         // starting items
         $p['prov'] = 0;
         $p['gold'] = 20;
-        $p['stuff'] = array('Sword (+0)');
+        $p['stuff'] = array('Cutlass (+0)');
     }  elseif ($gamebook == 'hoh') {
         // Make human
         if ($gender == 'Male') {
