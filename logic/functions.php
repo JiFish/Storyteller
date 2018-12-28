@@ -352,7 +352,7 @@ function send_charsheet($player, $text = "")
         $icon = $player['emoji'];
     }
 
-    sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['race']." ".$player['gender'].")_",$attachments,$icon);
+    sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_",$attachments,$icon);
 }
 
 // Send to slack a list of the player's stuff (inventory)
