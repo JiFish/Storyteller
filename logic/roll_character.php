@@ -154,6 +154,10 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['race'] = 'Pirate';
         $shipnames = file('resources/ship_names.txt');
         $p['shipname'] = trim($shipnames[array_rand($shipnames)]);
+        $adjectives = array('Bold','Bloodthirsty','Cut-throat','Despicable','Foul','Fearsome','Horrible','Killer','Loathsome','Low',
+                            'Mad','Murderous','Nasty','Navigator','Peg-legged','Reviled','Ruthless','Strong','Scurviest','Tough',
+                            'Terrible','Weird');
+        $p['adjective'] = trim($adjectives[array_rand($adjectives)]);
         // new stats
         $p['creationdice'][] = rand(1,6);
         $p['strike'] = $p['creationdice'][4]+6; // 1d6+6
