@@ -121,7 +121,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                 $p['max']['luck']++;
                 break;
         }
-    }  elseif ($gamebook == 'dotd') {
+    } elseif ($gamebook == 'dotd') {
         // Make human
         if ($gender == 'Male') {
             $emojilist = array(':man:',':blond-haired-man:',':older_man:');
@@ -134,7 +134,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['race'] = array('Sailor','Pirate','Seafarer','Mariner','Seaswab','Deck Hand','Navigator')[rand(0,6)];
         // Remove lantern
         unset($p['stuff'][2]);
-    }  elseif ($gamebook == 'sob') {
+    } elseif ($gamebook == 'sob') {
         // Make human
         if ($gender == 'Male') {
             $emojilist = array(':man:',':blond-haired-man:',':older_man:');
@@ -164,7 +164,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['prov'] = 0;
         $p['gold'] = 20;
         $p['stuff'] = array('Cutlass (+0)');
-    }  elseif ($gamebook == 'hoh') {
+    } elseif ($gamebook == 'hoh') {
         // Make human
         if ($gender == 'Male') {
             $emojilist = array(':man:',':blond-haired-man:',':older_man:');
@@ -181,25 +181,25 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['fear'] = 0;
         $p['max']['fear'] = $p['creationdice'][4]+6; // 1d6+6
         $p['race'] = array('Cowardly','Ordinary','Sceptical','Open-Minded','Believer','Enlightened')[$p['creationdice'][4]-1];
-    }  elseif ($gamebook == 'none') {
+    } elseif ($gamebook == 'none') {
         // No starting anything!
         $p['prov'] = 0;
         $p['stuff'] = array();
-    }  elseif ($gamebook == 'poe') {
+    } elseif ($gamebook == 'poe') {
         $p['prov'] = 2;
-    }  elseif ($gamebook == 'coc') {
+    } elseif ($gamebook == 'coc') {
         $p['prov'] = 0;
-    }  elseif ($gamebook == 'ss') {
+    } elseif ($gamebook == 'ss') {
         $p['prov'] = 0;
         $p['stuff'] = array('Sword (+0)','Chainmail Armor');
-    }  elseif ($gamebook == 'bvp') {
+    } elseif ($gamebook == 'bvp') {
         $p['creationdice'] = array();
         $p['stam'] = $p['max']['stam'] = 1;
         $p['skill'] = $p['max']['skill'] = 1;
         $p['luck'] = $p['max']['luck'] = 1;
         $p['prov'] = 0;
         $p['stuff'] = array();
-    }  elseif ($gamebook == 'coh') {
+    } elseif ($gamebook == 'coh') {
         // No starting anything!
         $p['prov'] = 0;
         $p['stuff'] = array();

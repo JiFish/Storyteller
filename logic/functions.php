@@ -164,13 +164,6 @@ function register_command($name, $function, $args = [])
 }
 
 // Figure out what rules we are running
-// Books:
-// none: No special rules
-// wofm: The Warlock on Firetop Mountain
-// wofm-strict: As above, with no starting gold.
-// rtfm: Return to Firetop Mountain
-// rtfm-strict: As above, with no starting provisions.
-// loz: Legend of Zagor
 function getbook()
 {
     require("book.php");
