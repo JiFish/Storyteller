@@ -103,7 +103,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     // End of bare character generation.
 
     // Book customisations
-    if ($gamebook == 'wofm' || $gamebook == 'wofm-strict') {
+    if ($gamebook == 'wofm') {
         // Random Potion
         // The book rules actually give you a choice, but this is a bit more fun
         $p['creationdice'][] = rand(1,6);
@@ -120,13 +120,6 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                 $p['luck']++;
                 $p['max']['luck']++;
                 break;
-        }
-        if ($gamebook == 'wofm-strict') {
-            $p['gamebook'] = 'wofm';
-        } else {
-            // Random Gold (Note this is a customisation from the book's rules)
-            $p['creationdice'][] = rand(1,6);
-            $p['gold'] = $p['creationdice'][5]-1; //1d6-1
         }
     }  elseif ($gamebook == 'dotd') {
         // Make human
@@ -223,16 +216,9 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
             }
         }
         $p['emoji'] = ':japanese_ogre:';
-    }  elseif ($gamebook == 'rtfm' || $gamebook == 'rtfm-strict') {
+    } elseif ($gamebook == 'rtfm') {
         $p['goldzagors'] = 0;
         $p['max']['goldzagors'] = 999;
-        if ($gamebook == 'rtfm-strict') {
-            $p['gamebook'] = 'rtfm';
-        } else {
-            // Random Provisions (Note this is a customisation from the book's rules)
-            $p['creationdice'][] = rand(1,6);
-            $p['prov'] = $p['creationdice'][4]-1; // 1d6-1
-        }
     } elseif ($gamebook == 'loz') {
         $p['prov'] = 12;
         $p['max']['prov'] = 12;
