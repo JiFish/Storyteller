@@ -6,11 +6,13 @@ The Black Hearted Wench
 The Black Pearl
 The Bloody Shame
 The Cursed Sea-Dog
+The Dainty Lady
 The Davy Jones
 The Devil's Doom
 The Devil's Maw
 The Devil's Storm
 The Dirty Lightning
+The Enterprise
 The Evil Strumpet
 The Fancy
 The Flying Dragon
@@ -41,7 +43,8 @@ The Royal Fortune
 The Satan's Mermaid
 The Satisfaction
 The Scourge of the Seven Seas
+The Sea Cucumber
 The Sea Nymph
 The Squirrel
-The Whydah
+The Vanguard
 The Wicked Wench
