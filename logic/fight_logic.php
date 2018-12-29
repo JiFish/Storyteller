@@ -1,6 +1,6 @@
 <?php
 
-function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0, $fasthands = false, $healthstatname = 'stamina') {
+function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0, $fasthands = false, $healthstatname = 'stamina', $bonusdmgchance = 3) {
     // Prevent restore
     backup_remove();
 
@@ -128,11 +128,11 @@ function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsf
         // Bonus damage
         if ($bonusdmg && $mstam > 0) {
             $bdroll = rand(1,6);
-            if ($bdroll > 3) {
-                $bdemoji = diceemoji($bdroll);
-                $out .= "_$m hits you with ".$bonusdmg." bonus damage! (_ $bdemoji _)_\n";
+            if ($bdroll > 6-$bonusdmgchance) {
+                $bdemoji = ($bonusdmgchance < 6?'(_ '.diceemoji($bdroll).' _)':'');
+                $out .= "_$m hits you with ".$bonusdmg." bonus damage! $bdemoji _\n";
                 $player['stam'] -= $bonusdmg;
-            }   
+            }
         }            
 
         //stave off death

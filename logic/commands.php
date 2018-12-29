@@ -31,7 +31,7 @@ function register_commands($gamebook)
     register_command('?',           '_cmd_help');
     register_command('fight',       '_cmd_fight',['oms','n','n','osl']);
     register_command('critfight',   '_cmd_critfight',['oms','n','os','on']);
-    register_command('bonusfight',  '_cmd_bonusfight',['oms','n','n','n']);
+    register_command('bonusfight',  '_cmd_bonusfight',['oms','n','n','n','on']);
     register_command('vs',          '_cmd_vs',['ms','n','n','ms','n','n']);
     register_command('fighttwo',    '_cmd_fighttwo',['ms','n','n','oms','on','on']);
     register_command('attack',      '_cmd_attack',['n','on']);
@@ -646,15 +646,20 @@ function _cmd_critfight($cmd, &$player)
     sendqmsg($out,":crossed_swords:");
 }
 
-//// !bonusfight [name] <skill> <stamina> <bonusdamage> (run bonus attack fight logic)
+//// !bonusfight [name] <skill> <stamina> <bonusdamage> [bonusdmgchance] (run bonus attack fight logic)
 function _cmd_bonusfight($cmd, &$player)
 {
     $m = ($cmd[1]?$cmd[1]:"Opponent");
     $mskill = $cmd[2];
     $mstam = $cmd[3];
     $bonusdmg = $cmd[4];
+    if (isset($cmd[5])) {
+        $bonusdmgchance = $cmd[5];
+    } else {
+        $bonusdmgchance = 3;
+    }
 
-    $out .= run_fight($player,$m,$mskill,$mstam,50,'nobody',null,null,null,$bonusdmg);
+    $out = run_fight($player,$m,$mskill,$mstam,50,'nobody',null,null,null,$bonusdmg,false,'stamina',$bonusdmgchance);
     sendqmsg($out,":crossed_swords:");
 }
 
