@@ -427,7 +427,7 @@ function format_story($page, $text, &$player) {
 
     // Look for choices in the text and give them bold formatting
     $story = preg_replace('/\(?turn(ing)? to [0-9]+\)?/i', '*${0}*', $text);
-    $story = preg_replace('/Your (adventure|quest) (is over|ends here)\.?/i', '*${0}*', $story);
+    $story = preg_replace('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', '*${0}*', $story);
     $story = preg_replace('/((Add|Subject|Deduct|Regain|Gain|Lose) )?([1-9] (points? )?from your (SKILL|LUCK|STAMINA)|([1-9] )?(SKILL|LUCK|STAMINA) points?|your (SKILL|LUCK|STAMINA))/', '*${0}*', $story);
 
     // Wrapping and formatting

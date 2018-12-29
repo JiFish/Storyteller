@@ -118,7 +118,7 @@ function _cmd_page($cmd, &$player)
                 }
             // Attempt to find pages that end the story, kill the player if found
             elseif (sizeof($matches) < 1 &&
-                    preg_match('/Your (adventure|quest) (is over|ends here)\.?/i', $story, $matches)) {
+                    preg_match('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', $story, $matches)) {
                 $player['stam'] = 0;
             }
         }
