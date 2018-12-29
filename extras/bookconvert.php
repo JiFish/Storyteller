@@ -30,4 +30,4 @@ foreach($input as $line)
 }
 
 echo ("<?php\n\n");
-echo var_export($book,1).";";
+echo '$book = '.var_export($book,1).";";
