@@ -100,7 +100,7 @@ function advanced_command_split($command,$def)
             case 'oms':  //optional multi string (hard, doesn't match numbers)
                 $regex .= "(\s+(?![0-9]+).+?)?";
                 break;
-            case 'ms':  //multi string
+            case 'ms':  //multi string (hard, doesn't match numbers)
                 $regex .= "\s+((?![0-9]+).+?)";
                 break;
             case 'osl':  //optional string (loose, matches numbers)
