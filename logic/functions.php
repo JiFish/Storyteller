@@ -386,15 +386,17 @@ function send_stuff($player)
 
 function get_stuff_attachment(&$player) {
     $s = $player['stuff'];
+
+    // Special inventory
+    if ($player['shield']) {
+        $s[] .= 'Shield *(Equipped)*';
+    }
+
     if (sizeof($s) == 0) {
         $s[] = "(Nothing!)";
     } else {
         natcasesort($s);
         $s = array_map("ucfirst",$s);
-    }
-
-    if ($player['shield']) {
-        $s[] .= '*Shield* _(Equipped)_';
     }
 
     $attachments = array(
