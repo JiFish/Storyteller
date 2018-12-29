@@ -316,7 +316,7 @@ function send_charsheet($player, $text = "", $sendstuff = false)
     if ($player['gamebook'] == 'sob') {
         $attachments[0]['fields'][5] = array (
             'title' => 'Log',
-            'value' => $player['log'],
+            'value' => $player['log'].' days',
             'short' => true
         );
         $attachments[] = [
