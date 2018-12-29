@@ -152,7 +152,8 @@ h3 { font-size: 2.3rem; }
 <p>Dragons be here. Advanced users only.</p>
 <ul>
 <li><code>!echo &lt;message&gt;</code> Simply repeats &lt;message&gt;. Useful to label outputs when chaining commands.</li>
-<li><code>!debugset &lt;var&gt; &lt;val&gt; [silent]</code> Set character variable &lt;var&gt; to &lt;val&gt;. Potentially could ruin the character if you are careless. Silent is optional, if given nothing will be outputted.</li>
+<li><code>!debugset &lt;var&gt; &lt;val&gt;</code> Set character variable &lt;var&gt; to &lt;val&gt;. Potentially could ruin the character if you are careless.</li>
+<li><code>!silentset &lt;var&gt; &lt;val&gt;</code> As above, but nothing will be outputted.</li>
 <li><code>!macro &lt;line&gt;</code> or <code>!m &lt;line&gt;</code> run line number &lt;line&gt; from macros.txt as a command. Useful if an adventure requires the same sequence of commands to be run again and again.</li>
 <li>You can include magic substitutions in any command with curly brackets. There are three types:<br>
 – Character vars. Any of the stats will work, plus a few extra. Try <code>!echo Hello {name}.</code> Useful for debugging. Use the special case <code>{all}</code> to see everything.<br>
@@ -167,7 +168,7 @@ h3 { font-size: 2.3rem; }
 <li><code>!stam -{1d}</code> Roll a 6-sided dice and subtract the result from stamina.</li>
 <li><code>!skill max {skill}</code> Set your maximum skill to your current skill.</li>
 <li><code>!ng {name} {gender} {emoji} {race} Second</code> Start a new game as the offspring of the last character</li>
-<li><code>!debugset name Bob silent</code> Set the character’s name to Bob silently.</li>
+<li><code>!silentset name Bob</code> Set the character’s name to Bob silently.</li>
 </ul>
 
 </body></html>

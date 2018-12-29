@@ -115,7 +115,8 @@ You can chain multiple commands together in one go with semicolons `;` e.g. `!ne
 Dragons be here. Advanced users only.
 
 - `!echo <message>` Simply repeats <message>. Useful to label outputs when chaining commands.
-- `!debugset <var> <val> [silent]` Set character variable <var> to <val>. Potentially could ruin the character if you are careless. Silent is optional, if given nothing will be outputted.
+- `!debugset <var> <val>` Set character variable <var> to <val>. Potentially could ruin the character if you are careless.
+- `!silentset <var> <val>` Set character variable <var> to <val>. As above, but nothing will be outputted.
 - `!macro <line>` or `!m <line>` run line number <line> from macros.txt as a command. Useful if an adventure requires the same sequence of commands to be run again and again. 
 - You can include magic substitutions in any command with curly brackets. There are three types:
 -- Character vars. Any of the stats will work, plus a few extra. Try `!echo Hello {name}.` Useful for debugging. Use the special case `{all}` to see everything.
@@ -129,4 +130,4 @@ Dragons be here. Advanced users only.
 - `!stam -{1d}` Roll a 6-sided dice and subtract the result from stamina.
 - `!skill max {skill}` Set your maximum skill to your current skill.
 - `!ng {name} {gender} {emoji} {race} Second` Start a new game as the offspring of the last character
-- `!debugset name Bob silent` Set the character's name to Bob silently.
+- `!silentset name Bob` Set the character's name to Bob silently.

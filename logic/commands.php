@@ -40,7 +40,8 @@ function register_commands($gamebook)
     register_command('randpage',    '_cmd_randpage',['n','on','on','on','on','on','on','on']);
     register_command('shield',      '_cmd_shield',['os']);
     register_command('dead',        '_cmd_dead');
-    register_command('debugset',    '_cmd_debugset',['s','s','os']);
+    register_command('debugset',    '_cmd_debugset',['s','l']);
+    register_command('silentset',   '_cmd_debugset',['s','l']);
     register_command('macro',       '_cmd_macro',['n']);
     register_command('m',           '_cmd_macro',['n']);
     register_command('undo',        '_cmd_undo');
@@ -845,7 +846,7 @@ function _cmd_debugset($cmd, &$player)
 {
     $key = $cmd[1];
     $val = $cmd[2];
-    $silent = (isset($cmd[3]) && (strtolower($cmd[3]) == 'silent' || strtolower($cmd[3]) == 's'));
+    $silent = (strtolower($cmd[0]) == 'silentset');
 
     if (array_key_exists($key,$player) && !is_array($player[$key])) {
         if (is_numeric($val)) {
