@@ -398,8 +398,13 @@ function get_stuff_attachment(&$player) {
     return $attachments;
 }
 
-function format_story($page,$text) {
+function format_story($page, $text, &$player) {
     require("book.php");
+
+    // Book specific specials
+    if ($player['gamebook'] == 'sob') {
+        $text = str_replace('The Banshee',$player['shipname'],$text);
+    }
 
     // Look for choices in the text and give them bold formatting
     $story = preg_replace('/\(?turn(ing)? to [0-9]+\)?/i', '*${0}*', $text);

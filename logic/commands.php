@@ -78,7 +78,7 @@ function register_commands($gamebook)
 function _cmd_look($cmd, &$player)
 {
     require("book.php");
-    $story = format_story($player['lastpage'],$book[$player['lastpage']]);
+    $story = format_story($player['lastpage'],$book[$player['lastpage']],$player);
     sendqmsg($story);
 }
 
@@ -122,7 +122,7 @@ function _cmd_page($cmd, &$player)
             }
         }
 
-        $story = format_story($player['lastpage'],$story);
+        $story = format_story($player['lastpage'],$story,$player);
     } else {
         sendqmsg("*".$cmd[1].": PAGE NOT FOUND*",":interrobang:");
         return;
@@ -139,7 +139,7 @@ function _cmd_page($cmd, &$player)
 function _cmd_background($cmd, &$player)
 {
     require("book.php");
-    $story = format_story(0,$book[0]);
+    $story = format_story(0,$book[0], $player);
     senddirmsg($story);
 }
 

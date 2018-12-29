@@ -1,47 +1,47 @@
-Bachelor's Delight 
-Royal Fortune 
-Golden Hind 
-Roebuck 
-Queen Anne's Revenge 
-The Black Pearl 
-Satisfaction 
-New York Revenge 
-The Adventure Galley 
-The Golden Fleece 
-The Whydah 
-The Flying Dragon 
-The Rose Pink 
-The Revenge 
-The Fancy 
-The Squirrel 
-The Ranger 
-The Freedom 
-The Gabriel 
-The Kraken
-Davy Jones' Executioner
+The Adventure Galley
+The Bachelor's Delight
+The Banshee
+The Black Charlatan
+The Black Hearted Wench
+The Black Pearl
 The Bloody Shame
-Satan's Mermaid
-Black Charlatan
-Devil's Maw
-Privateer's Death
-Rogue Wave
-Kiss of Death
-Night's Dirty Lightning
-Devil's Doom
-Ghostly Seadog
-The Wicked Wench
-Sea Nymph
-Privateer's Scream
-Devil's Cursed Storm
-The Black Heart Wench
-Cursed Sea-Dog
-The Lusty Wench
-Scourge of the Seven Seas
-Murderer's Knave
-The Hail Mary
-Mourning Star
-Sea's Hellish Plague
-Hell and High-Water
-Neptune's Plague
+The Cursed Sea-Dog
+The Davy Jones
+The Devil's Doom
+The Devil's Maw
+The Devil's Storm
+The Dirty Lightning
 The Evil Strumpet
+The Fancy
+The Flying Dragon
+The Freedom
+The Gabriel
+The Ghostly Seadog
+The Golden Fleece
+The Golden Hind
+The Hail Mary
+The Hell and High-Water
+The Hellish Plague
+The Kiss of Death
+The Kraken
+The Lusty Wench
 The Mad Monkey
+The Mourning Star
+The Murderer's Knave
+The Neptune
+The Privateer's Death
+The Privateer's Scream
+The Queen Anne's Revenge
+The Ranger
+The Revenge
+The Roebuck
+The Rogue Wave
+The Rose Pink
+The Royal Fortune
+The Satan's Mermaid
+The Satisfaction
+The Scourge of the Seven Seas
+The Sea Nymph
+The Squirrel
+The Whydah
+The Wicked Wench
