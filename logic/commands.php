@@ -67,7 +67,7 @@ function register_commands($gamebook)
     } elseif ($gamebook == 'hoh') {
         $stats = array_merge($stats,['fear']);
     } elseif ($gamebook == 'sob') {
-        $stats = array_merge($stats,['str','strength','strike','log']);
+        $stats = array_merge($stats,['str','strength','strike','log','slaves']);
     }
     foreach($stats as $s) {
         register_command($s, '_cmd_stat_adjust',['os','nm']);
@@ -169,6 +169,7 @@ function _cmd_stat_adjust($cmd, &$player)
     if ($cmd[0] == 'bonus') $cmd[0] = 'weapon';
     if ($cmd[0] == 'gz') $cmd[0] = 'goldzagors';
     if ($cmd[0] == 'strength') $cmd[0] = 'str';
+    if ($cmd[0] == 'booty') $cmd[0] = 'gold';
 
     // Setup the details of the ajustment
     // $statref is a reference to the stat that will be changed

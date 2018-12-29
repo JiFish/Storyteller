@@ -160,6 +160,8 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['max']['str'] = $p['str'];
         $p['log'] = 0;
         $p['max']['log'] = 999;
+        $p['slaves'] = 0;
+        $p['max']['slaves'] = 999;
         // starting items
         $p['prov'] = 0;
         $p['gold'] = 20;

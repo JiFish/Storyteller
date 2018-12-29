@@ -314,11 +314,13 @@ function send_charsheet($player, $text = "", $sendstuff = false)
 
     // Sea of Blood Ship Stats
     if ($player['gamebook'] == 'sob') {
-        $attachments[0]['fields'][5] = array (
-            'title' => 'Log',
-            'value' => $player['log'].' days',
-            'short' => true
-        );
+        // QOL for discord with 3 per row instead of two
+        if (DISCORD_MODE) {
+            $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d",$player['weapon']).')';
+            unset($attachments[0]['fields'][3]);
+        }
+        unset($attachments[0]['fields'][4]);
+        unset($attachments[0]['fields'][5]);
         $attachments[] = [
             'color'    => '#8b4513',
             'fields'   => array(
@@ -335,6 +337,21 @@ function send_charsheet($player, $text = "", $sendstuff = false)
             [
                 'title' => 'Crew Strength (str)',
                 'value' => $player['str']." / ".$player['max']['str'],
+                'short' => true
+            ],
+            [
+                'title' => 'Booty (Gold)',
+                'value' => $player['gold'],
+                'short' => true
+            ],
+            [
+                'title' => 'Slaves',
+                'value' => $player['slaves'],
+                'short' => true
+            ],
+            [
+                'title' => 'Log',
+                'value' => $player['log'].' days',
                 'short' => true
             ])
         ];
@@ -403,7 +420,7 @@ function format_story($page, $text, &$player) {
 
     // Book specific specials
     if ($player['gamebook'] == 'sob') {
-        $text = str_replace('The Banshee',$player['shipname'],$text);
+        $text = str_ireplace('The Banshee',$player['shipname'],$text);
     }
 
     // Look for choices in the text and give them bold formatting
