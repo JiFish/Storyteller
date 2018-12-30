@@ -19,6 +19,17 @@ function run_fight($input) {
     $fasthands =      (isset($input['fasthands'])?     $input['fasthands']:      false);
     $healthstatname = (isset($input['healthstatname'])?$input['healthstatname']: 'stamina');
 
+    // Referrers
+    if (isset($player['referrers'])) {
+        $referrers = $player['referrers'];
+    } else {
+        $referrers = ['you' => 'you', 'youare' => 'you are', 'your' => 'your'];
+    }
+    $you = ucfirst($referrers['you']);
+    $youlc = $referrers['you'];
+    $youare = ucfirst($referrers['youare']);
+    $your = ucfirst($referrers['your']);
+
     // Prevent restore
     backup_remove();
 
@@ -80,7 +91,7 @@ function run_fight($input) {
         }
 
         if ($pattack > $mattack) {
-            $out .= "_You hit $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)";
+            $out .= "_$you hit $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)";
             if ($critsfor == 'both' || $critsfor == 'me') {
                 if ($croll > 6-$critchance) {
                     $out .= " *and it was a critical strike!*_ ($cemoji)\n";
@@ -97,7 +108,7 @@ function run_fight($input) {
             if ($stop_when_hit_them) { break; }
         }
         else if ($pattack < $mattack) {
-            $out .= "_$m hits you! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)";
+            $out .= "_$m hits $youlc! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)";
             if ($critsfor == 'both') {
                 if ($croll > 6-$critchance) {
                     $out .= " *and it was a critical strike!*_ ($cemoji)\n";
@@ -108,7 +119,7 @@ function run_fight($input) {
                 }
             } else {
                 if ($player['shield'] && rand(1,6) == 6) {
-                    $out .= " :shield: Your shield reduces the damage by 1! (_ ".diceemoji(6)." _) ";
+                    $out .= " :shield: $your shield reduces the damage by 1! (_ ".diceemoji(6)." _) ";
                     $player['stam'] += 1;
                 }
                 $out .= "_\n";
@@ -117,7 +128,7 @@ function run_fight($input) {
             if ($stop_when_hit_you) { break; }
         }
         else {
-            $out .= "_You avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+            $out .= "_$you and $m avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
         }
 
         // Monster 2 attack
@@ -131,15 +142,15 @@ function run_fight($input) {
             $pemoji = diceemoji($proll).diceemoji($proll2);
 
             if ($pattack > $mattack) {
-                $out .= "_You block $m2's attack. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                $out .= "_$you block $m2's attack. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
             }
             else if ($pattack < $mattack) {
-                $out .= "_$m2 hits you! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                $out .= "_$m2 hits $youlc! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
                 $player['stam'] -= 2;
                 if ($stop_when_hit_you) { break; }
             }
             else {
-                $out .= "_You avoid $m2's attack. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                $out .= "_$m2's attack fails to hit $youlc. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
             }
         }
 
@@ -148,7 +159,7 @@ function run_fight($input) {
             $bdroll = rand(1,6);
             if ($bdroll > 6-$bonusdmgchance) {
                 $bdemoji = ($bonusdmgchance < 6?'(_ '.diceemoji($bdroll).' _)':'');
-                $out .= "_$m hits you with ".$bonusdmg." bonus damage! $bdemoji _\n";
+                $out .= "_$m hits $youlc with ".$bonusdmg." bonus damage! $bdemoji _\n";
                 $player['stam'] -= $bonusdmg;
             }
         }            
@@ -162,10 +173,10 @@ function run_fight($input) {
             $e2 = diceemoji($d2);
             $out .= "_Testing luck to stave off death... ";
             if ($d1+$d2 <= $player['luck']) {
-                $out .= " You are lucky!_ :four_leaf_clover: ( $e1 $e2 )\n";
+                $out .= " $youare lucky!_ :four_leaf_clover: ( $e1 $e2 )\n";
                 $player['stam'] += 1;
             } else {
-                $out .= " You are unlucky!_ :lightning: ( $e1 $e2 )\n";
+                $out .= " $youare unlucky!_ :lightning: ( $e1 $e2 )\n";
                 $player['stam'] -= 1;
             }
             $player['luck']--;
@@ -177,15 +188,15 @@ function run_fight($input) {
     }
 
     if ($player['stam'] < 1) {
-        $out .= "_*$m has defeated you!*_\n";
+        $out .= "_*$m defeated $youlc!*_\n";
     } elseif ($mstam < 1) {
-        $out .= "_*You have defeated $m!*_\n";
-        $out .= "_(Remaining $healthstatname: ".$player['stam'].")_";
+        $out .= "_*$you defeated $m!*_\n";
+        $out .= "_($your remaining $healthstatname: ".$player['stam'].")_";
     } else {
         if ($round > 1) {
             $out .= "_*Combat stopped after $round rounds.*_\n";
         }
-        $out .= "_($m's remaining $healthstatname: $mstam. Your remaining $healthstatname: ".$player['stam'].")_";
+        $out .= "_($m's remaining $healthstatname: $mstam. $your remaining $healthstatname: ".$player['stam'].")_";
     }
 
     // Remove temp bonuses, if any and clear temp bonus array

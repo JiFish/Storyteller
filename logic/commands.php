@@ -653,62 +653,23 @@ function _cmd_bonusfight($cmd, &$player)
 //// !vs <name 1> <skill 1> <stamina 1> <name 2> <skill 2> <stamina 2> 
 function _cmd_vs($cmd, &$player)
 {
-    // Invalid inputs
-    if (!is_numeric($cmd[2]) || !is_numeric($cmd[3]) || !is_numeric($cmd[5]) || !is_numeric($cmd[6])) {
-        return;
-    }
-
-    $m = $cmd[1];
-    $mskill = $cmd[2];
-    $mstam = $cmd[3];
-    $m2 = $cmd[4];
-    $m2skill = $cmd[5];
-    $m2stam = $cmd[6];
-
-    $maxrounds = 50;
-
-    $out = "";
-    $round = 1;
-    while ($mstam > 0 && $m2stam > 0) {
-        $mroll = rand(1,6); $mroll2 = rand(1,6);
-        $m2roll = rand(1,6); $m2roll2 = rand(1,6);
-        $mattack = $mskill+$mroll+$mroll2;
-        $m2attack = $m2skill+$m2roll+$m2roll2;
-
-        $memoji = diceemoji($mroll).diceemoji($mroll2);
-        $m2emoji = diceemoji($m2roll).diceemoji($m2roll2);
-
-        if ($m2attack > $mattack) {
-            $out .= "_$m2 hit $m. (_ $m2emoji _ $m2attack vs _ $memoji _ $mattack)_\n";
-            $mstam -= 2;
-        }
-        else if ($m2attack < $mattack) {
-            $out .= "_$m hit $m2. (_ $memoji _ $mattack vs _ $m2emoji _ $m2attack)_\n";
-            $m2stam -= 2;
-        }
-        else {
-            $out .= "_$m and $m2 each others blows. (_ $memoji _ $mattack vs _ $m2emoji _ $m2attack)_\n";
-        }
-
-        if ($round++ == $maxrounds) {
-            break;
-        }
-    }
-    if ($mstam < 1) {
-        $out .= "_*$m2 defeated $m!*_\n";
-        $out .= "_(Remaining stamina: ".$m2stam.")_";
-    }
-    else if ($m2stam < 1) {
-        $out .= "_*$m defeated $m2!*_\n";
-        $out .= "_(Remaining stamina: ".$mstam.")_";
-    }
-    else {
-        if ($maxrounds > 1) {
-            $out .= "_*Combat stopped after $maxrounds rounds.*_\n";
-        }
-        $out .= "_($m's remaining stamina: $mstam. $m2's remaining stamina: $m2stam)_";
-    }
-    sendqmsg($out,":wrestlers:");
+    $vsplayer = array(
+        'name' => $cmd[1],
+        'referrers' => ['you' => $cmd[1], 'youare' => $cmd[1].' is', 'your' => $cmd[1]."'s"],
+        'skill' => $cmd[2],
+        'stam' => $cmd[3],
+        'gamebook' => $player['gamebook'],
+        'luck' => 0,
+        'weapon' => 0,
+        'shield' => false,
+        'temp' => []
+    );
+    $out = run_fight(['player' => &$vsplayer,
+                      'monstername' => $cmd[4],
+                      'monsterskill' => $cmd[5],
+                      'monsterstam' => $cmd[6]
+                      ]);
+    sendqmsg($out,":crossed_swords:");
 }
 
 //// !fighttwo <name 1> <skill 1> <stamina 1> [<name 2> <skill 2> <stamina 2>]
@@ -981,7 +942,8 @@ function _cmd_battle($cmd, &$player)
 {
     // Construct battle player
     $bp = array(
-        'name' => $player['shipname'],
+        'name' => "The crew of ".$player['shipname'],
+        'referrers' => ['you' => 'your crew', 'youare' => 'your crew is', 'your' => "your crew's"],
         'skill' => $player['strike'],
         'stam' => $player['str'],
         'gamebook' => $player['gamebook'],
@@ -995,7 +957,7 @@ function _cmd_battle($cmd, &$player)
                       'monsterskill' => $cmd[2],
                       'monsterstam' => $cmd[3],
                       'maxrounds' => ($cmd[4]?$cmd[4]:50),
-                      'healthstatname' => 'crew strength']);
+                      'healthstatname' => 'strength']);
 
     $player['str'] = $bp['stam'];
     if ($player['str'] < 1) {
