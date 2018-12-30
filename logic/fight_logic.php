@@ -1,6 +1,24 @@
 <?php
 
-function run_fight(&$player, $m, $mskill, $mstam = 999, $maxrounds = 50, $critsfor = 'nobody', $critchance = 2, $m2 = null, $mskill2 = null, $bonusdmg = 0, $fasthands = false, $healthstatname = 'stamina', $bonusdmgchance = 3) {
+function run_fight($input) {
+    // Inputs
+    if (!isset($input['player'])) return false;
+    if (!isset($input['monstername'])) return false;
+    if (!isset($input['monsterskill'])) return false;
+    $player = &$input['player'];
+    $m = $input['monstername'];
+    $mskill = &$input['monsterskill'];
+    $mstam =          (isset($input['monsterstam'])?   $input['monsterstam']:    999);
+    $maxrounds =      (isset($input['maxrounds'])?     $input['maxrounds']:      50);
+    $critsfor =       (isset($input['critsfor'])?      $input['critsfor']:       'nobody');
+    $critchance =     (isset($input['critchance'])?    $input['critchance']:     2);
+    $m2 =             (isset($input['monster2name'])?  $input['monster2name']:   null);
+    $mskill2 =        (isset($input['monster2skill'])? $input['monster2skill']:  null);
+    $bonusdmg =       (isset($input['bonusdmg'])?      $input['bonusdmg']:       0);
+    $bonusdmgchance = (isset($input['bonusdmgchance'])?$input['bonusdmgchance']: 3);
+    $fasthands =      (isset($input['fasthands'])?     $input['fasthands']:      false);
+    $healthstatname = (isset($input['healthstatname'])?$input['healthstatname']: 'stamina');
+
     // Prevent restore
     backup_remove();
 

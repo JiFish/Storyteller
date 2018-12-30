@@ -99,7 +99,11 @@ $spells[] = array(
     'target' => true,
     'desc' => 'This spell can be cast immediately before any combat begins but not during one. For the first three Attack Rounds of the combat, you may roll dice twice when working out your Attack Strength and take the higher total rolled.',
     'func' => function(&$player,$name,$skill,$stam) {
-        $out = run_fight($player, $name, $skill, $stam, 50, 'nobody', 2, null, null, 0, true);
+        $out = run_fight(['player' => &$player,
+                          'monstername' => $m,
+                          'monsterskill' => $mskill,
+                          'monsterstam' => $mstam,
+                          'fasthands' => true]);
         sendqmsg($out,":crossed_swords:");
     }
 );

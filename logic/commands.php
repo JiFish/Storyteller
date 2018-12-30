@@ -624,7 +624,11 @@ function _cmd_fight($cmd, &$player)
         $maxrounds = 50;
     }
 
-    $out = run_fight($player,$m,$mskill,$mstam,$maxrounds);
+    $out = run_fight(['player' => &$player,
+                      'monstername' => $m,
+                      'monsterskill' => $mskill,
+                      'monsterstam' => $mstam,
+                      'maxrounds' => $maxrounds]);
     sendqmsg($out,":crossed_swords:");
 }
 
@@ -644,7 +648,11 @@ function _cmd_critfight($cmd, &$player)
     }
 
     $out = "_*You".($critsfor == 'both'?' both':'')." have to hit critical strikes!* ($critchance in 6 chance)_\n";
-    $out .= run_fight($player,$m,$mskill,999,50,$critsfor,$critchance);
+    $out = run_fight(['player' => &$player,
+                      'monstername' => $m,
+                      'monsterskill' => $mskill,
+                      'critsfor' => $critsfor,
+                      'critchance' => $critchance]);
     sendqmsg($out,":crossed_swords:");
 }
 
@@ -661,7 +669,12 @@ function _cmd_bonusfight($cmd, &$player)
         $bonusdmgchance = 3;
     }
 
-    $out = run_fight($player,$m,$mskill,$mstam,50,'nobody',null,null,null,$bonusdmg,false,'stamina',$bonusdmgchance);
+    $out = run_fight(['player' => &$player,
+                      'monstername' => $m,
+                      'monsterskill' => $mskill,
+                      'monsterstam' => $mstam,
+                      'bonusdmg' => $bonusdmg,
+                      'bonusdmgchance' => $bonusdmgchance]);
     sendqmsg($out,":crossed_swords:");
 }
 
@@ -751,7 +764,12 @@ function _cmd_fighttwo($cmd, &$player)
         $m2 = "Second ".$m2;
     }
 
-    $out = run_fight($player,$m,$mskill,$mstam,50,'nobody',null,$m2,$mskill2);
+    $out = run_fight(['player' => &$player,
+                      'monstername' => $m,
+                      'monsterskill' => $mskill,
+                      'monsterstam' => $mstam,
+                      'monster2name' => $m2,
+                      'monster2skill' => $mskill2]);
     if ($player['stam'] > 0) {
         addcommand("fight $m2 $mskill2 $mstam2");
     }
@@ -1024,7 +1042,12 @@ function _cmd_battle($cmd, &$player)
         'shield' => false,
         'temp' => []
     );
-    $out = run_fight($bp,$m,$mskill,$mstam,$maxrounds,'nobody',null,null,null,0,false,'crew strength');
+    $out = run_fight(['player' => &$bp,
+                      'monstername' => $m,
+                      'monsterskill' => $mskill,
+                      'monsterstam' => $mstam,
+                      'maxrounds' => $maxrounds,
+                      'healthstatname' => 'crew strength']);
 
     $player['str'] = $bp['stam'];
     if ($player['str'] < 1) {
