@@ -89,11 +89,8 @@ function _cmd_page($cmd, &$player)
     if (!is_numeric($cmd[1])) {
         return;
     }
-    if (isset($cmd[2])) {
-        $backup = (strtolower($cmd[2])!='nobackup');
-    } else {
-        $backup = false;
-    }
+    $backup = (strtolower($cmd[2])!='nobackup');
+    $backup = (strtolower($cmd[2])!='nobackup');
 
     require("book.php");
 
@@ -459,9 +456,8 @@ function _cmd_drop($cmd, &$player)
 //// !roll [x] (roll xd6)
 function _cmd_roll($cmd, &$player)
 {
-    if (!isset($cmd[1]) || $cmd[1] > 100) {
-        $cmd[1] = 1;
-    }
+    $numdice = ($cmd[1]?$cmd[1]:1);
+    $numdice = max(min($numdice, 100), 1);
     $out = "Result:";
 
     $t = 0;
@@ -502,10 +498,10 @@ function _cmd_test($cmd, &$player)
     apply_temp_stats($player);
 
     // Setup outcome pages to read if provided
-    if (isset($cmd[2])) {
+    if ($cmd[2]) {
         $success_page = "page ".$cmd[2]." nobackup";
     }
-    if (isset($cmd[3])) {
+    if ($cmd[3]) {
         $fail_page = "page ".$cmd[3]." nobackup";
     }
 
@@ -611,35 +607,20 @@ function _cmd_help($cmd, &$player)
 //// !fight [name] <skill> <stamina> [maxrounds] (run fight logic)
 function _cmd_fight($cmd, &$player)
 {
-    if ($cmd[1]) {
-        $m = $cmd[1];
-    } else {
-        $m = "Opponent";
-    }
-    $mskill = $cmd[2];
-    $mstam = $cmd[3];
-    if (isset($cmd[4])) {
-        $maxrounds = $cmd[4];
-    } else {
-        $maxrounds = 50;
-    }
-
     $out = run_fight(['player' => &$player,
-                      'monstername' => $m,
-                      'monsterskill' => $mskill,
-                      'monsterstam' => $mstam,
-                      'maxrounds' => $maxrounds]);
+                      'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
+                      'monsterskill' => $cmd[2],
+                      'monsterstam' => $cmd[3],
+                      'maxrounds' => ($cmd[4]?$cmd[4]:50)
+                      ]);
     sendqmsg($out,":crossed_swords:");
 }
 
 //// !critfight [name] <skill> [who] [critchance] (run crit fight logic)
 function _cmd_critfight($cmd, &$player)
 {
-    $m = ($cmd[1]?$cmd[1]:"Opponent");
-    $mskill = $cmd[2];
     $critsfor = ($cmd[3]?$cmd[3]:'me');
     $critchance = ($cmd[4]?$cmd[4]:2);
-
     if (!in_array($critsfor,['both','me'])) {
         $critsfor = 'me';
     }
@@ -649,8 +630,8 @@ function _cmd_critfight($cmd, &$player)
 
     $out = "_*You".($critsfor == 'both'?' both':'')." have to hit critical strikes!* ($critchance in 6 chance)_\n";
     $out = run_fight(['player' => &$player,
-                      'monstername' => $m,
-                      'monsterskill' => $mskill,
+                      'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
+                      'monsterskill' => $cmd[2],
                       'critsfor' => $critsfor,
                       'critchance' => $critchance]);
     sendqmsg($out,":crossed_swords:");
@@ -659,22 +640,13 @@ function _cmd_critfight($cmd, &$player)
 //// !bonusfight [name] <skill> <stamina> <bonusdamage> [bonusdmgchance] (run bonus attack fight logic)
 function _cmd_bonusfight($cmd, &$player)
 {
-    $m = ($cmd[1]?$cmd[1]:"Opponent");
-    $mskill = $cmd[2];
-    $mstam = $cmd[3];
-    $bonusdmg = $cmd[4];
-    if (isset($cmd[5])) {
-        $bonusdmgchance = $cmd[5];
-    } else {
-        $bonusdmgchance = 3;
-    }
-
     $out = run_fight(['player' => &$player,
-                      'monstername' => $m,
-                      'monsterskill' => $mskill,
-                      'monsterstam' => $mstam,
-                      'bonusdmg' => $bonusdmg,
-                      'bonusdmgchance' => $bonusdmgchance]);
+                      'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
+                      'monsterskill' => $cmd[2],
+                      'monsterstam' => $cmd[3],
+                      'bonusdmg' => $cmd[4],
+                      'bonusdmgchance' => ($cmd[5]?$cmd[5]:3)
+                      ]);
     sendqmsg($out,":crossed_swords:");
 }
 
@@ -748,7 +720,7 @@ function _cmd_fighttwo($cmd, &$player)
     $mstam = $cmd[3];
 
     // Set monster 2
-    if (isset($cmd[4]) && isset($cmd[5]) && isset($cmd[6])) {
+    if ($cmd[4] && $cmd[5] && $cmd[6]) {
         $m2 = $cmd[4];
         $mskill2 = $cmd[5];
         $mstam2 = $cmd[6];
@@ -779,13 +751,7 @@ function _cmd_fighttwo($cmd, &$player)
 //// !attack <skill>
 function _cmd_attack($cmd, &$player)
 {
-
-    if (isset($cmd[2])) {
-        $dmg = $cmd[2];
-    } else {
-        $dmg = 0;
-    }
-
+    $dmg = ($cmd[2]?$cmd[2]:0);
     $out = run_single_attack($player, 'Opponent', $cmd[1], 999, $dmg, 0);
 
     sendqmsg($out,":crossed_swords:");
@@ -837,12 +803,7 @@ function _cmd_randpage ($cmd, &$player)
 //// !shield [on/off] - Toggle shield
 function _cmd_shield($cmd, &$player)
 {
-    if (!isset($cmd[1])) {
-        $state = '';
-    } else {
-        $state = strtolower($cmd[1]);
-    }
-
+    $state = strtolower($cmd[1]);
     if ($state != 'on' && $state != 'off') {
         $state = ($player['shield']?'off':'on');
     }
@@ -1018,19 +979,6 @@ function _cmd_map($cmd, &$player)
 //// !battle [name] <skill> <stamina> [maxrounds] (run battle logic)
 function _cmd_battle($cmd, &$player)
 {
-    if ($cmd[1]) {
-        $m = $cmd[1];
-    } else {
-        $m = "Opponent";
-    }
-    $mskill = $cmd[2];
-    $mstam = $cmd[3];
-    if (isset($cmd[4])) {
-        $maxrounds = $cmd[4];
-    } else {
-        $maxrounds = 50;
-    }
-
     // Construct battle player
     $bp = array(
         'name' => $player['shipname'],
@@ -1043,10 +991,10 @@ function _cmd_battle($cmd, &$player)
         'temp' => []
     );
     $out = run_fight(['player' => &$bp,
-                      'monstername' => $m,
-                      'monsterskill' => $mskill,
-                      'monsterstam' => $mstam,
-                      'maxrounds' => $maxrounds,
+                      'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
+                      'monsterskill' => $cmd[2],
+                      'monsterstam' => $cmd[3],
+                      'maxrounds' => ($cmd[4]?$cmd[4]:50),
                       'healthstatname' => 'crew strength']);
 
     $player['str'] = $bp['stam'];

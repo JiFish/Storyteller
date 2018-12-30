@@ -146,6 +146,7 @@ function advanced_command_split($command,$def)
 
     array_shift($matches);
     $matches = array_map('trim', $matches);
+    $matches = array_pad($matches,sizeof($def)+1,null);
     //print_r($matches);
     return $matches;
 }
