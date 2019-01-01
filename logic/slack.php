@@ -49,7 +49,7 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
 
     // Respect any rate limit
     global $limittime;
-    if (DISCORD_MODE && $limittime) {
+    if ($limittime) {
         time_sleep_until($limittime);
         $limittime = false;
     }
@@ -83,7 +83,7 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     $result = get_headers_from_curl_response(curl_exec($ch));
 
     // Look for discord rate limit header
-    if (DISCORD_MODE && isset($result['x-ratelimit-remaining']) && $result['x-ratelimit-remaining'] == 0) {
+    if (isset($result['x-ratelimit-remaining']) && $result['x-ratelimit-remaining'] == 0) {
         $limittime = $result['x-ratelimit-reset'];
     }
 
