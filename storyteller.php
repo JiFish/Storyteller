@@ -13,7 +13,7 @@ if ($_POST['token'] != SLACK_TOKEN) {
 }
 
 $player = load();
-register_commands($player['gamebook']);
+register_commands($player);
 
 // Split the command list by semi-colons. Allows multiple commands to be queued
 // Note, some commands will queue other commands

@@ -97,6 +97,9 @@ function advanced_command_split($command,$def)
             case 'l':  //whole line
                 $regex .= "\s+(.+)";
                 break;
+            case 'ol':  //optional whole line
+                $regex .= "(\s+.+)?";
+                break;
             case 'oms':  //optional multi string (hard, doesn't match numbers)
                 $regex .= "(\s+(?![0-9]+).+?)?";
                 break;
@@ -134,6 +137,7 @@ function advanced_command_split($command,$def)
                 $regex .= ")";
                 break;
             default:  //misc
+                $regex .= $d;
                 break;
         }
     }
@@ -174,7 +178,7 @@ function getbook()
     }
 
     $supported_books = array('none','custom','wofm','dotd','coh','poe','bvp','rtfm',
-                             'loz','tot','hoh','sob');
+                             'loz','tot','hoh','sob','sst');
 
     if (!in_array(BOOK_TYPE, $supported_books)) {
         return 'none';
@@ -358,6 +362,56 @@ function send_charsheet($player, $text = "", $sendstuff = false)
         ];
     }
 
+    // starship traveller crew & ship
+    if ($player['gamebook'] == 'sst') {
+        // ship
+        $attachments[0]['fields'][3] = [
+            'title' => 'Ship',
+            'value' => $player['shipname'],
+            'short' => true
+        ];
+        $attachments[0]['fields'][4] = [
+            'title' => 'Weapons (weapons)',
+            'value' => $player['weapons'],
+            'short' => true
+        ];
+        $attachments[0]['fields'][5] = [
+            'title' => 'Shields',
+            'value' => $player['shields']." / ".$player['max']['shields'],
+            'short' => true
+        ];
+        // crew
+        $cname = "";
+        $cskill = "";
+        $cstam = "";
+        $cboth = "";
+        foreach ($player['crew'] as $cm) {
+            $cname .= '*'.$cm['position'].':* '.$cm['name']." (".$cm['race'].")\n";
+            $cskill .= $cm['skill'].'/'.$cm['max']['skill'].($cm['combatpenalty']?' *†*':'')."\n";
+            $cstam .= $cm['stam'].'/'.$cm['max']['stam'].($cm['replacement']?'_(Replacement)_':'')."\n";
+            $cboth = 'SKILL: '.$cm['skill'].'/'.$cm['max']['skill'].($cm['combatpenalty']?' *†*':'').' STAMINA: '.$cm['stam'].'/'.$cm['max']['stam'].($cm['replacement']?'_(Replacement)_':'')."\n";
+        }
+        $fields = array([ 'title' => 'Crew',
+                          'value' => $cname,
+                          'short' => true ]);
+        // Discord QOL
+        if (DISCORD_MODE) {
+            $fields[] = ['title' => 'Skill (†: -2 in combat)',
+                         'value' => $cskill,
+                         'short' => true ];
+            $fields[] = ['title' => 'Stamina',
+                         'value' => $cstam,
+                         'short' => true ];
+        } else {
+            $fields[] = ['title' => 'Stats',
+                         'value' => $cboth,
+                         'short' => true ];
+        }
+        $attachments[] = [
+            'color'    => '#BB0000',
+            'fields'   => $fields ];
+    }
+
     if ($sendstuff) {
         $attachments[] = get_stuff_attachment($player);
     }
@@ -424,6 +478,10 @@ function format_story($page, $text, &$player) {
     // Book specific specials
     if ($player['gamebook'] == 'sob') {
         $text = str_ireplace('The Banshee',$player['shipname'],$text);
+    }
+    if ($player['gamebook'] == 'sst') {
+        $text = str_ireplace('The Traveller',$player['shipname'],$text);
+        $text = str_ireplace('Starship Traveller','Starship '.substr($player['shipname'],3),$text);
     }
 
     // Look for choices in the text and give them bold formatting

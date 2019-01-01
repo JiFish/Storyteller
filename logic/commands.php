@@ -1,7 +1,7 @@
 <?php
 
 /// This is messy. But it was quick.
-function register_commands($gamebook)
+function register_commands(&$player)
 {
     register_command('look',        '_cmd_look');
     register_command('page',        '_cmd_page',['n','os']);
@@ -34,6 +34,8 @@ function register_commands($gamebook)
     register_command('bonusfight',  '_cmd_bonusfight',['oms','n','n','n','on']);
     register_command('vs',          '_cmd_vs',['ms','n','n','ms','n','n']);
     register_command('fighttwo',    '_cmd_fighttwo',['ms','n','n','oms','on','on']);
+    register_command('phaser',      '_cmd_phaser',['onm','(\sstun|\skill)?','oms','n','(\sstun|\skill)?','on']);
+    register_command('gun',         '_cmd_phaser',['onm','(\sstun|\skill)?','oms','n','(\sstun|\skill)?','on']);
     register_command('attack',      '_cmd_attack',['n','on']);
     register_command('a',           '_cmd_attack',['n','on']);
     register_command('echo',        '_cmd_echo',['l']);
@@ -49,6 +51,7 @@ function register_commands($gamebook)
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
 
+    $gamebook = $player['gamebook'];
     if ($gamebook == 'loz' ||
         $gamebook == 'custom') {
             register_command('spellbook',   '_cmd_spellbook',['osl']);
@@ -56,6 +59,13 @@ function register_commands($gamebook)
     }
     if ($gamebook == 'sob') {
             register_command('battle',      '_cmd_battle',['oms','n','n','osl']);
+    }
+    if ($gamebook == 'sst') {
+            register_command('shipbattle',  '_cmd_shipbattle',['oms','n','n']);
+            foreach($player['crew'] as $key => $val) {
+                register_command($key, '_cmd_order',['s','ol']);
+            }
+            register_command('everyone', '_cmd_everyone',['l']);
     }
 
     // Stats commands
@@ -89,7 +99,6 @@ function _cmd_page($cmd, &$player)
     if (!is_numeric($cmd[1])) {
         return;
     }
-    $backup = (strtolower($cmd[2])!='nobackup');
     $backup = (strtolower($cmd[2])!='nobackup');
 
     require("book.php");
@@ -169,7 +178,14 @@ function _cmd_stat_adjust($cmd, &$player)
     if ($cmd[0] == 'strength') $cmd[0] = 'str';
     if ($cmd[0] == 'booty') $cmd[0] = 'gold';
 
-    // Setup the details of the ajustment
+    // Referrers
+    if (isset($player['referrers'])) {
+        $your = $player['referrers']['your'].' ';
+    } else {
+        $your = '';
+    }
+
+    // Setup the details of the adjustment
     // $statref is a reference to the stat that will be changed
     // $max is the maximum we will allow it to be set to
     // $statname is what we will send back to slack
@@ -219,7 +235,7 @@ function _cmd_stat_adjust($cmd, &$player)
         if ($statref > $max) {
             $statref = $max;
         }
-        $msg = "*Added $val to $statname, now $statref.*";
+        $msg = "*Added $val to $your$statname, now $statref.*";
     } else if ($val[0] == "-") {
         $val = substr($val,1);
         $statref -= (int)$val;
@@ -227,13 +243,13 @@ function _cmd_stat_adjust($cmd, &$player)
         if ($statref < 0 && $cmd[0] != 'weapon' && $cmd[1] != 'temp') {
             $statref = 0;
         }
-        $msg = "*Subtracted $val from $statname, now $statref.*";
+        $msg = "*Subtracted $val from $your$statname, now $statref.*";
     } else {
         $statref = (int)$val;
         if ($statref > $max) {
             $statref = $max;
         }
-        $msg = "*Set $statname to $statref.*";
+        $msg = "*Set $your$statname to $statref.*";
     }
 
     // When reducing the max value, we may also need to reduce the current value
@@ -484,6 +500,15 @@ function _cmd_test($cmd, &$player)
     if ($cmd[1] == "stamina") $cmd[1] = "stam";
     if ($cmd[1] == "strength") $cmd[1] = "str";
 
+    // Referrers
+    if (isset($player['referrers'])) {
+        $youare = ucfirst($player['referrers']['youare']);
+        $you = ucfirst($player['referrers']['you']);
+    } else {
+        $youare = 'You are';
+        $you = 'You';
+    }
+
     // Check for valid test types
     $vtt = array('luck','skill','stam','spot');
     if ($player['gamebook'] = 'sob') {
@@ -510,7 +535,7 @@ function _cmd_test($cmd, &$player)
     $d2 = rand(1,6);
     $roll = $d1 + $d2;
     $emojidice = diceemoji($d1).' '.diceemoji($d2);
-    if ($cmd[1] == 'str') {
+    if ($cmd[1] == 'str' || $cmd[1] == 'stam') {
         $d3 = rand(1,6);
         $roll += $d3;
         $emojidice .= ' '.diceemoji($d3);
@@ -528,13 +553,13 @@ function _cmd_test($cmd, &$player)
     if ($roll <= $target) {
         if ($cmd[1] == "luck") {
             $player['luck']--;
-            sendqmsg("_*You are lucky*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':four_leaf_clover:');
+            sendqmsg("_*$youare lucky*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':four_leaf_clover:');
         } else if ($cmd[1] == "skill") {
-            sendqmsg("_*You are skillful*_\n_(_ $emojidice _ vs $target)_",':juggling:');
+            sendqmsg("_*$youare skillful*_\n_(_ $emojidice _ vs $target)_",':juggling:');
         } else if ($cmd[1] == "stam") {
-            sendqmsg("_*You are strong enough*_\n_(_ $emojidice _ vs $target)_",':muscle:');
+            sendqmsg("_*$youare strong enough*_\n_(_ $emojidice _ vs $target)_",':muscle:');
         } else if ($cmd[1] == "spot") {
-            sendqmsg("_*You spotted something*_\n_(_ $emojidice _ vs $target)_",':eyes:');
+            sendqmsg("_*$you spotted something*_\n_(_ $emojidice _ vs $target)_",':eyes:');
         } else if ($cmd[1] == "str") {
             sendqmsg("_*Your crew is strong enough*_\n_(_ $emojidice _ vs $target)_",':muscle:');
         }
@@ -546,13 +571,13 @@ function _cmd_test($cmd, &$player)
     else {
         if ($cmd[1] == "luck") {
             $player['luck']--;
-            sendqmsg("_*You are unlucky.*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':lightning:');
+            sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':lightning:');
         } else if ($cmd[1] == "skill") {
-            sendqmsg("_*You are not skillful*_\n_(_ $emojidice _ vs $target)_",':tired_face:');
+            sendqmsg("_*$youare not skillful*_\n_(_ $emojidice _ vs $target)_",':tired_face:');
         } else if ($cmd[1] == "stam") {
-            sendqmsg("_*You are not strong enough*_\n_(_ $emojidice _ vs $target)_",':sweat:');
+            sendqmsg("_*$youare not strong enough*_\n_(_ $emojidice _ vs $target)_",':sweat:');
         } else if ($cmd[1] == "spot") {
-            sendqmsg("_*You didn't spot anything*_\n_(_ $emojidice _ vs $target)_",':persevere:');
+            sendqmsg("_*$you didn't spot anything*_\n_(_ $emojidice _ vs $target)_",':persevere:');
         } else if ($cmd[1] == "str") {
             sendqmsg("_*Your crew is not strong enough*_\n_(_ $emojidice _ vs $target)_",':sweat:');
         }
@@ -614,6 +639,20 @@ function _cmd_fight($cmd, &$player)
                       'maxrounds' => ($cmd[4]?$cmd[4]:50)
                       ]);
     sendqmsg($out,":crossed_swords:");
+}
+
+//// !phaser/gun [-/+modifier] [stun/kill] [name] <skill> [stun/kill] [maxrounds] (run phaser fight logic)
+function _cmd_phaser($cmd, &$player)
+{
+    $out = run_phaser_fight(['player' => &$player,
+                             'modifier' => ($cmd[1]?$cmd[1]:0),
+                             'stunkill' => ($cmd[2]?$cmd[2]:'stun'),
+                             'monstername' => ($cmd[3]?$cmd[3]:"Opponent"),
+                             'monsterskill' => $cmd[4],
+                             'mstunkill' => ($cmd[5]?$cmd[5]:'kill'),
+                             'maxrounds' => ($cmd[6]?$cmd[6]:50)
+                             ]);
+    sendqmsg($out,":gun:");
 }
 
 //// !critfight [name] <skill> [who] [critchance] (run crit fight logic)
@@ -778,7 +817,6 @@ function _cmd_shield($cmd, &$player)
 function _cmd_dead($cmd, &$player)
 {
     $player['stam'] = 0;
-    sendqmsg("> _*Your adventure ends here.*_", ':skull:');
 }
 
 //// !debugset - Set any value
@@ -965,4 +1003,89 @@ function _cmd_battle($cmd, &$player)
     }
 
     sendqmsg($out,":crossed_swords:");
+}
+
+//// Special case, order various crew to do commands
+function _cmd_order($cmd, &$player)
+{
+    global $commandslist, $commandsargs;
+
+    $officer = strtolower($cmd[0]);
+    $order = strtolower($cmd[1]);
+    if (array_key_exists($order, $commandsargs)) {
+        $cmd = advanced_command_split(trim($order.' '.$cmd[2]), $commandsargs[$order]);
+    } else {
+        $cmd = false;
+    }
+    if (!$cmd) {
+        sendqmsg("Sorry, I didn't understand that command!",":interrobang:");
+        return;
+    }
+
+    $crew = &$player['crew'][$officer];
+    switch ($order) {
+        case 'fight':
+        case 'phaser':
+        case 'gun':
+        case 'critfight':
+        case 'bonusfight':
+        case 'fighttwo':
+            if ($crew['combatpenalty']) {
+                $tmpskill = $crew['skill'];
+                $crew['skill'] = max(0,$crew['skill']-2);
+            }
+            call_user_func_array($commandslist[$order],array($cmd,&$crew));
+            if ($crew['combatpenalty']) {
+                $crew['skill'] = $tmpskill;
+            }
+            break;
+        case 'skill':
+        case 'stam':
+        case 'stamina':
+        case 'test':
+        case 'dead':
+            call_user_func_array($commandslist[$order],array($cmd,&$crew));
+            break;
+        default:
+            sendqmsg('Cannot order crew to '.$order,':interrobang:');
+    }
+
+    if ($crew['stam'] < 1) {
+        $out = "*".$crew['name']." is dead!* :skull:\n";
+        $races = array('Human','Human','Human','Vulcan','Andorian','Caitian','Droid');
+        $races = array_pad($races,10,'Human');
+        $crew['race'] = $races[array_rand($races)];
+        $crew['gender'] = (rand(0,1)?'Male':'Female');
+        $names = file($crew['gender']=='Male'?'resources/male_names.txt':'resources/female_names.txt');
+        $crew['name'] = trim($names[array_rand($names)]);
+        $crew['max']['skill'] = max(1,$crew['max']['skill']-2);
+        $crew['skill'] = $crew['max']['skill'];
+        $crew['max']['stam'] = 12+rand(1,6)+rand(1,6);
+        $crew['stam'] = $crew['max']['stam'];
+        $crew['referrers'] = ['you' => $crew['name'], 'youare' => $crew['name'].' is', 'your' => $crew['name']."'s"];
+        $crew['replacement'] = true;
+        $out .= "Their assistant, ".$crew['name'].", is promoted to the ".$crew['position']." position. ";
+        $out .= "(Replacement crew cannot beam down to planets.)";
+        sendqmsg($out,':dead:');
+    }
+}
+
+//// Special case, order WHOLE crew to do command
+function _cmd_everyone($cmd, &$player)
+{
+    addcommand($cmd[1]);
+    foreach ($player['crew'] as $key => $val) {
+        addcommand($key.' '.$cmd[1]);
+    }
+}
+
+//// !shipbattle [name] <skill> <stamina> (run ship battle logic)
+function _cmd_shipbattle($cmd, &$player)
+{
+    $out = run_ship_battle(['player' => &$player,
+                            'oppname' => ($cmd[1]?$cmd[1]:"Opponent"),
+                            'oppweapons' => $cmd[2],
+                            'oppshields' => $cmd[3],
+                           ]);
+    sendqmsg($out,":rocket:");
 }

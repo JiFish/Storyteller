@@ -290,7 +290,59 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                 }
                 $p['emoji'] .= $skintone[array_rand($skintone)];
         }
-    } elseif ($gamebook == 'tot') {
+    } elseif ($gamebook == 'sst') {
+        // Overriding default rolling
+        $races = array('Human','Human','Human','Vulcan','Andorian','Caitian','Droid');
+        $p['race'] = $races[$selection];
+        unset($races[$selection]);
+        if ($p['race'] == 'Droid') {
+            $p['emoji'] = ':robot:';
+        }
+        $p['prov'] = 0;
+        $p['stuff'] = array();
+        // Ship
+        $d1 = rand(1,6);
+        $d2 = rand(1,6);
+        array_push($p['creationdice'],$d1,$d2);
+        $p['weapons'] = 6+$d1;
+        $p['shields'] = 12+$d2;
+        $p['max']['weapons'] = 999;
+        $p['max']['shields']  = $p['shields'];
+        $names = file('resources/starship_names.txt');
+        $p['shipname'] = trim($names[array_rand($names)]);
+        // Crew
+        $cl = ['no1','science','medic','engineer','security','guard'];
+        $races = array_pad($races,10,'Human');
+        foreach ($cl as $k => $c) {
+            $d1 = rand(1,6);
+            $d2 = rand(1,6);
+            $d3 = rand(1,6);
+            array_push($p['creationdice'],$d1,$d2,$d3);
+            $cm = array(
+                'skill' =>  6+$d1,
+                'stam' => 12+$d2+$d3,
+                'position' => ($c=='redshirt'?'RedShirt':ucfirst($c)),
+                'gender' => (rand(0,1)?'Male':'Female'),
+                'combatpenalty' => ($k > 0 && $k < 4),
+                'replacement' => false,
+                'gamebook' => $p['gamebook'],
+                'luck' => 0,
+                'weapon' => 0,
+                'shield' => false,
+                'temp' => []
+            );
+            $cm['max']['skill'] = $cm['skill'];
+            $cm['max']['stam']  = $cm['stam'];
+            $names = file($cm['gender']=='Male'?'resources/male_names.txt':'resources/female_names.txt');
+            $cm['name'] = trim($names[array_rand($names)]);
+            // Set race and unset for choice string to avoid repeats
+            $r = array_rand($races);
+            $cm['race'] = trim($races[$r]);
+            unset($races[$r]);
+            $cm['referrers'] = ['you' => $cm['name'], 'youare' => $cm['name'].' is', 'your' => $cm['name']."'s"];
+            $p['crew'][$c] = $cm;
+        }
+    }  elseif ($gamebook == 'tot') {
         //nothing to do
         null;
     } elseif ($gamebook == 'custom') {
