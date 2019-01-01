@@ -51,7 +51,7 @@ Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are 
 
 If in doubt set `BOOK_TYPE` to `none`. This will generate a minimal character that can be used for most stories. A special type `custom` is provided for anyone who wishes to create a their own adventure.
 
-The following books currently work very well: Battleblade Warrior; Black Vein Prophecy; Caverns of the Snow Witch; City of Thieves; Creature of Havoc; Crypt of the Sorcerer; Deathmoor; Deathtrap Dungeon; Demons of the Deep; Eye of the Dragon; The Forest of Doom; House of Hell; Island of the Lizard King; Legend of Zagor; Masks of Mayhem; Portal of Evil; Return to Firetop Mountain; Seas of Blood; Stealer of Souls; Talisman of Death; Temple of Terror; Trial of Champions; The Warlock of Firetop Mountain.
+The following books currently work very well: Battleblade Warrior; Black Vein Prophecy; Caverns of the Snow Witch; City of Thieves; Creature of Havoc; Crypt of the Sorcerer; Deathmoor; Deathtrap Dungeon; Demons of the Deep; Eye of the Dragon; The Forest of Doom; House of Hell; Island of the Lizard King; Legend of Zagor; Masks of Mayhem; Portal of Evil; Return to Firetop Mountain; Seas of Blood; Starship Traveller; Stealer of Souls; Talisman of Death; Temple of Terror; Trial of Champions; The Warlock of Firetop Mountain.
 
 ### 4. Get the code online
 - Upload the installation to your PHP enabled web-server. No database is needed. The uploaded directory must be writeable.
