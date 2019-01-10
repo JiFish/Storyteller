@@ -511,8 +511,11 @@ function _cmd_test($cmd, &$player)
 
     // Check for valid test types
     $vtt = array('luck','skill','stam','spot');
-    if ($player['gamebook'] = 'sob') {
+    if ($player['gamebook'] == 'sob') {
         $vtt[] = 'str';
+    }
+    if ($player['gamebook'] == 'sst') {
+        $vtt[] = 'shields';
     }
     if (!in_array($cmd[1], $vtt)) {
         sendqmsg("*Don't know how to test ".$cmd[1]."*",':interrobang:');
@@ -535,7 +538,7 @@ function _cmd_test($cmd, &$player)
     $d2 = rand(1,6);
     $roll = $d1 + $d2;
     $emojidice = diceemoji($d1).' '.diceemoji($d2);
-    if ($cmd[1] == 'str' || $cmd[1] == 'stam') {
+    if ($cmd[1] == 'str') {
         $d3 = rand(1,6);
         $roll += $d3;
         $emojidice .= ' '.diceemoji($d3);
@@ -562,6 +565,8 @@ function _cmd_test($cmd, &$player)
             sendqmsg("_*$you spotted something*_\n_(_ $emojidice _ vs $target)_",':eyes:');
         } else if ($cmd[1] == "str") {
             sendqmsg("_*Your crew is strong enough*_\n_(_ $emojidice _ vs $target)_",':muscle:');
+        } else if ($cmd[1] == "shields") {
+            sendqmsg("_*Your shields hold up*_\n_(_ $emojidice _ vs $target)_",':rocket:');
         }
         // Show follow up page
         if (isset($success_page)) {
@@ -580,6 +585,8 @@ function _cmd_test($cmd, &$player)
             sendqmsg("_*$you didn't spot anything*_\n_(_ $emojidice _ vs $target)_",':persevere:');
         } else if ($cmd[1] == "str") {
             sendqmsg("_*Your crew is not strong enough*_\n_(_ $emojidice _ vs $target)_",':sweat:');
+        } else if ($cmd[1] == "shields") {
+            sendqmsg("_*Your shields do not protect you*_\n_(_ $emojidice _ vs $target)_",':rocket:');
         }
         // Show follow up page
         if (isset($fail_page)) {

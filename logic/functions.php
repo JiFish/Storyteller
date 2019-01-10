@@ -372,7 +372,7 @@ function send_charsheet($player, $text = "", $sendstuff = false)
         ];
         $attachments[0]['fields'][4] = [
             'title' => 'Weapons (weapons)',
-            'value' => $player['weapons'],
+            'value' => $player['weapons']." / ".$player['max']['weapons'],
             'short' => true
         ];
         $attachments[0]['fields'][5] = [

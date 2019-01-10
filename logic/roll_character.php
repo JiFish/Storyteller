@@ -298,6 +298,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         if ($p['race'] == 'Droid') {
             $p['emoji'] = ':robot:';
         }
+        $p['adjective'] = 'Captain';
         $p['prov'] = 0;
         $p['stuff'] = array();
         // Ship
@@ -306,7 +307,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         array_push($p['creationdice'],$d1,$d2);
         $p['weapons'] = 6+$d1;
         $p['shields'] = 12+$d2;
-        $p['max']['weapons'] = 999;
+        $p['max']['weapons'] = $p['weapons'];
         $p['max']['shields']  = $p['shields'];
         $names = file('resources/starship_names.txt');
         $p['shipname'] = trim($names[array_rand($names)]);
