@@ -98,6 +98,6 @@ Gladly.
 
 There isn't any. This was pretty much a single use script that I've genericised just enough that it can be installed elsewhere. I've tried to clean the code up enough to allow easy hackablity, but drastic expansions will likely require a refactor.
 
-**What about support for other chat software (Discord, IRC etc.)?**
+**What about support for other chat software?**
 
 This would be nice. But the code would need a refactor.
