@@ -100,7 +100,7 @@ function _cmd_page($cmd, &$player)
     if (!is_numeric($cmd[1])) {
         return;
     }
-    $backup = (strtolower($cmd[2])!='nobackup');
+    $backup = (isset($cmd[2])?strtolower($cmd[2])!='nobackup':false);
 
     require("book.php");
 
