@@ -66,6 +66,7 @@ function register_commands(&$player)
                 register_command($key, '_cmd_order',['s','ol']);
             }
             register_command('everyone', '_cmd_everyone',['l']);
+            register_command('recruit',  '_cmd_recruit', ['s','s','n','n','os','os']);
     }
 
     // Stats commands
@@ -1084,6 +1085,33 @@ function _cmd_everyone($cmd, &$player)
     foreach ($player['crew'] as $key => $val) {
         addcommand($key.' '.$cmd[1]);
     }
+}
+
+//// Replace crew
+function _cmd_recruit($cmd, &$player)
+{
+    $pos = $cmd[1];
+
+    if (!array_key_exists($pos,$player['crew'])) {
+        sendqmsg("*$pos: invalid position*", ':interrobang:');
+    }
+
+    $c = &$player['crew'][$pos];
+    $c['replacement'] = false;
+    $c['name'] = ucfirst($cmd[2]);
+    $c['skill'] = $cmd[3];
+    $c['stam'] = $cmd[4];
+    $c['max']['skill'] = $c['skill'];
+    $c['max']['stam'] = $c['stam'];
+    if ($cmd[5]) {
+        $c['gender'] = ucfirst($cmd[5]);
+    }
+    if ($cmd[6]) {
+        $c['race'] = ucfirst($cmd[6]);
+    }
+    $c['referrers'] = ['you' => $c['name'], 'youare' => $c['name'].' is', 'your' => $c['name']."'s"];
+
+    sendqmsg("*".$c['name']." recruited!*", ':handshake:');
 }
 
 //// !shipbattle [name] <skill> <stamina> (run ship battle logic)

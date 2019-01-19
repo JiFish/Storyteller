@@ -130,8 +130,9 @@ Ordering crew
 
 (Only available for some books.)
 
-    !<position> <command> Order the crew member in to perform . Command is a valid command including parameters.
-    !everyone <command> Shorthand to make every crew member and yourself perform .
+    !<position> <command> Order the crew member in to perform <command>. Command is a valid command including parameters.
+    !everyone <command> Shorthand to make every crew member and yourself perform <command>.
+    !recruit <position> <name> <skill> <stam> [gender] [race] Replace one of the crew with a new crew member with the given information.
 
 The following commands are available for ordering: bonusfight, critfight, dead, fight, fighttwo, phaser, skill, stam, test.
 Examples
