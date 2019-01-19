@@ -518,11 +518,7 @@ function format_story($page, $text, &$player) {
             $story[$l] = "> _".$story[$l].'_';
         }
     }
-    $story = "> ~ *$page* ~\n".implode("\n",$story);
-
-    if (DISCORD_MODE) {
-        $story = str_replace('> ','',$story);
-    }
+    $story = "> — *$page* —\n".implode("\n",$story);
 
     return $story;
 }

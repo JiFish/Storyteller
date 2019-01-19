@@ -32,7 +32,7 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     if (DISCORD_MODE && strlen($message) > 1975) {
         $m = str_replace(' ','¥',$message);
         $m = str_replace("\n"," ",$m);
-        $m = wordwrap($m,1950,"[BREAK]");
+        $m = wordwrap($m,1950,"[BREAK]", true);
         $m = str_replace(' ',"\n",$m);
         $m = str_replace('¥',' ',$m);
         $m = explode("[BREAK]",$m);
@@ -110,14 +110,15 @@ function get_headers_from_curl_response($response)
 }
 
 function discordize(&$data) {
-    $data['text'] = str_replace('*','**',$data['text']);
+    $data['text'] = str_replace(['*','~'],['**','~~'],$data['text']);
+    $data['text'] = str_replace('> ','',$data['text']);
     if (isset($data['attachments'])) {
         foreach ($data['attachments'] as $akey => $aval) {
             foreach ($aval['fields'] as $fkey => $fval) {
                 if ($fval['title']) {
                     $data['attachments'][$akey]['fields'][$fkey]['title'] = '**'.$data['attachments'][$akey]['fields'][$fkey]['title'].'**';
                 }
-                $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace('*','**',$data['attachments'][$akey]['fields'][$fkey]['value']);
+                $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace(['*','~'],['**','~~'],$data['attachments'][$akey]['fields'][$fkey]['value']);
             }
         }
     }
