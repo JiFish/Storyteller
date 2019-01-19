@@ -1052,6 +1052,7 @@ function _cmd_order($cmd, &$player)
         case 'stamina':
         case 'test':
         case 'dead':
+        case 'debugset':
             call_user_func_array($commandslist[$order],array($cmd,&$crew));
             break;
         default:
