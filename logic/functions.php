@@ -212,10 +212,13 @@ function save(&$p, $file="save.txt")
 // Convert number to html entity of dice emoji
 function diceemoji($r)
 {
-    if ($r < 1 || $r > 6)
-        return "BADDICE";
+    if ($r >= 1 && $r <= 6) {
+        return mb_convert_encoding('&#'.(9855+$r).';', 'UTF-8', 'HTML-ENTITIES');
+    } elseif ($r >= 7 && $r <= 9) {
+        return mb_convert_encoding('&#'.(127000+$r).';', 'UTF-8', 'HTML-ENTITIES');
+    }
 
-    return mb_convert_encoding('&#x'.(2679+$r).';', 'UTF-8', 'HTML-ENTITIES');
+    return "BADDICE";
 }
 
 // Adds a new command to the command list

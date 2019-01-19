@@ -1,5 +1,31 @@
 <?php
 
+function dice() {
+    $r = rand(1,6);
+    switch(CHARACTER_ROLLS) {
+        case 'min3':
+            $r = max(3,$r);
+            break;
+        case 'min4':
+            $r = max(4,$r);
+            break;
+        case 'roll2':
+            $r = max(rand(1,6),$r);
+            break;
+        case 'roll3':
+            $r = max(rand(1,6),rand(1,6),$r);
+            break;
+        case 'all6':
+            $r = 6;
+            break;
+        case 'heaven':
+            $r = 7;
+            break;
+        default:
+    }
+    return $r;
+}
+
 // Roll a new random character and return a 'player' array ready to be used elsewhere
 function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?')
 {
@@ -11,7 +37,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
 
     // Roll dice!
     for ($c = 0; $c < 4; $c++) {
-        $dice[$c] = rand(1,6);
+        $dice[$c] = dice();
     }
 
     // Get the type of book
@@ -106,7 +132,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     if ($gamebook == 'wofm') {
         // Random Potion
         // The book rules actually give you a choice, but this is a bit more fun
-        $p['creationdice'][] = rand(1,6);
+        $p['creationdice'][] = dice();
         switch($p['creationdice'][4]) {
             case 1: case 2:
                 $p['stuff'][] = 'Potion of Skill';
@@ -152,10 +178,10 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                             'Reviled','Ruthless','Strong','Scurviest','Tough','Terrible','Weird','Vile','Villainous');
         $p['adjective'] = trim($adjectives[array_rand($adjectives)]);
         // new stats
-        $p['creationdice'][] = rand(1,6);
+        $p['creationdice'][] = dice();
         $p['strike'] = $p['creationdice'][4]+6; // 1d6+6
         $p['max']['strike'] = $p['strike'];
-        $p['creationdice'][] = rand(1,6);
+        $p['creationdice'][] = dice();
         $p['str'] = $p['creationdice'][5]+6; // 1d6+6
         $p['max']['str'] = $p['str'];
         $p['log'] = 0;
@@ -179,7 +205,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['stuff'] = array();
         $p['prov'] = 0;
         $p['weapon'] = -3;
-        $p['creationdice'][] = rand(1,6);
+        $p['creationdice'][] = dice();
         $p['fear'] = 0;
         $p['max']['fear'] = $p['creationdice'][4]+6; // 1d6+6
         $p['race'] = array('Cowardly','Ordinary','Sceptical','Open-Minded','Believer','Enlightened')[$p['creationdice'][4]-1];
@@ -238,7 +264,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         // Gold dice
         $p['gold'] = 2;
         for ($c = 0; $c < 3; $c++) {
-            $d = rand(1,6);
+            $d = dice();
             $p['creationdice'][] = $d;
             $p['gold'] += $d;
         }
@@ -302,8 +328,8 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['prov'] = 0;
         $p['stuff'] = array();
         // Ship
-        $d1 = rand(1,6);
-        $d2 = rand(1,6);
+        $d1 = dice();
+        $d2 = dice();
         array_push($p['creationdice'],$d1,$d2);
         $p['weapons'] = 6+$d1;
         $p['shields'] = 12+$d2;
@@ -315,9 +341,9 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $cl = ['no1','science','medic','engineer','security','guard'];
         $races = array_pad($races,10,'Human');
         foreach ($cl as $k => $c) {
-            $d1 = rand(1,6);
-            $d2 = rand(1,6);
-            $d3 = rand(1,6);
+            $d1 = dice();
+            $d2 = dice();
+            $d3 = dice();
             array_push($p['creationdice'],$d1,$d2,$d3);
             $cm = array(
                 'skill' =>  6+$d1,
@@ -347,7 +373,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         //nothing to do
         null;
     } elseif ($gamebook == 'custom') {
-        $p['creationdice'][] = rand(1,6);
+        $p['creationdice'][] = dice();
         $p['magic'] = max(0,$p['creationdice'][4]-3); // 1d6-3
         $p['max']['magic'] = $p['magic'];
     }
