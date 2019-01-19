@@ -19,6 +19,11 @@ function run_fight($input) {
     $fasthands =      (isset($input['fasthands'])?     $input['fasthands']:      false);
     $healthstatname = (isset($input['healthstatname'])?$input['healthstatname']: 'stamina');
 
+    // Special case for Starship Traveller Macommonian
+    if ($player['gamebook'] == 'sst' && $player['race'] == 'Macommonian') {
+        $fasthands = true;
+    }
+
     // Referrers
     if (isset($player['referrers'])) {
         $referrers = $player['referrers'];
@@ -76,11 +81,11 @@ function run_fight($input) {
             $fhroll2 = rand(1,6);
             if ($fhroll+$fhroll2 > $proll+$proll2) {
                 $pattack = $player['skill']+$player['weapon']+$fhroll;
-                $pemoji = "~".$pemoji."~ :fireworks:".diceemoji($fhroll).diceemoji($fhroll2);
+                $pemoji = "~".$pemoji."~ / ".diceemoji($fhroll).diceemoji($fhroll2);
             } else {
-                $pemoji .= " ~:fireworks:".diceemoji($fhroll).diceemoji($fhroll2)."~";
+                $pemoji .= " / ~".diceemoji($fhroll).diceemoji($fhroll2)."~";
             }
-            if ($round >= 3) {
+            if ($round >= 3 && !($player['gamebook'] == 'sst' && $player['race'] == 'Macommonian')) {
                 $fasthands = false;
             }
         }
