@@ -218,7 +218,7 @@ function diceemoji($r)
         return mb_convert_encoding('&#'.(127000+$r).';', 'UTF-8', 'HTML-ENTITIES');
     }
 
-    return "BADDICE";
+    return "[$r]";
 }
 
 // Adds a new command to the command list
