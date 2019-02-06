@@ -2,6 +2,15 @@
 
 // This is only an example adventure. See readme.md
 
+// Autorun commands
+// An array of commands that will get run if the player turns to the linked page. This variable can be omitted.
+// Note: It's a good idea not to automate too much, players often can perform action before making any requested rolls
+//       e.g. Drinking a potion of skill before testing skill.
+$autorun = array(
+0 => '!echo Good Luck!',
+6 => '!debugset adjective Warlock; !info'
+);
+
 // The text of the book
 // An array of story text indexed by page number. Page numbers do not have to be continuous.
 // 0 is normally the story backgrounds and 1 the start of the story

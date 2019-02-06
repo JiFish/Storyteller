@@ -131,6 +131,16 @@ function _cmd_page($cmd, &$player)
             }
         }
 
+        // Autorun
+        if (isset($autorun)) {
+            if (array_key_exists($page,$autorun)) {
+                $cmdlist = explode(";",$autorun[$page]);
+                for ($k = count($cmdlist)-1; $k >= 0; $k--) {
+                    addcommand($cmdlist[$k]);
+                }
+            }
+        }
+
         $story = format_story($player['lastpage'],$story,$player);
     } else {
         sendqmsg("*$page: PAGE NOT FOUND*",":interrobang:");
