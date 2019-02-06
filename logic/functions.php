@@ -484,7 +484,7 @@ function format_story($page, $text, &$player) {
     }
     if ($player['gamebook'] == 'sst') {
         $text = str_ireplace('The Traveller',$player['shipname'],$text);
-        $text = str_ireplace('Starship Traveller','Starship '.substr($player['shipname'],3),$text);
+        $text = str_ireplace('Starship Traveller','Starship '.substr($player['shipname'],4),$text);
     }
 
     // Look for choices in the text and give them bold formatting
