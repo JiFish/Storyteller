@@ -130,43 +130,51 @@ function discordize(&$data) {
 }
 
 function discordize_emoji($e) {
-    $clean = str_replace(':','',$e);
-    $path = 'images'.DIRECTORY_SEPARATOR.'emoji_cache'.DIRECTORY_SEPARATOR.$clean.'.png';
     if (!isset($_SERVER['HTTP_HOST'])) {
         // Must be running from command line, can't send emoji
         return '';
     }
+
+    // Check for emoji in cache and send url if found
+    $clean = str_replace(':','',$e);
+    $path = 'images'.DIRECTORY_SEPARATOR.'emoji_cache'.DIRECTORY_SEPARATOR.$clean.'.png';
     $url = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/emoji_cache/'.$clean.'.png';
     if (file_exists($path)) {
         return $url;
     }
 
+    $remoteurl = get_emoji_remote_url($e);
+    // Check URL works
+    list($width, $height) = getimagesize($remoteurl);
+    if (!$width) {
+        return '';
+    }
+    // Download, resize 90x90 and save emoji to cache
+    $src = imagecreatefrompng($remoteurl);
+    $dst = imagecreatetruecolor(90, 90);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, 90, 90, $width, $height);
+    imagepng($dst, $path);
+
+    return $url;
+}
+
+function get_emoji_remote_url($e) {
     $emojis = explode(':',$e);
     $emoji2html = json_decode(file_get_contents('resources/slack_emoticons_to_html_unicode.json'),1);
-    $lookup = "";
+    $url = "";
     foreach($emojis as $e) {
         if (!$e) continue;
         $e = $emoji2html[$e];
         $e = html_entity_decode($e);
-        $lookup .= $e;
+        $url .= $e;
     }
     // Special cases, bleh
     if ($emojis[1] == 'male_elf' || $emojis[1] == 'blond-haired-man' || $emojis[1] == 'male_mage') {
-        $lookup .= html_entity_decode('&#x200D;&#x2642;');
+        $url .= html_entity_decode('&#x200D;&#x2642;');
     } else if ($emojis[1] == 'female_elf' || $emojis[1] == 'blond-haired-woman' || $emojis[1] == 'female_mage') {
-        $lookup .= html_entity_decode('&#x200D;&#x2640;');
+        $url .= html_entity_decode('&#x200D;&#x2640;');
     }
-    $lookup = "https://xn--i-7iq.ws/emoji-image/".urlencode($lookup).".png";//?format=emojione&ar=1x1";
-
-    // Resize emoji to 90x90
-    list($width, $height) = getimagesize($lookup);
-    if (!$width) {
-        return '';
-    }
-    $src = imagecreatefrompng($lookup);
-    $dst = imagecreatetruecolor(90, 90);
-    imagecopyresampled($dst, $src, 0, 0, 0, 0, 90, 90, $width, $height);
-    imagepng($dst, $path);
+    $url = "https://xn--i-7iq.ws/emoji-image/".urlencode($url).".png";//?format=emojione&ar=1x1";
 
     return $url;
 }
