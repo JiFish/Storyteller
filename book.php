@@ -2,6 +2,10 @@
 
 // This is only an example adventure. See readme.md
 
+// The text of the book
+// An array of story text indexed by page number. Page numbers do not have to be continuous.
+// 0 is normally the story backgrounds and 1 the start of the story
+//
 $book = array(
 0 => "*The Janitor of Firetop Mountain*\nYou are the weary janitor to The Warlock of Firetop Mountain. Your task today is to clean up the corpse of an unfortunate adventurer who is making a mess in one of the rooms. If you can survive that long...\nNow turn to 1\n(THIS IS AN EXAMPLE ADVENTURE. SEE README.MD FOR INFO ON CHANGING THE ADVENTURE.)",
 1 => "You are in your own room. There is a small cot here with your mop to one side.\nYou may take the mop. (Type `!get mop`)\nWill you exit the room (Turn to 2 by typing `!2`) or get some sleep (Turn to 3 by typing `!3`)?",
