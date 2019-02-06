@@ -100,18 +100,19 @@ function _cmd_page($cmd, &$player)
     if (!is_numeric($cmd[1])) {
         return;
     }
+    $page = $cmd[1];
     $backup = (isset($cmd[2])?strtolower($cmd[2])!='nobackup':false);
 
     require("book.php");
 
-    if (array_key_exists($cmd[1], $book)) {
+    if (array_key_exists($page, $book)) {
         // Save a backup of the player for undo
         if ($backup) {
             backup_player($player);
         }
 
-        $player['lastpage'] = $cmd[1];
-        $story = $book[$cmd[1]];
+        $player['lastpage'] = $page;
+        $story = $book[$page];
 
         // Exclude pages using 'if ', 'you may' or 'otherwise'
         // This isn't perfect, but will prevent many false matches
@@ -132,7 +133,7 @@ function _cmd_page($cmd, &$player)
 
         $story = format_story($player['lastpage'],$story,$player);
     } else {
-        sendqmsg("*".$cmd[1].": PAGE NOT FOUND*",":interrobang:");
+        sendqmsg("*$page: PAGE NOT FOUND*",":interrobang:");
         return;
     }
 
