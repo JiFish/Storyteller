@@ -28,6 +28,7 @@ foreach($input as $line)
     }
     $page .= $line . "\n";
 }
+$book[] = trim($page);
 
 echo ("<?php\n\n");
 echo '$book = '.var_export($book,1).";";
