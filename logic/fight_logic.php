@@ -18,9 +18,10 @@ function run_fight($input) {
     $bonusdmgchance = (isset($input['bonusdmgchance'])?$input['bonusdmgchance']: 3);
     $fasthands =      (isset($input['fasthands'])?     $input['fasthands']:      false);
     $healthstatname = (isset($input['healthstatname'])?$input['healthstatname']: 'stamina');
+    $gamebook = getbook();
 
     // Special case for Starship Traveller Macommonian
-    if ($player['gamebook'] == 'sst' && $player['race'] == 'Macommonian') {
+    if ($gamebook == 'sst' && $player['race'] == 'Macommonian') {
         $fasthands = true;
     }
 
@@ -69,7 +70,7 @@ function run_fight($input) {
         $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
 
         // Special case for Creature of Havok instant kills
-        if ($player['gamebook'] == 'coh' && $proll == $proll2) {
+        if ($gamebook == 'coh' && $proll == $proll2) {
             $out .= "_*Instant Kill*_ $pemoji\n";
             $mstam = 0;
             break;
@@ -85,7 +86,7 @@ function run_fight($input) {
             } else {
                 $pemoji .= " / ~".diceemoji($fhroll).diceemoji($fhroll2)."~";
             }
-            if ($round >= 3 && !($player['gamebook'] == 'sst' && $player['race'] == 'Macommonian')) {
+            if ($round >= 3 && !($gamebook == 'sst' && $player['race'] == 'Macommonian')) {
                 $fasthands = false;
             }
         }

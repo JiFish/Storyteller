@@ -51,7 +51,7 @@ function register_commands(&$player)
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
 
-    $gamebook = $player['gamebook'];
+    $gamebook = getbook();
     if ($gamebook == 'loz' ||
         $gamebook == 'custom') {
             register_command('spellbook',   '_cmd_spellbook',['osl']);
@@ -523,10 +523,10 @@ function _cmd_test($cmd, &$player)
 
     // Check for valid test types
     $vtt = array('luck','skill','stam','spot');
-    if ($player['gamebook'] == 'sob') {
+    $gamebook = getbook();
+    if ($gamebook == 'sob') {
         $vtt[] = 'str';
-    }
-    if ($player['gamebook'] == 'sst') {
+    } elseif ($gamebook == 'sst') {
         $vtt[] = 'shields';
     }
     if (!in_array($cmd[1], $vtt)) {
@@ -716,7 +716,6 @@ function _cmd_vs($cmd, &$player)
         'referrers' => ['you' => $cmd[1], 'youare' => $cmd[1].' is', 'your' => $cmd[1]."'s"],
         'skill' => $cmd[2],
         'stam' => $cmd[3],
-        'gamebook' => $player['gamebook'],
         'luck' => 0,
         'weapon' => 0,
         'shield' => false,
@@ -1003,7 +1002,6 @@ function _cmd_battle($cmd, &$player)
         'referrers' => ['you' => 'your crew', 'youare' => 'your crew is', 'your' => "your crew's"],
         'skill' => $player['strike'],
         'stam' => $player['str'],
-        'gamebook' => $player['gamebook'],
         'luck' => 0,
         'weapon' => 0,
         'shield' => false,

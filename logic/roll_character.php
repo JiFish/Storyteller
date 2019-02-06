@@ -52,7 +52,6 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                'shield' => false,
                'lastpage' => 1,
                'stuff' => array('Sword (+0)','Leather Armor','Lantern'),
-               'gamebook' => $gamebook,
                'creationdice' => $dice,
                'temp' => array(),
                'seed' => $seed);
@@ -352,7 +351,6 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                 'gender' => (rand(0,1)?'Male':'Female'),
                 'combatpenalty' => ($k > 0 && $k < 4),
                 'replacement' => false,
-                'gamebook' => $p['gamebook'],
                 'luck' => 0,
                 'weapon' => 0,
                 'shield' => false,

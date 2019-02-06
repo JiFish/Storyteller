@@ -171,8 +171,6 @@ function register_command($name, $function, $args = [])
 // Figure out what rules we are running
 function getbook()
 {
-    require("book.php");
-
     if (!defined("BOOK_TYPE")) {
         return 'none';
     }
@@ -280,7 +278,8 @@ function send_charsheet($player, $text = "", $sendstuff = false)
         );
     }
 
-    if ($player['gamebook'] == 'rtfm') {
+    $gamebook = getbook();
+    if ($gamebook == 'rtfm') {
         $attachments[0]['fields'][3] = array (
             'title' => 'Weapon: '.sprintf("%+d",$player['weapon']),
             'value' => '*Provisions: '.$player['prov'].'*',
@@ -293,7 +292,7 @@ function send_charsheet($player, $text = "", $sendstuff = false)
         );
     }
 
-    if ($player['gamebook'] == 'loz') {
+    if ($gamebook == 'loz') {
         $attachments[0]['fields'] = array_merge($attachments[0]['fields'],
         array([
                 'title' => 'Talismans: '.$player['talismans'],
@@ -311,7 +310,7 @@ function send_charsheet($player, $text = "", $sendstuff = false)
         );
     }
 
-    if ($player['gamebook'] == 'hoh') {
+    if ($gamebook == 'hoh') {
         $attachments[0]['fields'][4] = array (
             'title' => 'Fear',
             'value' => $player['fear']." / ".$player['max']['fear'],
@@ -321,7 +320,7 @@ function send_charsheet($player, $text = "", $sendstuff = false)
     }
 
     // Sea of Blood Ship Stats
-    if ($player['gamebook'] == 'sob') {
+    if ($gamebook == 'sob') {
         // QOL for discord with 3 per row instead of two
         if (DISCORD_MODE) {
             $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d",$player['weapon']).')';
@@ -366,7 +365,7 @@ function send_charsheet($player, $text = "", $sendstuff = false)
     }
 
     // starship traveller crew & ship
-    if ($player['gamebook'] == 'sst') {
+    if ($gamebook == 'sst') {
         // ship
         $attachments[0]['fields'][3] = [
             'title' => 'Ship',
@@ -479,10 +478,11 @@ function format_story($page, $text, &$player) {
     require("book.php");
 
     // Book specific specials
-    if ($player['gamebook'] == 'sob') {
+    $gamebook = getbook();
+    if ($gamebook == 'sob') {
         $text = str_ireplace('The Banshee',$player['shipname'],$text);
     }
-    if ($player['gamebook'] == 'sst') {
+    if ($gamebook == 'sst') {
         $text = str_ireplace('The Traveller',$player['shipname'],$text);
         $text = str_ireplace('Starship Traveller','Starship '.substr($player['shipname'],4),$text);
     }
