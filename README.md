@@ -6,7 +6,9 @@ Storyteller is a bot for use with Slack which helps a group of people play throu
 
 Storyteller adds commands to read the story, manage your character and roll dice for fights and other challenges. It will assist you in playing the game but does not strictly enforce rules - replicating the experience of playing with a real book and dice.
 
-Storyteller is programmed in PHP, requires no database and is state-based. This means it can be installed on an ordinary web-server, without the need to setup a complicated chat-bot. *Discord is also supported, with some caveats, see Using Discord below.
+Storyteller is programmed in PHP, requires no database and is state-based. This means it can be installed on an ordinary web-server, without the need to setup a complicated chat-bot.
+
+* Discord is also supported, with some caveats, see *Using Discord* below.
 
 ## Set-Up
 Download and extract the bot to start.
@@ -59,7 +61,7 @@ The following books currently work very well: Battleblade Warrior; Black Vein Pr
 - If you are _not_ using apache, you must replicate the rules in `.htaccess` to ensure the installation is secure.
 
 ### 5. Ready to play!
-Type `!newgame` in the channel you chose for the webhook to get started. Type `!help` to see the basic commands or `!helpmore` for the complete list.
+Type `!newgame` in the channel you chose for the webhook to get started. Type `!help` to see the basic commands and get a link to the complete list.
 
 ## Using Discord
 
