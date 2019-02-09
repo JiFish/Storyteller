@@ -329,12 +329,19 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                 $p['emoji'] .= $skintone[array_rand($skintone)];
         }
     } elseif ($gamebook == 'sst') {
-        // Overriding default rolling
+        // Overriding default races
         $races = array('Human','Human','Human','Vulcan','Andorian','Caitian','Droid');
-        $p['race'] = $races[$selection];
-        unset($races[$selection]);
+        if (!$race || $race == '?') {
+            $p['race'] = $races[$selection];
+            unset($races[$selection]);
+        }
         if ($p['race'] == 'Droid') {
-            $p['emoji'] = ':robot:';
+            if (!$emoji || $emoji == '?') {
+                $p['emoji'] = ':robot:';
+            }
+            if (!$name || $name == '?') {
+                $p['name'] = chr(mt_rand(68,90)).chr(mt_rand(65,87)).'-'.mt_rand(1,9);
+            }
         }
         $p['adjective'] = 'Captain';
         $p['prov'] = 0;
