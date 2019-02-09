@@ -4,3 +4,4 @@ save_backup.txt
 
 # ignore images
 images/*
+!images/jofm

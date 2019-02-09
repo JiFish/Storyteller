@@ -1,3 +1,6 @@
-Put your images here. They should be named [pagenumber].jpg e.g. 400.jpg. They will be automatically sent when the page is turned to.
+Put your images in here.
 
-The emoji_cache directory is used to mirror emoji images for use with discord.
+Book illustrations should be in a sub-directory defined in your config.php and have the filename "[pagenumber].jpg".
+They will be automatically sent along with the story when the appropriate page is turned to.
+
+The emoji_cache sub-directory is used to mirror emoji images for use with discord. It will be populated automatically if Discord Mode is on.

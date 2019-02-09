@@ -19,6 +19,11 @@ define("BOOK_TYPE",'wofm');
 // all6   : Use 6 for all dice, instead of rolling
 define("CHARACTER_ROLLS",'normal');
 
+// Images subdirectory. This is the subdirectory within the images directory to serve this book's
+// illustrations from. You'll need to change this when changing books to prevent caching issues.
+// Set to false if you don't want to send illustrations.
+define("IMAGES_SUBDIR",'jofm');
+
 // Discord mode formats output to work with Discord's *Slack Compatible* incoming webhooks
 define("DISCORD_MODE",false);
 

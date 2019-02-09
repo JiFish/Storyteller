@@ -147,8 +147,8 @@ function _cmd_page($cmd, &$player)
         return;
     }
 
-    if (file_exists('images'.DIRECTORY_SEPARATOR.$player['lastpage'].'.jpg')) {
-        sendimgmsg($story,'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/'.$player['lastpage'].'.jpg');
+    if (IMAGES_SUBDIR && file_exists('images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR.$player['lastpage'].'.jpg')) {
+        sendimgmsg($story,'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/'.IMAGES_SUBDIR.'/'.$player['lastpage'].'.jpg');
     } else {
         sendqmsg($story);
     }
