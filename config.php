@@ -6,7 +6,7 @@ define("SLACK_HOOK","https://hooks.slack.com/services/YOUR/WEBHOOK/HERE");
 // Token for outgoing webhook
 define("SLACK_TOKEN","YOURTOKENHERE");
 
-// Book type code. This determines which rules are used. See in extras to find your code
+// Book type code. This determines which rules are used. See book_support.html in extras for codes.
 define("BOOK_TYPE",'wofm');
 
 // Types of dice rolling rules when creating characters
