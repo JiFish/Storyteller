@@ -81,6 +81,8 @@ function register_commands(&$player)
         $stats = array_merge($stats,['fear']);
     } elseif ($gamebook == 'sob') {
         $stats = array_merge($stats,['str','strength','strike','log','slaves']);
+    } elseif ($gamebook == 'sst') {
+        $stats = array_merge($stats,['weapons','shields']);
     }
     foreach($stats as $s) {
         register_command($s, '_cmd_stat_adjust',['os','nm']);
