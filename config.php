@@ -11,6 +11,7 @@ define("BOOK_TYPE",'wofm');
 
 // Types of dice rolling rules when creating characters
 // normal : Roll as normal
+// d5+1   : Rolls of 1 are re-rolled
 // min3   : Rolls of 1 or 2 are replaced with 3
 // min4   : Rolls of 1, 2 or 3 are replaced with 4
 // roll2  : Roll 2 dice and take the highest

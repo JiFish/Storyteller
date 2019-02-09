@@ -3,6 +3,9 @@
 function dice() {
     $r = rand(1,6);
     switch(CHARACTER_ROLLS) {
+        case 'd5+1':
+            $r = rand(2,6);
+            break;
         case 'min3':
             $r = max(3,$r);
             break;
