@@ -492,7 +492,7 @@ function _cmd_roll($cmd, &$player)
     $out = "Result:";
 
     $t = 0;
-    for ($a = 0; $a < $cmd[1]; $a++) {
+    for ($a = 0; $a < $numdice; $a++) {
         $r = rand(1,6);
         $emoji = diceemoji($r);
         $out .= " $emoji ($r)";
