@@ -133,6 +133,7 @@ Ordering crew
     !<position> <command> Order the crew member in to perform <command>. Command is a valid command including parameters.
     !everyone <command> Shorthand to make every crew member and yourself perform <command>.
     !beam <up/down> [position] [position] [position] Mark crew as in the away team with up, and remove them with down. `!beam up` on it's own beams everybody up.
+    !awayteam <command> Shorthand to make every crew member in the away team and yourself perform <command>.
     !recruit <position> <name> <skill> <stam> [gender] [race] Replace one of the crew with a new crew member with the given information.
 
 The following commands are available for ordering: bonusfight, critfight, dead, fight, fighttwo, phaser, skill, stam, test.

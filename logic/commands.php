@@ -66,6 +66,7 @@ function register_commands(&$player)
                 register_command($key, '_cmd_order',['s','ol']);
             }
             register_command('everyone', '_cmd_everyone',['l']);
+            register_command('awayteam', '_cmd_everyone',['l']);
             register_command('recruit',  '_cmd_recruit', ['s','s','n','n','os','os']);
             register_command('beam',     '_cmd_beam',['(\sup|\sdown)','os','os','os']);
     }
@@ -1086,12 +1087,14 @@ function _cmd_order($cmd, &$player)
     }
 }
 
-//// Special case, order WHOLE crew to do command
+//// Special case, order WHOLE crew, or away team, to do command
 function _cmd_everyone($cmd, &$player)
 {
     addcommand($cmd[1]);
     foreach ($player['crew'] as $key => $val) {
-        addcommand($key.' '.$cmd[1]);
+        if ($cmd[0] != 'awayteam' || $val['awayteam']) {
+            addcommand($key.' '.$cmd[1]);
+        }
     }
 }
 
