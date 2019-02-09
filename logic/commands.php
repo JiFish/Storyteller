@@ -990,7 +990,7 @@ function _cmd_undo($cmd, &$player)
 //// !map - Sends a map image if map.jpg exists in images dir
 function _cmd_map($cmd, &$player)
 {
-    if (file_exists('images'.DIRECTORY_SEPARATOR.'map.jpg')) {
+    if (file_exists('images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR.'map.jpg')) {
         sendimgmsg("*Map*",'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.jpg');
     } else {
         sendqmsg("*No map found!*", ':interrobang:');
