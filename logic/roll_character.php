@@ -347,27 +347,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
             $d2 = dice();
             $d3 = dice();
             array_push($p['creationdice'],$d1,$d2,$d3);
-            $cm = array(
-                'skill' =>  6+$d1,
-                'stam' => 12+$d2+$d3,
-                'position' => ($c=='redshirt'?'RedShirt':ucfirst($c)),
-                'gender' => (rand(0,1)?'Male':'Female'),
-                'combatpenalty' => ($k > 0 && $k < 4),
-                'replacement' => false,
-                'luck' => 0,
-                'weapon' => 0,
-                'shield' => false,
-                'temp' => []
-            );
-            $cm['max']['skill'] = $cm['skill'];
-            $cm['max']['stam']  = $cm['stam'];
-            $names = file($cm['gender']=='Male'?'resources/male_names.txt':'resources/female_names.txt');
-            $cm['name'] = trim($names[array_rand($names)]);
-            // Set race and unset for choice string to avoid repeats
-            $r = array_rand($races);
-            $cm['race'] = trim($races[$r]);
-            unset($races[$r]);
-            $cm['referrers'] = ['you' => $cm['name'], 'youare' => $cm['name'].' is', 'your' => $cm['name']."'s"];
+            $cm = roll_sst_crew($c, ($k > 0 && $k < 4), $races, [$d1, $d2, $d3]);
             $p['crew'][$c] = $cm;
         }
     }  elseif ($gamebook == 'tot') {
@@ -385,4 +365,44 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     }
 
     return $p;
+}
+
+function roll_sst_crew($position, $combatpenalty, &$races = null, $dice = null) {
+    if ($races == null) {
+        $races = ['Human','Human','Human','Vulcan','Andorian','Caitian','Droid'];
+    }
+    if ($dice == null) {
+        $dice = [dice(),dice(),dice()];
+    }
+    $cm = array(
+        'skill' =>  6+$dice[0],
+        'stam' => 12+$dice[1]+$dice[2],
+        'position' => ($position=='redshirt'?'RedShirt':ucfirst($position)),
+        'gender' => (rand(0,1)?'Male':'Female'),
+        'combatpenalty' => $combatpenalty,
+        'replacement' => false,
+        'awayteam' => false,
+        'luck' => 0,
+        'weapon' => 0,
+        'shield' => false,
+        'temp' => []
+    );
+    $cm['max']['skill'] = $cm['skill'];
+    $cm['max']['stam']  = $cm['stam'];
+    // Set race and unset for choice string to avoid repeats
+    $r = array_rand($races);
+    $cm['race'] = trim($races[$r]);
+    unset($races[$r]);
+    if ($cm['race'] == 'Droid') {
+        $cm['name'] = chr(mt_rand(68,90)).chr(mt_rand(65,87)).'-'.mt_rand(1,9);
+    } elseif ($cm['race'] == 'Caitian') {
+        $names = file('resources/cat_names.txt');
+        $cm['name'] = trim($names[array_rand($names)]);
+    } else {
+        $names = file($cm['gender']=='Male'?'resources/male_names.txt':'resources/female_names.txt');
+        $cm['name'] = trim($names[array_rand($names)]);
+    }
+    $cm['referrers'] = ['you' => $cm['name'], 'youare' => $cm['name'].' is', 'your' => $cm['name']."'s"];
+
+    return $cm;
 }

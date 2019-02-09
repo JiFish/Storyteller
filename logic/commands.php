@@ -613,7 +613,7 @@ function _cmd_test($cmd, &$player)
 //// !newgame (roll new character)
 function _cmd_newgame($cmd, &$player)
 {
-    require('logic/roll_character.php');
+    require_once('logic/roll_character.php');
 
     $cmd = array_pad($cmd, 7, '?');
     $player = roll_character($cmd[1],$cmd[2],$cmd[3],$cmd[4],$cmd[5],$cmd[6]);
@@ -1069,19 +1069,14 @@ function _cmd_order($cmd, &$player)
     }
 
     if ($crew['stam'] < 1) {
+        require_once('roll_character.php');
         $out = "*".$crew['name']." is dead!* :skull:\n";
-        $races = array('Human','Human','Human','Vulcan','Andorian','Caitian','Droid');
-        $races = array_pad($races,10,'Human');
-        $crew['race'] = $races[array_rand($races)];
-        $crew['gender'] = (rand(0,1)?'Male':'Female');
-        $names = file($crew['gender']=='Male'?'resources/male_names.txt':'resources/female_names.txt');
-        $crew['name'] = trim($names[array_rand($names)]);
-        $crew['max']['skill'] = max(1,$crew['max']['skill']-2);
-        $crew['skill'] = $crew['max']['skill'];
-        $crew['max']['stam'] = 12+rand(1,6)+rand(1,6);
-        $crew['stam'] = $crew['max']['stam'];
-        $crew['referrers'] = ['you' => $crew['name'], 'youare' => $crew['name'].' is', 'your' => $crew['name']."'s"];
+        $newskill = max(1,$crew['max']['skill']-2);
+        $crew = roll_sst_crew($officer, $crew['combatpenalty']);
+        $crew['max']['skill'] = $newskill;
+        $crew['skill'] = $newskill;
         $crew['replacement'] = true;
+        $crew['awayteam'] = false;
         $out .= "Their assistant, ".$crew['name'].", is promoted to the ".$crew['position']." position. ";
         $out .= "(Replacement crew cannot beam down to planets.)";
         sendqmsg($out,':dead:');
@@ -1108,6 +1103,7 @@ function _cmd_recruit($cmd, &$player)
 
     $c = &$player['crew'][$pos];
     $c['replacement'] = false;
+    $c['awayteam'] = false;
     $c['name'] = ucfirst($cmd[2]);
     $c['skill'] = $cmd[3];
     $c['stam'] = $cmd[4];
