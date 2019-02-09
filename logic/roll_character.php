@@ -81,20 +81,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $gender = 'Female';
     }
     $p['gender'] = ucfirst(strtolower($gender));
-    if (!$name || $name == '?') {
-        $names = file($gender=='Male'?'resources/male_names.txt':'resources/female_names.txt');
-        $p['name'] = trim($names[array_rand($names)]);
-    } else {
-        $p['name'] = ucfirst($name);
-    }
-    if (!$adjective || $adjective == '?') {
-        $adjectives = file('resources/adjectives.txt');
-        $p['adjective'] = ucfirst(trim($adjectives[array_rand($adjectives)]));
-    } else {
-        $p['adjective'] = ucfirst($adjective);
-    }
 
-    // Race, Gender and emoji are linked
     // Note this array should match with the emoji arrays below
     $races = array('Human','Human','Human','Elf','Djinnin','Catling','Dwarf');
     $needsskintone = array(true,true,true,true,false,false,true);
@@ -110,6 +97,29 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $selection = array_rand($races);
         $p['race'] = ucfirst(strtolower($race));
     }
+
+    // Name and adjective
+    if (!$name || $name == '?') {
+        if ($p['race'] == 'Catling') {
+            $namesfile = 'resources/cat_names.txt';
+        } elseif ($gender=='Male') {
+            $namesfile = 'resources/male_names.txt';
+        } else {
+            $namesfile = 'resources/female_names.txt';
+        }
+        $names = file($namesfile);
+        $p['name'] = trim($names[array_rand($names)]);
+    } else {
+        $p['name'] = ucfirst($name);
+    }
+    if (!$adjective || $adjective == '?') {
+        $adjectives = file('resources/adjectives.txt');
+        $p['adjective'] = ucfirst(trim($adjectives[array_rand($adjectives)]));
+    } else {
+        $p['adjective'] = ucfirst($adjective);
+    }
+
+    // Race, Gender and emoji are linked
     // Determine emoji
     if (!$emoji || $emoji == '?') {
         $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:',':skin-tone-2:');
