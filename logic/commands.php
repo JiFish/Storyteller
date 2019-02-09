@@ -67,6 +67,7 @@ function register_commands(&$player)
             }
             register_command('everyone', '_cmd_everyone',['l']);
             register_command('recruit',  '_cmd_recruit', ['s','s','n','n','os','os']);
+            register_command('beam',     '_cmd_beam',['(\sup|\sdown)','os','os','os']);
     }
 
     // Stats commands
@@ -1128,5 +1129,34 @@ function _cmd_shipbattle($cmd, &$player)
                             'oppweapons' => $cmd[2],
                             'oppshields' => $cmd[3],
                            ]);
+    sendqmsg($out,":rocket:");
+}
+
+//// !beam <up/down> [crew] [crew] [crew]
+function _cmd_beam($cmd, &$player)
+{
+    $out = "";
+    $crew = array();
+    $dir = strtolower($cmd[1]);
+    if ($cmd[2]) $crew[] = strtolower($cmd[2]);
+    if ($cmd[3]) $crew[] = strtolower($cmd[3]);
+    if ($cmd[4]) $crew[] = strtolower($cmd[4]);
+
+    if (sizeof($crew) < 1 && $dir == 'up') {
+        $crew = array_keys($player['crew']);
+    }
+    foreach ($crew as $k => $c) {
+        if (!array_key_exists($c, $player['crew']) ||
+            $player['crew'][$c]['awayteam'] == ($dir == 'down') ||
+            $player['crew'][$c]['replacement'] == true) {
+            unset($crew[$k]);
+        } else {
+            $player['crew'][$c]['awayteam'] = ($dir == 'down');
+            $crew[$k] = $player['crew'][$c]['name'];
+        }
+    }
+    array_unshift($crew,"You");
+    $out = "_".basic_num_to_word(count($crew))." to beam $dir!_\n";
+    $out .= "*".implode(', ', array_slice($crew, 0, -1)) . (count($crew)>1?' and ':'') . end($crew)." have beamed $dir.*\n";
     sendqmsg($out,":rocket:");
 }

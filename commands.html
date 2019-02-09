@@ -149,6 +149,7 @@ h3 { font-size: 2.3rem; }
 <ul>
 <li><code>!&lt;position&gt; &lt;command&gt;</code> Order the crew member in <position> to perform &lt;command&gt;. Command is a valid command including parameters.</li>
 <li><code>!everyone &lt;command&gt;</code> Shorthand to make every crew member and yourself perform &lt;command&gt;.</li>
+<li><code>!beam &lt;up/down&gt; [position] [position] [position]</code> Mark crew as in the away team with up, and remove them with down. <code>!beam up</code> on it's own beams everybody up.     
 <li><code>!recruit &lt;position&gt; &lt;name&gt; &lt;skill&gt; &lt;stam&gt; [gender] [race]</code> Replace one of the crew with a new crew member with the given information.</li>
 </ul>
 <p>The following commands are available for ordering: <code>bonusfight</code>, <code>critfight</code>, <code>dead</code>, <code>fight</code>, <code>fighttwo</code>, <code>phaser</code>, <code>skill</code>, <code>stam</code>, <code>test</code>.</p>
@@ -157,6 +158,7 @@ h3 { font-size: 2.3rem; }
 <li><code>!medic test skill</code> - Order medic to test skill</li>
 <li><code>!security phaser kill Salt Monster 7</code> - Order security officer to phaser fight Salt Monster, Shoot to kill</li>
 <li><code>!everyone stam +2</code> - Everyone gain 2 stamina</li>
+<li><code>!beam down science medic guard</code> - Add your science officer, medic and guard to the away team.</li>
 </ul>
 <h3>Command Chaining</h3>
 <p>You can chain multiple commands together in one go with semicolons <code>;</code> e.g. <code>!newgame; !1</code> The chain will stop automatically on player death. You can omit the <code>!</code> prefix after the first command in the chain.</p>

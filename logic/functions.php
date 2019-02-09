@@ -388,12 +388,13 @@ function send_charsheet($player, $text = "", $sendstuff = false)
         $cstam = "";
         $cboth = "";
         foreach ($player['crew'] as $cm) {
-            $cname .= '*'.$cm['position'].':* '.$cm['name']." (".$cm['race'].")\n";
-            $cskill .= $cm['skill'].'/'.$cm['max']['skill'].($cm['combatpenalty']?' *†*':'')."\n";
-            $cstam .= $cm['stam'].'/'.$cm['max']['stam'].($cm['replacement']?'_(Replacement)_':'')."\n";
-            $cboth = 'SKILL: '.$cm['skill'].'/'.$cm['max']['skill'].($cm['combatpenalty']?' *†*':'').' STAMINA: '.$cm['stam'].'/'.$cm['max']['stam'].($cm['replacement']?'_(Replacement)_':'')."\n";
+            $thisname = '*'.($cm['awayteam']?' *⇓*':'').$cm['position'].':* '.$cm['name']." ".($cm['gender']=='Male'?'♂':'♀')." ".$cm['race'];
+            $cname .= mb_substr($thisname, 0, 36)."\n";
+            $cskill .= $cm['skill'].' / '.$cm['max']['skill'].($cm['combatpenalty']?' *†*':'')."\n";
+            $cstam .= $cm['stam'].' / '.$cm['max']['stam'].($cm['replacement']?' *R*':'')."\n";
+            $cboth .= 'SKILL: '.$cm['skill'].' / '.$cm['max']['skill'].' | STAMINA: '.$cm['stam'].' / '.$cm['max']['stam'].($cm['combatpenalty']?' *†*':'').($cm['replacement']?' *R*':'')."\n";
         }
-        $fields = array([ 'title' => 'Crew',
+        $fields = array([ 'title' => 'Crew (⇓: away team)',
                           'value' => $cname,
                           'short' => true ]);
         // Discord QOL
@@ -401,11 +402,11 @@ function send_charsheet($player, $text = "", $sendstuff = false)
             $fields[] = ['title' => 'Skill (†: -2 in combat)',
                          'value' => $cskill,
                          'short' => true ];
-            $fields[] = ['title' => 'Stamina',
+            $fields[] = ['title' => 'Stamina (R: Replaced)',
                          'value' => $cstam,
                          'short' => true ];
         } else {
-            $fields[] = ['title' => 'Stats',
+            $fields[] = ['title' => 'Stats (†: -2 in combat, R: Replaced)',
                          'value' => $cboth,
                          'short' => true ];
         }
@@ -572,4 +573,33 @@ function restore_player(&$p)
         return true;
     }
     return false;
+}
+
+function basic_num_to_word($num) {
+    switch($num) {
+        case 0:
+            return 'Zero';
+        case 1:
+            return 'One';
+        case 2:
+            return 'Two';
+        case 3:
+            return 'Three';
+        case 4:
+            return 'Four';
+        case 5:
+            return 'Five';
+        case 6:
+            return 'Six';
+        case 7:
+            return 'Seven';
+        case 8:
+            return 'Eight';
+        case 9:
+            return 'Nine';
+        case 10:
+            return 'Ten';
+        default:
+            return $num;
+    }
 }
