@@ -4,10 +4,12 @@
 
 // Autorun commands
 // An array of commands that will get run if the player turns to the linked page. This variable can be omitted.
-// Note: It's a good idea not to automate too much, players often can perform action before making any requested rolls
+// Note: It's a good idea not to automate too much, as players may want to perform an action before making any requested rolls
 //       e.g. Drinking a potion of skill before testing skill.
 $autorun = array(
-0 => '!echo Good Luck!',
+// Turn to page 1. (This would ordinarily happen automatically, but the word 'if' in the paragraph tag prevents this.)
+0 => '!1',
+// Change player adjective to 'Warlock' and then show player info
 6 => '!debugset adjective Warlock; !info'
 );
 
