@@ -34,13 +34,16 @@ First you must create an incoming and outgoing webhook. In Slack, go to **Admini
 ### 2. Get the story
 By default Storyteller ships with a very short and simple sample book. It isn't very fun, so you'll likely want to replace it. You have 3 options.
 
-#### Option 1: Download pre-prepared _Warlock on Firetop Mountain_ or _Return to Firetop Mountain_
-Importing from an official source is painful (see the next section.) So I am reluctantly providing a link to _Warlock on Firetop Mountain_ and _Return to Firetop Mountain_ that has been pre-prepared for use. Download this file and replace the contents of `book.php` with it.
+#### Option 1: Download pre-prepared book
+Importing from an official source is painful (see the next section.) So I am reluctantly providing a link to some books that have been pre-prepared for use. Download the file and replace the contents of `book.php` with it.
 
-- [Pre-prepared WoFM book.php](https://pastebin.com/raw/rwbfuT6L)
-- [Pre-prepared RtFM book.php](https://pastebin.com/raw/GSL5sY7B)
+Pre-Prepared book.php:
+- [Warlock of Firetop Mountain](https://pastebin.com/raw/vWWTeMFj)
+- [Return to Firetop Mountain](https://pastebin.com/raw/7gFq1WTW)
+- [Seas of Blood](https://pastebin.com/raw/Y4t3V1kq)
+- [Starship Traveller](https://pastebin.com/raw/wxi722M5)
 
-This link will be removed hastily if anyone ever objects. Don't be a jerk. If use this, make sure you own the books. [WoFM Amazon link](https://www.amazon.co.uk/Fighting-Fantasy-Warlock-Firetop-Mountain/dp/1407181300/), [RtFM Amazon link](https://www.amazon.co.uk/Return-Firetop-Mountain-Fighting-Fantasy/dp/184046481X/)
+These links will be removed hastily if anyone ever objects. Don't be a jerk. If use them, make sure you own the books. [Amazon link](http://www.amazon.com/s?url=search-alias%3Daps&field-keywords=fighting+fantasy)
 
 #### Option 2: Import a book you own
 Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook format. If they were, I'd provide a script to automate extraction. Since they aren't your only option is to scan, OCR and input the text yourself from a paper book. If you're mad enough to attempt this, see `book.php` for an example. Use can use the `bookconvert.php` script in the *extras* directory to help you convert raw text to this format. e.g. `php bookconvert.php mybook.txt > book.php`
