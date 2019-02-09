@@ -192,6 +192,7 @@ function load()
 {
     $save = file_get_contents('save.txt');
     if (!$save) {
+        require_once('logic/roll_character.php');
         $p = roll_character();
     }
     else {
