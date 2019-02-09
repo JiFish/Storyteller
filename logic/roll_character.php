@@ -335,13 +335,17 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
             $p['race'] = $races[$selection];
             unset($races[$selection]);
         }
-        if ($p['race'] == 'Droid') {
-            if (!$emoji || $emoji == '?') {
-                $p['emoji'] = ':robot:';
-            }
-            if (!$name || $name == '?') {
+        if (!$name || $name == '?') {
+            if ($p['race'] == 'Droid') {
                 $p['name'] = chr(mt_rand(68,90)).chr(mt_rand(65,87)).'-'.mt_rand(1,9);
+            } elseif ($p['race'] == 'Vulcan') {
+                $p['name'] = generate_vulcan_name($p['gender']);
+            } elseif ($p['race'] == 'Andorian') {
+                $p['name'] = generate_andorian_name();
             }
+        }
+        if ($p['race'] == 'Droid' && (!$emoji || $emoji == '?')) {
+            $p['emoji'] = ':robot:';
         }
         $p['adjective'] = 'Captain';
         $p['prov'] = 0;
@@ -358,7 +362,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['shipname'] = trim($names[array_rand($names)]);
         // Crew
         $cl = ['no1','science','medic','engineer','security','guard'];
-        $races = array_pad($races,10,'Human');
+        $races = array_pad($races,9,'Human');
         foreach ($cl as $k => $c) {
             $d1 = dice();
             $d2 = dice();
@@ -386,7 +390,8 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
 
 function roll_sst_crew($position, $combatpenalty, &$races = null, $dice = null) {
     if ($races == null) {
-        $races = ['Human','Human','Human','Vulcan','Andorian','Caitian','Droid'];
+        $races = ['Vulcan','Andorian','Caitian','Droid'];
+        $races = array_pad($races,8,'Human');
     }
     if ($dice == null) {
         $dice = [dice(),dice(),dice()];
@@ -415,6 +420,10 @@ function roll_sst_crew($position, $combatpenalty, &$races = null, $dice = null) 
     } elseif ($cm['race'] == 'Caitian') {
         $names = file('resources/cat_names.txt');
         $cm['name'] = trim($names[array_rand($names)]);
+    } elseif ($cm['race'] == 'Vulcan') {
+        $cm['name'] = generate_vulcan_name($cm['gender']);
+    } elseif ($cm['race'] == 'Andorian') {
+        $cm['name'] = generate_andorian_name();
     } else {
         $names = file($cm['gender']=='Male'?'resources/male_names.txt':'resources/female_names.txt');
         $cm['name'] = trim($names[array_rand($names)]);
@@ -422,4 +431,28 @@ function roll_sst_crew($position, $combatpenalty, &$races = null, $dice = null) 
     $cm['referrers'] = ['you' => $cm['name'], 'youare' => $cm['name'].' is', 'your' => $cm['name']."'s"];
 
     return $cm;
+}
+
+function generate_vulcan_name($gender) {
+    $c = ["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","x","z"];
+    $v = ["a","e","i","o","u"];
+
+    if (strtolower($gender) == 'male') {
+        return 'S'.$v[rand(0,4)].$c[rand(0,18)].$v[rand(0,4)].'k';
+    } else {
+        $b = array_merge($c,$v);
+        return "T'P".$v[rand(0,4)].$b[rand(0,23)];
+    }
+}
+
+function generate_andorian_name() {
+    $c = ["g","h","k","l","m","n","p","r","s","t","v"];
+    $v = ["a","e","i","o","u"];
+    $s = ["Ta","Th","Sh","Ke"];
+
+    if (rand(0,1) == 1) {
+        return ['Th','Sh'][rand(0,1)].$v[rand(0,4)].$c[rand(0,10)].$v[rand(0,4)].$c[rand(0,10)];
+    } else {
+        return ['Ta','Ke'][rand(0,1)].$c[rand(0,10)].$v[rand(0,4)].$c[rand(0,10)];
+    }
 }
