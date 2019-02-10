@@ -1163,5 +1163,22 @@ function _cmd_beam($cmd, &$player)
     array_unshift($crew,"You");
     $out = "_".basic_num_to_word(count($crew))." to beam $dir!_\n";
     $out .= "*".implode(', ', array_slice($crew, 0, -1)) . (count($crew)>1?' and ':'') . end($crew)." have beamed $dir.*\n";
+
+    // If we are beaming up and have our original MO, we get some healing
+    if ($dir == 'up' && $player['crew']['medic']['replacement'] == false) {
+        if ($player['stam'] < $player['max']['stam']) {
+            $r = min($player['max']['stam']-$player['stam'],2);
+            $out .= "_Your medic treats you restoring $r stamina._\n";
+            $player['stam'] += $r;
+        }
+        foreach ($player['crew'] as $key => $c) {
+            if ($c['stam'] < $c['max']['stam']) {
+                $r = min($c['max']['stam']-$c['stam'],2);
+                $out .= "_Your medic treats ".($key=='medic'?'himself':$c['name'])." restoring $r stamina._\n";
+                $player['crew'][$key]['stam'] += $r;
+            }
+        }
+    }
+
     sendqmsg($out,":rocket:");
 }
