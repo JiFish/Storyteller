@@ -14,6 +14,8 @@ function run_fight($input) {
     $critchance =     (isset($input['critchance'])?    $input['critchance']:     2);
     $m2 =             (isset($input['monster2name'])?  $input['monster2name']:   null);
     $mskill2 =        (isset($input['monster2skill'])? $input['monster2skill']:  null);
+    $backupname =     (isset($input['backupname'])?    $input['backupname']:   null);
+    $backupskill =    (isset($input['backupskill'])?   $input['backupskill']:  null);
     $bonusdmg =       (isset($input['bonusdmg'])?      $input['bonusdmg']:       0);
     $bonusdmgchance = (isset($input['bonusdmgchance'])?$input['bonusdmgchance']: 3);
     $fasthands =      (isset($input['fasthands'])?     $input['fasthands']:      false);
@@ -151,12 +153,35 @@ function run_fight($input) {
                 $out .= "_$you block $m2's attack. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
             }
             else if ($pattack < $mattack) {
-                $out .= "_$m2 hits $youlc! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                $out .= "_$m2 hit  $youlc! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
                 $player['stam'] -= 2;
                 if ($stop_when_hit_you) { break; }
             }
             else {
                 $out .= "_$m2's attack fails to hit $youlc. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+            }
+        }
+
+        //  Your backup attack
+        if ($backupname) {
+            $mroll = rand(1,6); $mroll2 = rand(1,6);
+            $proll = rand(1,6); $proll2 = rand(1,6);
+            $mattack = $mskill+$mroll+$mroll2;
+            $pattack = $backupskill+$proll+$proll2;
+
+            $memoji = diceemoji($mroll).diceemoji($mroll2);
+            $pemoji = diceemoji($proll).diceemoji($proll2);
+
+            if ($pattack > $mattack) {
+                $out .= "_$backupname hits $m! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                $mstam -= 2;
+                if ($stop_when_hit_them) { break; }
+            }
+            else if ($pattack < $mattack) {
+                $out .= "_$m blocks the attack of $backupname! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+            }
+            else {
+                 $out .= "_$backupname's attack fails to hit $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
             }
         }
 
