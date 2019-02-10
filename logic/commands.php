@@ -34,6 +34,7 @@ function register_commands(&$player)
     register_command('bonusfight',  '_cmd_bonusfight',['oms','n','n','n','on']);
     register_command('vs',          '_cmd_vs',['ms','n','n','ms','n','n']);
     register_command('fighttwo',    '_cmd_fighttwo',['ms','n','n','oms','on','on']);
+    register_command('fightbackup', '_cmd_fightbackup',['oms','n','n','oms','n']);
     register_command('phaser',      '_cmd_phaser',['onm','(\sstun|\skill)?','oms','n','(\sstun|\skill)?','on']);
     register_command('gun',         '_cmd_phaser',['onm','(\sstun|\skill)?','oms','n','(\sstun|\skill)?','on']);
     register_command('attack',      '_cmd_attack',['n','on']);
@@ -770,6 +771,27 @@ function _cmd_fighttwo($cmd, &$player)
     sendqmsg($out,":crossed_swords:");
 }
 
+//// !fightbackup [name 1] <skill 1> <stamina 1> [backup's name] <backup's skill>
+function _cmd_fightbackup($cmd, &$player)
+{
+    // Set monster
+    $m = ($cmd[1]?$cmd[1]:'Opponent');
+    $mskill = $cmd[2];
+    $mstam = $cmd[3];
+
+    // Set backup
+    $backupname = ($cmd[4]?$cmd[4]:'The backup');
+    $backupskill = $cmd[5];
+
+    $out = run_fight(['player' => &$player,
+                      'monstername' => $m,
+                      'monsterskill' => $mskill,
+                      'monsterstam' => $mstam,
+                      'backupname' => $backupname,
+                      'backupskill' => $backupskill]);
+    sendqmsg($out,":crossed_swords:");
+}
+
 //// !attack <skill>
 function _cmd_attack($cmd, &$player)
 {
@@ -1051,6 +1073,7 @@ function _cmd_order($cmd, &$player)
         case 'critfight':
         case 'bonusfight':
         case 'fighttwo':
+        case 'fightbackup':
             if ($crew['combatpenalty']) {
                 $tmpskill = $crew['skill'];
                 $crew['skill'] = max(0,$crew['skill']-2);

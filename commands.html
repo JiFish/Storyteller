@@ -122,9 +122,10 @@ h3 { font-size: 2.3rem; }
 </ul>
 <h5>The following covers many custom fight rules:</h5>
 <ul>
-<li><code>!critfight [name] &lt;skill&gt; [who] [critchance]</code> Fight a monster named [name] (optional) with skill <skill> with critical strikes doing damage only. [who] is who has to roll the crits, <code>me</code> or <code>both</code> (Default: me). [critchance] is the chance of the crit hitting x in 6. (Default: 2)</li>
+<li><code>!critfight [name] &lt;skill&gt; [who] [critchance]</code> Fight a monster named [name] (optional) with skill &lt;skill&gt; with critical strikes doing damage only. [who] is who has to roll the crits, <code>me</code> or <code>both</code> (Default: me). [critchance] is the chance of the crit hitting x in 6. (Default: 2)</li>
 <li><code>!bonusfight [name] &lt;skill&gt; &lt;stamina&gt; &lt;bonusdmg&gt; [bonusdmgchance]</code> Fight a monster named [name] (optional) with skill <skill> and stamina <stamina>. After each round the monster has a [bonusdmgchance]/6 chance of doing <bonusdmg> damage. Default 3/6.</li>
 <li><code>!fighttwo &lt;name 1&gt; &lt;skill 1&gt; &lt;stamina 1&gt; [&lt;name 2&gt; &lt;skill 2&gt; &lt;stamina 2&gt;]</code> Fight two opponents at the same time. If a second monster isn't provided, you'll fight two copies of the first.</li>
+<li><code>!fightbackup [name] &lt;skill&gt; &lt;stamina&gt; [allyname] &lt;allyskill&gt;</code> Fight an opponent with an ally named [allyname] (optional) and with skill &lt;allyskill&gt; backing you up in the fight.</li>
 <li><code>!vs &lt;name 1&gt; &lt;skill 1&gt; &lt;stamina 1&gt; &lt;name 2&gt; &lt;skill 2&gt; &lt;stamina 2&gt;</code> Fight two monsters against each other.</li>
 <li><code>!battle [name] &lt;strike&gt; &lt;strength&gt; [stopafter]</code> Fight a large scale battle with opponent named [name] (optional) with strike &lt;strike&gt; and strength <strength>, using your strike and strength. This command is only available for some books.</li>
 <li><code>!phaser [-/+penalty] [stun/kill] [name] &lt;skill&gt; [stun/kill] [maxrounds]</code> or <code>!gun</code>. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of <skill>. The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.</li>
