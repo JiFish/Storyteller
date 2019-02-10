@@ -1197,7 +1197,7 @@ function _cmd_beam($cmd, &$player)
         foreach ($player['crew'] as $key => $c) {
             if ($c['stam'] < $c['max']['stam']) {
                 $r = min($c['max']['stam']-$c['stam'],2);
-                $out .= "_Your medic treats ".($key=='medic'?'himself':$c['name'])." restoring $r stamina._\n";
+                $out .= "_Your medic treats ".($key=='medic'?'themself':$c['name'])." restoring $r stamina._\n";
                 $player['crew'][$key]['stam'] += $r;
             }
         }
