@@ -1,11 +1,3 @@
-
-MarkdowntoHTML.co — A Simple Commonmark Markdown Converter
-
-clear  Smart punctuation
-
-    Preview
-    HTML
-
 Storyteller Commands Help
 Quick Guide / Common Commands
 
