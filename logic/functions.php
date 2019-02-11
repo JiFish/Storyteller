@@ -182,14 +182,13 @@ function getbook()
 
 // Load the player array from a serialized array
 // If we can't find the file, generate a new character
-function load()
+function load($file = 'save.txt')
 {
-    $save = file_get_contents('save.txt');
+    $save = file_get_contents($file);
     if (!$save) {
         require_once('logic/roll_character.php');
         $p = roll_character();
-    }
-    else {
+    } else {
         $p = unserialize($save);
     }
 

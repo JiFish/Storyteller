@@ -74,7 +74,6 @@ h3 { font-size: 2.3rem; }
 <li><code>!stats</code> or <code>!s</code> Show character stats only.</li>
 <li><code>!stuff</code> or <code>!i</code> Show character inventory.</li>
 <li><code>!newgame [name] [gender] [emoji] [race] [adjective] [seed]</code> or <code>!ng</code> Rolls a new character and resets the game. Optionally customise the new character. Use <code>?</code> to randomise a field. A numeric [seed] may be given in case you want to generate the same character again and again.</li>
-<li><code>!undo</code> When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!</li>
 </ul>
 <h5>Some fun character ideas:</h5>
 <ul>
@@ -130,6 +129,17 @@ h3 { font-size: 2.3rem; }
 <li><code>!battle [name] &lt;strike&gt; &lt;strength&gt; [stopafter]</code> Fight a large scale battle with opponent named [name] (optional) with strike &lt;strike&gt; and strength <strength>, using your strike and strength. This command is only available for some books.</li>
 <li><code>!phaser [-/+penalty] [stun/kill] [name] &lt;skill&gt; [stun/kill] [maxrounds]</code> or <code>!gun</code>. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of <skill>. The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.</li>
 <li><code>!shipbattle [name] &lt;skill&gt; &lt;stamina&gt; [stopafter]</code> Battle a ship named [name] (optional) with weapons <weapons> and shields <shields>. This command is only available for some books.</li>
+</ul>
+<h3>Restoring To Earlier</h3>
+<ul>
+<li><code>!undo</code> When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!</li>
+<li><code>!save [slot]</code> Save the current game in slot numbered [slot]. Valid slot numbers are 0 - 10. If you don't specify a slot, 0 will be used. (This command is disabled by default.)</li>
+<li><code>!load [slot]</code> Restore the game from slot [slot]. (This command is disabled by default.)</li>
+<li><code>!clearslots [confirm]</code> Clear all the save slots. Useful after switching books. You are required to type <code>!clearslots confirm</code> for safety. (This command is disabled by default.)</li>
+</ul>
+<h5>Example</h5>
+<ul>
+<li><code>!save 3; !dead; !load 3</code> Save, kill yourself, come back to life</li>
 </ul>
 <h3>Spellcasting</h3>
 <p>(Only available for some books.)</p>

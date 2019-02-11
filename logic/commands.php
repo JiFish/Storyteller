@@ -48,6 +48,9 @@ function register_commands(&$player)
     register_command('macro',       '_cmd_macro',['n']);
     register_command('m',           '_cmd_macro',['n']);
     register_command('undo',        '_cmd_undo');
+    register_command('save',        '_cmd_save',['on']);
+    register_command('load',        '_cmd_load',['on']);
+    register_command('clearslots',  '_cmd_clearslots',['osl']);
     register_command('map',         '_cmd_map');
     register_command('π',           '_cmd_easteregg');
     register_command(':pie:',       '_cmd_easteregg');
@@ -1007,6 +1010,50 @@ function _cmd_undo($cmd, &$player)
     } else {
         sendqmsg("*There are some things that cannot be undone...*", ':skull:');
     }
+}
+
+//// !save - save copy of player
+function _cmd_save($cmd, &$player)
+{
+    $slot = ($cmd[1]?$cmd[1]:0);
+    if ($slot < 0 || $slot > 10) {
+        sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
+        return;
+    }
+    save($player, "save_$slot.txt");
+    sendqmsg("*Game saved in slot $slot*", ':floppy_disk:');
+}
+
+//// !load - save copy of player
+function _cmd_load($cmd, &$player)
+{
+    $slot = ($cmd[1]?$cmd[1]:0);
+    if ($slot < 0 || $slot > 10) {
+        sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
+        return;
+    }
+    if (!file_exists("save_$slot.txt")) {
+        sendqmsg("*No save found in slot $slot*", ':interrobang:');
+        return;
+    }
+    $player = load("save_$slot.txt");
+    sendqmsg("*Loaded game in slot $slot*", $player['emoji']);
+    addcommand("look");
+    addcommand("info");
+}
+
+//// !load - save copy of player
+function _cmd_clearslots($cmd, &$player)
+{
+    $slot = ($cmd[1]?$cmd[1]:0);
+    if (strtolower($cmd[1]) != 'confirm') {
+        sendqmsg("*Use `!clearslots confirm` to confirm clear of all save slots.*", ':interrobang:');
+        return;
+    }
+    foreach(glob("save_*.txt") as $f) {
+        unlink($f);
+    }
+    sendqmsg("*All save slots cleared*", ':floppy_disk:');
 }
 
 //// !map - Sends a map image if map.jpg exists in images dir

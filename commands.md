@@ -104,6 +104,17 @@ The following covers many custom fight rules:
     !phaser [-/+penalty] [stun/kill] [name] <skill> [stun/kill] [maxrounds] or !gun. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of . The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.
     !shipbattle [name] <skill> <stamina> [stopafter] Battle a ship named [name] (optional) with weapons and shields . This command is only available for some books.
 
+Restoring To Earlier
+
+    !undo When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
+    !save [slot] Save the current game in slot numbered [slot]. Valid slot numbers are 0 - 10. If you don't specify a slot, 0 will be used. (This command is disabled by default.)
+    !load [slot] Restore the game from slot [slot]. (This command is disabled by default.)
+    !clearslots [confirm] Clear all the save slots. Useful after switching books. You are required to type `!clearslots confirm` for safety. (This command is disabled by default.)
+
+Example
+
+    !save 3; !dead; !load 3 Save, kill yourself, come back to life
+
 Spellcasting
 
 (Only available for some books.)
