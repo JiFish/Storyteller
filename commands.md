@@ -113,7 +113,7 @@ Restoring To Earlier
 
 Example
 
-    !save 3; !dead; !load 3 Save, kill yourself, come back to life
+    !save 3; !7; !load 3 Save in slot 3, turn to page 7, reload game
 
 Spellcasting
 
