@@ -51,12 +51,14 @@ Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook 
 #### Option 3: Write your own adventure
 Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
 
-### 3. Set the booktype
+### 3. Set the booktype / adjust config.php
 Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules. You can look up the correct book type for the Fighting Fantasy book you are playing in `book_support.html` found in the *extras* directory.
 
 If in doubt set `BOOK_TYPE` to `none`. This will generate a minimal character that can be used for most stories. A special type `custom` is provided for anyone who wishes to create a their own adventure.
 
 The following books currently work very well: Battleblade Warrior; Black Vein Prophecy; Caverns of the Snow Witch; City of Thieves; Creature of Havoc; Crypt of the Sorcerer; Deathmoor; Deathtrap Dungeon; Demons of the Deep; Eye of the Dragon; The Forest of Doom; House of Hell; Island of the Lizard King; Legend of Zagor; Masks of Mayhem; Portal of Evil; Return to Firetop Mountain; Seas of Blood; Starship Traveller; Stealer of Souls; Talisman of Death; Temple of Terror; Trial of Champions; The Warlock of Firetop Mountain.
+
+You may wish to adjust other settings in config.php at this point. You might like to remove `save` and `load` from the disabled commands list. This will allow players to use save-points. Alternatively, you could add the `undo` command to this list if you want to prevent players from undoing their mistakes.
 
 ### 4. Get the code online
 - Upload the installation to your PHP enabled web-server. No database is needed. The uploaded directory must be writeable.
