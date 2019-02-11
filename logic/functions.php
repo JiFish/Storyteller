@@ -8,12 +8,6 @@ function processcommand($command, &$player)
 {
     global $commandslist, $commandsargs;
 
-    // If we have a trigger word right at the start, strip it now
-    $command = trim($command);
-    if (stripos($command,$_POST['trigger_word']) === 0) {
-        $command = substr($command,strlen($_POST['trigger_word']));
-    }
-
     $command = pre_processes_magic($command, $player);
 
     // Split by whitespace
@@ -602,5 +596,27 @@ function basic_num_to_word($num) {
             return 'Ten';
         default:
             return $num;
+    }
+}
+
+// Filter an array of commands by a disabled list and remove entries
+// that are on the disabled list
+function filter_command_list(&$disabledcommands, &$commandlist) {
+    if (isset($disabledcommands) && is_array($disabledcommands)) {
+        foreach ($commandlist as $key => $cmd) {
+            // Determine end of command word.
+            // Either the 1st space of the end of the string
+            $cmdend = stripos($cmd,' ');
+            if ($cmdend === false) {
+                $cmdend = strlen($cmd);
+            }
+            foreach ($disabledcommands as $dc) {
+                // Look for match
+                if (strtolower(substr($cmd, 0, $cmdend)) == strtolower($dc)) {
+                    unset($commandlist[$key]);
+                    break;
+                }
+            }
+        }
     }
 }

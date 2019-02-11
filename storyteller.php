@@ -21,6 +21,19 @@ register_commands($player);
 $commandlist = explode(";",html_entity_decode($_POST['text']));
 $limittime = false;
 
+// Trim and Filter Trigger word from commands
+// From this point onwards all commands are expects to NOT have the trigger word
+foreach ($commandlist as $key => $command) {
+    $command = trim($command);
+    if (stripos($command,$_POST['trigger_word']) === 0) {
+        $commandlist[$key] = substr($command,strlen($_POST['trigger_word']));
+    }
+}
+
+// Filter commands using the disabled list. Do this here so macros and $autorun
+// can still use disabled commands
+filter_command_list($disabledcommands, $commandlist);
+
 $executions = 0;
 while (sizeof($commandlist) > 0)
 {

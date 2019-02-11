@@ -24,6 +24,11 @@ define("CHARACTER_ROLLS",'normal');
 // Set to false if you don't want to send illustrations.
 define("IMAGES_SUBDIR",'jofm');
 
+// Command disabling. Any command in the list cannot be run by anyone. (This excludes macros and
+// $autorun in book.php) If a command has aliases, they must also be included. A few of the more
+// powerful commands are disabled by default. Remove them from this list to enable them.
+$disabledcommands = ['debugset', 'silentset'];
+
 // Discord mode formats output to work with Discord's *Slack Compatible* incoming webhooks
 define("DISCORD_MODE",false);
 

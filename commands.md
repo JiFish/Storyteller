@@ -159,8 +159,8 @@ Fancy Stuff & Debugging
 Dragons be here. Advanced users only.
 
     !echo <message> Simply repeats . Useful to label outputs when chaining commands.
-    !debugset <var> <val> Set character variable to . Potentially could ruin the character if you are careless.
-    !silentset <var> <val> Set character variable to . As above, but nothing will be outputted.
+    !debugset <var> <val> Set character variable to . Potentially could ruin the character if you are careless. (This command is disabled by default.)
+    !silentset <var> <val> Set character variable to . As above, but nothing will be outputted. (This command is disabled by default.)
     !macro <line> or !m <line> run line number from macros.txt as a command. Useful if an adventure requires the same sequence of commands to be run again and again.
     You can include magic substitutions in any command with curly brackets. There are three types:
         Character vars. Any of the stats will work, plus a few extra. Try !echo Hello {name}. Useful for debugging. Use the special case {all} to see everything.
