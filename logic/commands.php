@@ -45,6 +45,7 @@ function register_commands(&$player)
     register_command('dead',        '_cmd_dead');
     register_command('debugset',    '_cmd_debugset',['s','l']);
     register_command('silentset',   '_cmd_debugset',['s','l']);
+    register_command('debuglist',   '_cmd_debuglist');
     register_command('macro',       '_cmd_macro',['n']);
     register_command('m',           '_cmd_macro',['n']);
     register_command('undo',        '_cmd_undo');
@@ -872,12 +873,18 @@ function _cmd_debugset($cmd, &$player)
     $key = $cmd[1];
     $val = $cmd[2];
     $silent = (strtolower($cmd[0]) == 'silentset');
+    $sa = array();
+    recursive_flatten_player($player,$sa);
 
-    if (array_key_exists($key,$player) && !is_array($player[$key])) {
-        if (is_numeric($val)) {
-            $val = (int)$val;
+    if (array_key_exists($key,$sa) && !is_array($sa[$key])) {
+        if (is_int($sa[$key])) {
+            $sa[$key] = (int)$val;
+        } elseif (is_bool($sa[$key])) {
+            $sa[$key] = (strtolower($val)=='yes');
+            $val = ($sa[$key]?'yes':'no');
+        } else {
+            $sa[$key] = $val;
         }
-        $player[$key] = $val;
         $msg = "*$key set to $val*";
     } else {
         $msg = "*$key is invalid.*";
@@ -885,6 +892,24 @@ function _cmd_debugset($cmd, &$player)
     if (!$silent) {
         sendqmsg($msg, ':desktop_computer:');
     }
+}
+
+//// !debuglist - List all debug values
+function _cmd_debuglist($cmd, &$player)
+{
+    $sa = array();
+    recursive_flatten_player($player,$sa);
+    ksort($sa);
+
+    $msg = "";
+    foreach ($sa as $key => $val) {
+        if (is_bool($val)) {
+            $msg .= "*$key:* ".($val?'yes':'no')."\n";
+        } else {
+            $msg .= "*$key:* $val\n";
+        }
+    }
+    sendqmsg($msg, ':desktop_computer:');
 }
 
 //// !π - Easter egg
@@ -1135,7 +1160,6 @@ function _cmd_order($cmd, &$player)
         case 'stamina':
         case 'test':
         case 'dead':
-        case 'debugset':
             call_user_func_array($commandslist[$order],array($cmd,&$crew));
             break;
         default:

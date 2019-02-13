@@ -59,21 +59,18 @@ function pre_processes_magic($command, &$player)
     );
 
     // magic to substitute player vars
+    // build substitute array
+    $sa = array();
+    recursive_flatten_player($player,$sa);
+    // perform substitution
     $command = preg_replace_callback(
-        '/{(.+?)(\[(.+?)\])?}/',
-        function ($matches) use ($player) {
-            if (isset($matches[3]) && array_key_exists($matches[1],$player)
-            && array_key_exists($matches[3],$player[$matches[1]])) {
-                return $player[$matches[1]][$matches[3]];
-            } elseif (!isset($matches[3]) && array_key_exists($matches[1],$player)) {
-                if (is_array($player[$matches[1]])) {
-                    return str_replace("\n"," ",var_export($player[$matches[1]],1));
-                } elseif (is_bool($player[$matches[1]])) {
-                    return ($player[$matches[1]]?'on':'off');
+        '/{(.+?)}/',
+        function ($matches) use ($sa) {
+            if (array_key_exists($matches[1],$sa)) {
+                if (is_bool($sa[$matches[1]])) {
+                    return ($sa[$matches[1]]?'yes':'no');
                 }
-                return $player[$matches[1]];
-            } elseif ($matches[1] == 'all') {
-                return str_replace("\n"," ",var_export($player,1));
+                return $sa[$matches[1]];
             }
             return $matches[0];
         },
@@ -81,6 +78,18 @@ function pre_processes_magic($command, &$player)
     );
 
     return $command;
+}
+
+function recursive_flatten_player(&$player, &$return, $keychain="") {
+    foreach($player as $key => $val) {
+        if ($key == 'creationdice' || $key == 'stuff') { // skip these
+            continue;
+        } elseif (is_array($val)) {
+            recursive_flatten_player($player[$key], $return, $keychain.$key.'_');
+        } else {
+            $return[$keychain.$key] = &$player[$key];
+        }
+    }
 }
 
 function advanced_command_split($command,$def)

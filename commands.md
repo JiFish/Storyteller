@@ -161,13 +161,14 @@ Fancy Stuff & Debugging
 
 Dragons be here. Advanced users only.
 
-    !echo <message> Simply repeats . Useful to label outputs when chaining commands.
-    !debugset <var> <val> Set character variable to . Potentially could ruin the character if you are careless. (This command is disabled by default.)
-    !silentset <var> <val> Set character variable to . As above, but nothing will be outputted. (This command is disabled by default.)
+    !echo <message> Simply repeats <message>. Useful to label outputs when chaining commands.
+    !debugset <var> <val> Set character variable to <var>. Potentially could ruin the character if you are careless. (This command is disabled by default.)
+    !silentset <var> <val> Set character variable to <var>. As above, but nothing will be outputted. (This command is disabled by default.)
+    !debuglist Show all character variables and the the current value. (This command is disabled by default.)
     !macro <line> or !m <line> run line number from macros.txt as a command. Useful if an adventure requires the same sequence of commands to be run again and again.
     You can include magic substitutions in any command with curly brackets. There are three types:
-        Character vars. Any of the stats will work, plus a few extra. Try !echo Hello {name}. Useful for debugging. Use the special case {all} to see everything.
-        Dice rolls in the form d[dicesides][+/-bonus]. If dicesides is omitted, 6 is assumed. e.g. {1d}, {3d10}, {1d8-4}, {1d+3}
+        Character variables. Try !echo Hello {name}.
+        Dice rolls in the form <dice>d[dicesides][+/-bonus]. If dicesides is omitted, 6 is assumed. e.g. {1d}, {3d10}, {1d8-4}, {1d+3}
         {sc} will be replaced with a semicolon ";". Just in case you need one in a string.
 
 Examples:
