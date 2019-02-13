@@ -39,7 +39,7 @@ h3 { font-size: 2.3rem; }
 </ul>
 <h3>Rolling Dice</h3>
 <ul>
-<li><code>!fight [name] &lt;skill&gt; &lt;stamina&gt;</code> Fight a monster with skill <skill> and stamina <stamina>. Name is optional and can contain spaces. e.g. <code>!fight Giant Spider 4 5</code></li>
+<li><code>!fight [name] &lt;skill&gt; &lt;stamina&gt;</code> Fight a monster with skill &lt;skill&gt; and stamina &lt;stamina&gt;. Name is optional and can contain spaces. e.g. <code>!fight Giant Spider 4 5</code></li>
 <li><code>!roll [dienumber]</code> Roll [dienumber] six-sided dice and sum the result. If dienumber is missing, rolls one die.</li>
 <li><code>!test luck</code> or <code>!test skill</code> or <code>!test stam</code> Test the stat against two dice.</li>
 <li><code>!randpage &lt;page 1&gt; [page 2] [page 3] [...]</code> Turn randomly to one of the listed pages.</li>
@@ -116,18 +116,18 @@ h3 { font-size: 2.3rem; }
 </ul>
 <h3>Fight Automation</h3>
 <ul>
-<li><code>!fight [name] &lt;skill&gt; &lt;stamina&gt; [stopafter]</code> Fight a monster named [name] (optional) with skill <skill> and stamina <stamina>. Spaces are accepted in the name. Stop after [stopafter] rounds (optional.) You can use 3 special phrases for [stopafter]: <code>hitme</code>, <code>hitthem</code> and <code>hitany</code> to stop the fight in those situations.</li>
-<li><code>!attack &lt;skill&gt; [damage]</code> or <code>!a &lt;skill&gt; [damage]</code> Perform a single attack roll versus a monster with skill <skill>. [damage] is taken from stamina on a fail (Default: 0) This is for manually running combat with special rules.</li>
+<li><code>!fight [name] &lt;skill&gt; &lt;stamina&gt; [stopafter]</code> Fight a monster named [name] (optional) with skill &lt;skill&gt; and stamina &lt;stamina&gt;. Spaces are accepted in the name. Stop after [stopafter] rounds (optional.) You can use 3 special phrases for [stopafter]: <code>hitme</code>, <code>hitthem</code> and <code>hitany</code> to stop the fight in those situations.</li>
+<li><code>!attack &lt;skill&gt; [damage]</code> or <code>!a &lt;skill&gt; [damage]</code> Perform a single attack roll versus a monster with skill &lt;skill&gt;. [damage] is taken from stamina on a fail (Default: 0) This is for manually running combat with special rules.</li>
 </ul>
 <h5>The following covers many custom fight rules:</h5>
 <ul>
 <li><code>!critfight [name] &lt;skill&gt; [who] [critchance]</code> Fight a monster named [name] (optional) with skill &lt;skill&gt; with critical strikes doing damage only. [who] is who has to roll the crits, <code>me</code> or <code>both</code> (Default: me). [critchance] is the chance of the crit hitting x in 6. (Default: 2)</li>
-<li><code>!bonusfight [name] &lt;skill&gt; &lt;stamina&gt; &lt;bonusdmg&gt; [bonusdmgchance]</code> Fight a monster named [name] (optional) with skill <skill> and stamina <stamina>. After each round the monster has a [bonusdmgchance]/6 chance of doing <bonusdmg> damage. Default 3/6.</li>
+<li><code>!bonusfight [name] &lt;skill&gt; &lt;stamina&gt; &lt;bonusdmg&gt; [bonusdmgchance]</code> Fight a monster named [name] (optional) with skill &lt;skill&gt; and stamina &lt;stamina&gt;. After each round the monster has a [bonusdmgchance]/6 chance of doing <bonusdmg> damage. Default 3/6.</li>
 <li><code>!fighttwo &lt;name 1&gt; &lt;skill 1&gt; &lt;stamina 1&gt; [&lt;name 2&gt; &lt;skill 2&gt; &lt;stamina 2&gt;]</code> Fight two opponents at the same time. If a second monster isn't provided, you'll fight two copies of the first.</li>
 <li><code>!fightbackup [name] &lt;skill&gt; &lt;stamina&gt; [allyname] &lt;allyskill&gt;</code> Fight an opponent with an ally named [allyname] (optional) and with skill &lt;allyskill&gt; backing you up in the fight.</li>
 <li><code>!vs &lt;name 1&gt; &lt;skill 1&gt; &lt;stamina 1&gt; &lt;name 2&gt; &lt;skill 2&gt; &lt;stamina 2&gt;</code> Fight two monsters against each other.</li>
 <li><code>!battle [name] &lt;strike&gt; &lt;strength&gt; [stopafter]</code> Fight a large scale battle with opponent named [name] (optional) with strike &lt;strike&gt; and strength <strength>, using your strike and strength. This command is only available for some books.</li>
-<li><code>!phaser [-/+penalty] [stun/kill] [name] &lt;skill&gt; [stun/kill] [maxrounds]</code> or <code>!gun</code>. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of <skill>. The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.</li>
+<li><code>!phaser [-/+penalty] [stun/kill] [name] &lt;skill&gt; [stun/kill] [maxrounds]</code> or <code>!gun</code>. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of &lt;skill&gt;. The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.</li>
 <li><code>!shipbattle [name] &lt;skill&gt; &lt;stamina&gt; [stopafter]</code> Battle a ship named [name] (optional) with weapons <weapons> and shields <shields>. This command is only available for some books.</li>
 </ul>
 <h3>Restoring To Earlier</h3>
@@ -164,13 +164,13 @@ h3 { font-size: 2.3rem; }
 <li><code>!awayteam &lt;command&gt;</code> Shorthand to make every crew member in the away team and yourself perform &lt;command&gt;.</li>
 <li><code>!recruit &lt;position&gt; &lt;name&gt; &lt;skill&gt; &lt;stam&gt; [gender] [race]</code> Replace one of the crew with a new crew member with the given information.</li>
 </ul>
-<p>The following commands are available for ordering: <code>bonusfight</code>, <code>critfight</code>, <code>dead</code>, <code>fight</code>, <code>fighttwo</code>, <code>phaser</code>, <code>skill</code>, <code>stam</code>, <code>test</code>.</p>
+<p>The following commands are available for ordering: <code>bonusfight</code>, <code>critfight</code>, <code>dead</code>, <code>fight</code>, <code>fighttwo</code>,, <code>fightbackup</code>, <code>phaser</code>, <code>skill</code>, <code>stam</code>, <code>test</code>.</p>
 <h4>Examples</h4>
 <ul>
 <li><code>!medic test skill</code> - Order medic to test skill</li>
 <li><code>!security phaser kill Salt Monster 7</code> - Order security officer to phaser fight Salt Monster, Shoot to kill</li>
 <li><code>!everyone stam +2</code> - Everyone gain 2 stamina</li>
-<li><code>!beam down science medic guard</code> - Add your science officer, medic and guard to the away team.</li>
+<li><code>!beam down science guard</code> - Add your science officer and guard to the away team.</li>
 </ul>
 <h3>Command Chaining</h3>
 <p>You can chain multiple commands together in one go with semicolons <code>;</code> e.g. <code>!newgame; !1</code> The chain will stop automatically on player death. You can omit the <code>!</code> prefix after the first command in the chain.</p>

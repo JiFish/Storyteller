@@ -120,7 +120,7 @@ Spellcasting
 (Only available for some books.)
 
     !spellbook [page] Read your spellbook. [Page] can be a number; or it can be one of the four spell types: combat, self, object and utility; or the word all to see every spell. (Warning: using all will result in a long post.)
-    !cast <spell name> Cast the spell ! Magic points will be deducted and stats effects applied where appropriate.
+    !cast <spell name> Cast the spell <spell name>! Magic points will be deducted and stats effects applied where appropriate.
     !cast <spell name> [name] <skill> <stamina> Some spell require a combat target. These 3 values work the same as the !fight command.
 
 Examples
@@ -140,13 +140,14 @@ Ordering crew
     !awayteam <command> Shorthand to make every crew member in the away team and yourself perform <command>.
     !recruit <position> <name> <skill> <stam> [gender] [race] Replace one of the crew with a new crew member with the given information.
 
-The following commands are available for ordering: bonusfight, critfight, dead, fight, fighttwo, phaser, skill, stam, test.
+The following commands are available for ordering: `bonusfight`, `critfight`, `dead`, `fight`, `fighttwo`, `fightbackup`, `phaser`, `skill`, `stam`, `test`.
+
 Examples
 
     !medic test skill - Order medic to test skill
     !security phaser kill Salt Monster 7 - Order security officer to phaser fight Salt Monster, Shoot to kill
     !everyone stam +2 - Everyone gain 2 stamina
-    !beam down science medic guard - Add your science officer, medic and guard to the away team.
+    !beam down science guard - Add your science officer and guard to the away team.
 
 Command Chaining
 
