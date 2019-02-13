@@ -376,6 +376,7 @@ function send_charsheet($player, $text = "", $sendstuff = false)
             'value' => $player['shields']." / ".$player['max']['shields'],
             'short' => true
         ];
+        $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d",$player['weapon']).')';
         // crew
         $cname = "";
         $cskill = "";
