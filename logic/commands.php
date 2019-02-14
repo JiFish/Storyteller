@@ -57,8 +57,7 @@ function register_commands(&$player)
     register_command(':pie:',       '_cmd_easteregg');
 
     $gamebook = getbook();
-    if ($gamebook == 'loz' ||
-        $gamebook == 'custom') {
+    if ($gamebook == 'loz') {
             register_command('spellbook',   '_cmd_spellbook',['osl']);
             register_command('cast',        '_cmd_cast',['spell','oms','on','on']);
     }

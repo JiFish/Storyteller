@@ -54,7 +54,7 @@ Storyteller doesn't have to play the official books. Perhaps one of the best way
 ### 3. Set the booktype / adjust config.php
 Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules. You can look up the correct book type for the Fighting Fantasy book you are playing in `book_support.html` found in the *extras* directory.
 
-If in doubt set `BOOK_TYPE` to `none`. This will generate a minimal character that can be used for most stories. A special type `custom` is provided for anyone who wishes to create a their own adventure.
+If in doubt set `BOOK_TYPE` to `none`. This will generate a minimal character that can be used for most stories.
 
 The following books currently work very well: Battleblade Warrior; Black Vein Prophecy; Caverns of the Snow Witch; City of Thieves; Creature of Havoc; Crypt of the Sorcerer; Deathmoor; Deathtrap Dungeon; Demons of the Deep; Eye of the Dragon; The Forest of Doom; House of Hell; Island of the Lizard King; Legend of Zagor; Masks of Mayhem; Portal of Evil; Return to Firetop Mountain; Seas of Blood; Starship Traveller; Stealer of Souls; Talisman of Death; Temple of Terror; Trial of Champions; The Warlock of Firetop Mountain.
 

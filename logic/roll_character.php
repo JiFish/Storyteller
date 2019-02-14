@@ -374,10 +374,6 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     }  elseif ($gamebook == 'tot') {
         //nothing to do
         null;
-    } elseif ($gamebook == 'custom') {
-        $p['creationdice'][] = dice();
-        $p['magic'] = max(0,$p['creationdice'][4]-3); // 1d6-3
-        $p['max']['magic'] = $p['magic'];
     }
 
     // Undocumented hook to allow the config file to alter new players

@@ -178,7 +178,7 @@ function getbook()
         return 'none';
     }
 
-    $supported_books = array('none','custom','wofm','dotd','coh','poe','bvp','rtfm',
+    $supported_books = array('none','wofm','dotd','coh','poe','bvp','rtfm',
                              'loz','tot','hoh','sob','sst');
 
     if (!in_array(BOOK_TYPE, $supported_books)) {
