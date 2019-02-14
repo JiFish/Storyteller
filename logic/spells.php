@@ -43,9 +43,7 @@ if (getbook() == "loz") {
         'type' => 'self',
         'target' => false,
         'desc' => 'This spell enables you to leap safely a distance of up to six meters. If you are faced with an obstacle (a chasm, a trapped corridor, etc.) which is not stated to be longer than six meters, you may use this spell to traverse the obstacle safely. This spell cannot be cast during combat.',
-        'func' => function() {
-            sendqmsg('> _Boing!_',':fireworks:');
-        }
+        'reply' => "_Boing!_"
     );
 
     $spells[] = array(
@@ -53,9 +51,7 @@ if (getbook() == "loz") {
         'cost' => 1,
         'type' => 'utility',
         'desc' => 'If you lose your lantern, or it no longer works, this spell creates a long-lasting small sphere of light which can be stored and used as a lantern whenever the need arises. Each use of the spell illuminates only one section of pathway, however. This spell cannot be cast during combat.',
-        'func' => function() {
-            sendqmsg('> _Let there be light!_',':fireworks:');
-        }
+        'reply' => "_Let there be light!_"
     );
 
     $spells[] = array(
@@ -76,9 +72,7 @@ if (getbook() == "loz") {
         'type' => 'utility',
         'target' => false,
         'desc' => 'This simple spell opens one trapped treasure chest or locked door safely. If the chest or door has a trap, it is rendered harmless by the spell (even if it is a Magic Trap). This spell cannot be cast during combat.',
-        'func' => function() {
-            sendqmsg('> _Open Sesame!_',':fireworks:');
-        }
+        'reply' => "_Open Sesame!_"
     );
 
     $spells[] = array(
@@ -168,9 +162,7 @@ if (getbook() == "loz") {
         'type' => 'utility',
         'target' => false,
         'desc' => 'This spell enables you to move long distances through a dungeon by instant magical teleportation, avoiding many hazards and enemies. You can cast this spell only at certain special magical portals. When you confront such a portal, you will be asked whether you wish to cast this spell; if you do, you will be instructed accordingly.',
-        'func' => function(&$player,$name,$skill,$stam) {
-            sendqmsg("> _The world shimmers away around you..._",':fireworks:');
-        }
+        'reply' => "_The world shimmers away around you..._"
     );
 
     $spells[] = array(

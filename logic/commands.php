@@ -1018,7 +1018,12 @@ function _cmd_cast($cmd, &$player)
         $s['func']($player,($cmd[2]?$cmd[2]:'Opponent'),$cmd[3],$cmd[4]);
     } else {
         $player['magic'] -= $s['cost'];
-        $s['func']();
+        // If we have a reply, just send that. Otherwise we should have a function to call
+        if ($s['reply']) {
+            sendqmsg("> ".$s['reply'],':fireworks:');
+        } else {
+            $s['func']($player);
+        }
     }
 }
 
