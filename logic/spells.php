@@ -101,9 +101,9 @@ if (getbook() == "loz") {
         'desc' => 'This spell can be cast immediately before any combat begins but not during one. For the first three Attack Rounds of the combat, you may roll dice twice when working out your Attack Strength and take the higher total rolled.',
         'func' => function(&$player,$name,$skill,$stam) {
             $out = run_fight(['player' => &$player,
-                              'monstername' => $m,
-                              'monsterskill' => $mskill,
-                              'monsterstam' => $mstam,
+                              'monstername' => $name,
+                              'monsterskill' => $skill,
+                              'monsterstam' => $stam,
                               'fasthands' => true]);
             sendqmsg($out,":crossed_swords:");
         }
