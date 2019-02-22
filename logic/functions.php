@@ -470,8 +470,8 @@ function get_stuff_attachment(&$player) {
                 'short' => true
             ],
             [
-                'title' => "",
-                'value' => html_entity_decode("&nbsp;")."\n".implode("\n",array_slice($s, ceil(sizeof($s) / 2))),
+                'title' => html_entity_decode("&nbsp;"),
+                'value' => implode("\n",array_slice($s, ceil(sizeof($s) / 2))),
                 'short' => true
             ])
     );
