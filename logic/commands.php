@@ -18,7 +18,7 @@ function register_commands(&$player)
     register_command('lose',        '_cmd_drop',['l']);
     register_command('use',         '_cmd_drop',['l']);
     register_command('roll',        '_cmd_roll',['on']);
-    register_command('test',        '_cmd_test',['s','on','on']);
+    register_command('test',        '_cmd_test',['s','onm','on','on']);
     register_command('ng',          '_cmd_newgame',['osl','osl','osl','osl','osl','on']);
     register_command('newgame',     '_cmd_newgame',['osl','osl','osl','osl','osl','on']);
     register_command('info',        '_cmd_info');
@@ -515,10 +515,19 @@ function _cmd_test($cmd, &$player)
     // Prevent restore
     backup_remove();
 
-    $cmd[1] = strtolower($cmd[1]);
+    $stat = strtolower($cmd[1]);
+    $dicemod = ($cmd[2]?(int)$cmd[2]:0);
+    // Setup outcome pages to read if provided
+    if ($cmd[3]) {
+        $success_page = "page ".$cmd[3]." nobackup";
+    }
+    if ($cmd[4]) {
+        $fail_page = "page ".$cmd[4]." nobackup";
+    }
+
     // Aliases
-    if ($cmd[1] == "stamina") $cmd[1] = "stam";
-    if ($cmd[1] == "strength") $cmd[1] = "str";
+    if ($stat == "stamina") $stat = "stam";
+    if ($stat == "strength") $stat = "str";
 
     // Referrers
     if (isset($player['referrers'])) {
@@ -537,56 +546,56 @@ function _cmd_test($cmd, &$player)
     } elseif ($gamebook == 'sst') {
         $vtt[] = 'shields';
     }
-    if (!in_array($cmd[1], $vtt)) {
-        sendqmsg("*Don't know how to test ".$cmd[1]."*",':interrobang:');
+    if (!in_array($stat, $vtt)) {
+        sendqmsg("*Don't know how to test ".$stat."*",':interrobang:');
         return;
     }
 
     // Apply temp bonuses, if any
     apply_temp_stats($player);
 
-    // Setup outcome pages to read if provided
-    if ($cmd[2]) {
-        $success_page = "page ".$cmd[2]." nobackup";
-    }
-    if ($cmd[3]) {
-        $fail_page = "page ".$cmd[3]." nobackup";
-    }
-
     // Roll dice
     $d1 = rand(1,6);
     $d2 = rand(1,6);
     $roll = $d1 + $d2;
     $emojidice = diceemoji($d1).' '.diceemoji($d2);
-    if ($cmd[1] == 'str') {
+    if ($stat == 'str') {
         $d3 = rand(1,6);
         $roll += $d3;
         $emojidice .= ' '.diceemoji($d3);
     }
 
-    // Set the target value from stat
-    // Spot is a special case
-    if ($cmd[1] == 'spot') {
-        $target = $player['skill'] + ($player['adjective'] == 'Wizard'?2:0);
-    } else {
-        $target = $player[$cmd[1]];
+    // Dice modifier
+    if ($dicemod != 0) {
+        $emojidice .= ' '.($dicemod>0?'+':'').$dicemod;
     }
 
+    // Set the target value from stat
+    // Spot is a special case
+    if ($stat == 'spot') {
+        $target = $player['skill'] + ($player['adjective'] == 'Wizard'?2:0);
+    } else {
+        $target = $player[$stat];
+    }
+    $targetstr = $target;
+
     // Check roll versus target number
-    if ($roll <= $target) {
-        if ($cmd[1] == "luck") {
+    if ($roll+$dicemod <= $target) {
+        if ($stat == "luck") {
             $player['luck']--;
-            sendqmsg("_*$youare lucky*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':four_leaf_clover:');
-        } else if ($cmd[1] == "skill") {
-            sendqmsg("_*$youare skillful*_\n_(_ $emojidice _ vs $target)_",':juggling:');
-        } else if ($cmd[1] == "stam") {
-            sendqmsg("_*$youare strong enough*_\n_(_ $emojidice _ vs $target)_",':muscle:');
-        } else if ($cmd[1] == "spot") {
-            sendqmsg("_*$you spotted something*_\n_(_ $emojidice _ vs $target)_",':eyes:');
-        } else if ($cmd[1] == "str") {
-            sendqmsg("_*Your crew is strong enough*_\n_(_ $emojidice _ vs $target)_",':muscle:');
-        } else if ($cmd[1] == "shields") {
-            sendqmsg("_*Your shields hold up*_\n_(_ $emojidice _ vs $target)_",':rocket:');
+            sendqmsg("_*$youare lucky*_\n_(_ $emojidice _ vs $targetstr, Remaining luck ".$player['luck'].")_",':four_leaf_clover:');
+        } else if ($stat == "skill") {
+            sendqmsg("_*$youare skillful*_\n_(_ $emojidice _ vs $targetstr)_",':juggling:');
+        } else if ($stat == "stam") {
+            sendqmsg("_*$youare strong enough*_\n_(_ $emojidice _ vs $targetstr)_",':muscle:');
+        } else if ($stat == "spot") {
+            sendqmsg("_*$you spotted something*_\n_(_ $emojidice _ vs $targetstr)_",':eyes:');
+        } else if ($stat == "str" && $gamebook != 'sonic') {
+            sendqmsg("_*Your crew is strong enough*_\n_(_ $emojidice _ vs $targetstr)_",':muscle:');
+        } else if ($stat == "shields") {
+            sendqmsg("_*Your shields hold up*_\n_(_ $emojidice _ vs $targetstr)_",':rocket:');
+        } else {
+            sendqmsg("_*".ucfirst($stat)." test passed!*_\n_(_ $emojidice _ vs $targetstr)_",':smile:');
         }
         // Show follow up page
         if (isset($success_page)) {
@@ -594,19 +603,21 @@ function _cmd_test($cmd, &$player)
         }
     }
     else {
-        if ($cmd[1] == "luck") {
+        if ($stat == "luck") {
             $player['luck']--;
-            sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':lightning:');
-        } else if ($cmd[1] == "skill") {
-            sendqmsg("_*$youare not skillful*_\n_(_ $emojidice _ vs $target)_",':tired_face:');
-        } else if ($cmd[1] == "stam") {
-            sendqmsg("_*$youare not strong enough*_\n_(_ $emojidice _ vs $target)_",':sweat:');
-        } else if ($cmd[1] == "spot") {
-            sendqmsg("_*$you didn't spot anything*_\n_(_ $emojidice _ vs $target)_",':persevere:');
-        } else if ($cmd[1] == "str") {
-            sendqmsg("_*Your crew is not strong enough*_\n_(_ $emojidice _ vs $target)_",':sweat:');
-        } else if ($cmd[1] == "shields") {
-            sendqmsg("_*Your shields do not protect you*_\n_(_ $emojidice _ vs $target)_",':rocket:');
+            sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _ vs $targetstr, Remaining luck ".$player['luck'].")_",':lightning:');
+        } else if ($stat == "skill") {
+            sendqmsg("_*$youare not skillful*_\n_(_ $emojidice _ vs $targetstr)_",':tired_face:');
+        } else if ($stat == "stam") {
+            sendqmsg("_*$youare not strong enough*_\n_(_ $emojidice _ vs $targetstr)_",':sweat:');
+        } else if ($stat == "spot") {
+            sendqmsg("_*$you didn't spot anything*_\n_(_ $emojidice _ vs $targetstr)_",':persevere:');
+        } else if ($stat == "str" && $gamebook != 'sonic') {
+            sendqmsg("_*Your crew is not strong enough*_\n_(_ $emojidice _ vs $targetstr)_",':sweat:');
+        } else if ($stat == "shields") {
+            sendqmsg("_*Your shields do not protect you*_\n_(_ $emojidice _ vs $targetstr)_",':rocket:');
+        } else {
+            sendqmsg("_*".ucfirst($stat)." test failed!*_\n_(_ $emojidice _ vs $targetstr)_",':frowning:');
         }
         // Show follow up page
         if (isset($fail_page)) {
