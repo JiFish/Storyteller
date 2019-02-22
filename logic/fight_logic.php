@@ -102,37 +102,35 @@ function run_fight($input) {
             $out .= "_$you hit $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)";
             if ($critsfor == 'both' || $critsfor == 'me') {
                 if ($croll > 6-$critchance) {
-                    $out .= " *and it was a critical strike!*_ ($cemoji)\n";
+                    $out .= " *and it was a critical strike!* (_ $cemoji _)_\n";
                     $mstam = 0;
                     break;
                 }
                 else {
-                    $out .= " but failed to get a critical strike._ ($cemoji)\n";
+                    $out .= " but failed to get a critical strike._ (_ $cemoji _)";
                 }
-            } else {
-                $out .= "_\n";
-                $mstam -= 2;
             }
+            $out .= "_\n";
+            $mstam -= 2;
             if ($stop_when_hit_them) { break; }
         }
         else if ($pattack < $mattack) {
             $out .= "_$m hits $youlc! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)";
             if ($critsfor == 'both') {
                 if ($croll > 6-$critchance) {
-                    $out .= " *and it was a critical strike!*_ ($cemoji)\n";
+                    $out .= " *and it was a critical strike!* (_ $cemoji _)_\n";
                     $player['stam'] = 0;
                     break;
                 } else {
-                    $out .= " but failed to get a critical strike._ ($cemoji)\n";
+                    $out .= " but failed to get a critical strike. (_ $cemoji _)";
                 }
-            } else {
-                if ($player['shield'] && rand(1,6) == 6) {
-                    $out .= " :shield: $your shield reduces the damage by 1! (_ ".diceemoji(6)." _) ";
-                    $player['stam'] += 1;
-                }
-                $out .= "_\n";
-                $player['stam'] -= 2;
             }
+            if ($player['shield'] && rand(1,6) == 6) {
+                $out .= " :shield: $your shield reduces the damage by 1! (_ ".diceemoji(6)." _) ";
+                $player['stam'] += 1;
+            }
+            $out .= "_\n";
+            $player['stam'] -= 2;
             if ($stop_when_hit_you) { break; }
         }
         else {
