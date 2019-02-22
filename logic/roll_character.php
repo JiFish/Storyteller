@@ -236,6 +236,24 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     } elseif ($gamebook == 'ss') {
         $p['prov'] = 0;
         $p['stuff'] = array('Sword (+0)','Chainmail Armor');
+    } elseif ($gamebook == 'rp') {
+        $p['prov'] = 0;
+        $p['stuff'] = array('Laser Sword (+0)');
+        $p['gold'] = 2000;
+        // Make human
+        if (!$race || $race == '?') {
+            $p['race'] = 'Human';
+        }
+        if (!$emoji || $emoji == '?') {
+            if ($gender == 'Male') {
+                $emojilist = array(':man:',':blond-haired-man:',':older_man:');
+            } elseif ($gender == 'Female') {
+                $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
+            } else {
+                $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
+            }
+            $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
+        }
     } elseif ($gamebook == 'bvp') {
         $p['creationdice'] = array();
         $p['stam'] = $p['max']['stam'] = 1;

@@ -57,14 +57,12 @@ function register_commands(&$player)
     register_command(':pie:',       '_cmd_easteregg');
 
     $gamebook = getbook();
-    if ($gamebook == 'loz') {
+    if (in_array($gamebook, ['loz','coc','ss'])) {
             register_command('spellbook',   '_cmd_spellbook',['osl']);
             register_command('cast',        '_cmd_cast',['spell','oms','on','on']);
-    }
-    if ($gamebook == 'sob') {
+    } elseif ($gamebook == 'sob') {
             register_command('battle',      '_cmd_battle',['oms','n','n','osl']);
-    }
-    if ($gamebook == 'sst') {
+    } elseif ($gamebook == 'sst') {
             register_command('shipbattle',  '_cmd_shipbattle',['oms','n','n']);
             foreach($player['crew'] as $key => $val) {
                 register_command($key, '_cmd_order',['s','ol']);
@@ -88,6 +86,10 @@ function register_commands(&$player)
         $stats = array_merge($stats,['str','strength','strike','log','slaves']);
     } elseif ($gamebook == 'sst') {
         $stats = array_merge($stats,['weapons','shields']);
+    } elseif ($gamebook == 'loz' || $gamebook == 'coc') {
+        $stats = array_merge($stats,['magic']);
+    } elseif ($gamebook == 'rp') {
+        $stats = array_merge($stats,['credits']);
     }
     foreach($stats as $s) {
         register_command($s, '_cmd_stat_adjust',['os','nm']);
@@ -189,6 +191,7 @@ function _cmd_eat($cmd, &$player)
 //// Various statistic adjustment commands
 function _cmd_stat_adjust($cmd, &$player)
 {
+    $gamebook = getbook();
     // Aliases. Allow people to give long-form stat names if they like
     if ($cmd[0] == 'stamina') $cmd[0] = 'stam';
     if ($cmd[0] == 'provisons') $cmd[0] = 'prov';
@@ -231,6 +234,18 @@ function _cmd_stat_adjust($cmd, &$player)
             break;
         default:
             $statname = ucfirst($cmd[0]);
+    }
+    // Special case to rename gold in various books
+    if ($statname == 'Gold') {
+        switch (getbook()) {
+            case 'sot':
+                $statname = 'Booty';
+                break;
+            case 'rp':
+                $statname = 'Credits';
+                break;
+            default:
+        }
     }
     if (strtolower($cmd[1]) == "max") {
         $statref = &$player['max'][$cmd[0]];
@@ -1001,7 +1016,7 @@ function _cmd_spellbook($cmd, &$player)
     }
 
     foreach ($list as $s) {
-        $out .= "*".$s['name']."* _(Cost: ".$s['cost']." Magic".($s['target']?", Requires Target":"").", Type: ".ucfirst($s['type']).")_\n";
+        $out .= "*".$s['name']."* _(".($s['cost']>0?"Cost: ".$s['cost']." Magic, ":"").($s['target']?"Requires Target, ":"")."Type: ".ucfirst($s['type']).")_\n";
         $out .= wordwrap($s['desc'],100)."\n\n";
     }
 
@@ -1020,17 +1035,19 @@ function _cmd_cast($cmd, &$player)
         }
     }
 
-    if ($player['magic'] < $s['cost']) {
+    if ($s['cost'] > 0 && $player['magic'] < $s['cost']) {
         sendqmsg("*You don't have ".$s['cost']." Magic to spend!*", ':interrobang:');
     } elseif ($s['target'] && (!$cmd[3] || !$cmd[4])) {
         sendqmsg("*This spell requires a target!* e.g. `!cast ".$s['name']." Monster 6 7`", ':interrobang:');
-    } elseif ($s['target']) {
-        $player['magic'] -= $s['cost'];
-        $s['func']($player,($cmd[2]?$cmd[2]:'Opponent'),$cmd[3],$cmd[4]);
     } else {
-        $player['magic'] -= $s['cost'];
-        // If we have a reply, just send that. Otherwise we should have a function to call
-        if ($s['reply']) {
+        // Deal with cost of magic
+        if ($s['cost'] > 0) {
+            $player['magic'] -= $s['cost'];
+        }
+        // Deal with the spell based on type
+        if ($s['target']) {
+            $s['func']($player,($cmd[2]?$cmd[2]:'Opponent'),$cmd[3],$cmd[4]);
+        } elseif (isset($s['reply'])) {
             sendqmsg("> ".$s['reply'],':fireworks:');
         } else {
             $s['func']($player);

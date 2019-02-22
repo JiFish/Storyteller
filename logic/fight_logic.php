@@ -27,6 +27,16 @@ function run_fight($input) {
         $fasthands = true;
     }
 
+    // Special case for rebel planet: players ALWAYS have critchance 1/6
+    if ($gamebook = 'rp') {
+        if ($critsfor == 'them') {
+            $crtisfor = 'both';
+        } elseif ($critsfor != 'both') {
+            $crtisfor = 'me';
+        }
+        $critchance = 1;
+    }
+
     // Referrers
     if (isset($player['referrers'])) {
         $referrers = $player['referrers'];

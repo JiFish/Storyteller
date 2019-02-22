@@ -179,7 +179,7 @@ function getbook()
     }
 
     $supported_books = array('none','wofm','dotd','coh','poe','bvp','rtfm',
-                             'loz','tot','hoh','sob','sst','coc');
+                             'loz','tot','hoh','sob','sst','coc','ss','rp');
 
     if (!in_array(BOOK_TYPE, $supported_books)) {
         return 'none';
@@ -417,6 +417,11 @@ function send_charsheet($player, $text = "", $sendstuff = false)
         $attachments[] = [
             'color'    => '#BB0000',
             'fields'   => $fields ];
+    }
+
+    if ($gamebook == 'rp') {
+        $attachments[0]['fields'][4]['title'] = 'Credits';
+        unset($attachments[0]['fields'][5]);
     }
 
     if ($sendstuff) {
