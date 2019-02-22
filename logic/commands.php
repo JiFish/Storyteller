@@ -69,8 +69,8 @@ function register_commands(&$player)
             }
             register_command('everyone', '_cmd_everyone',['l']);
             register_command('awayteam', '_cmd_everyone',['l']);
-            register_command('recruit',  '_cmd_recruit', ['s','s','n','n','os','os']);
-            register_command('beam',     '_cmd_beam',['(\sup|\sdown)','os','os','os']);
+            register_command('recruit',  '_cmd_recruit', ['s','os','on','on','os','os']);
+            register_command('beam',     '_cmd_beam',['(\sup|\sdown)','os','os','os','os','os']);
     }
 
     // Stats commands
@@ -1227,6 +1227,8 @@ function _cmd_everyone($cmd, &$player)
 //// Replace crew
 function _cmd_recruit($cmd, &$player)
 {
+    require_once('roll_character.php');
+
     $pos = $cmd[1];
 
     if (!array_key_exists($pos,$player['crew'])) {
@@ -1234,17 +1236,22 @@ function _cmd_recruit($cmd, &$player)
     }
 
     $c = &$player['crew'][$pos];
-    $c['replacement'] = false;
-    $c['awayteam'] = false;
-    $c['name'] = ucfirst($cmd[2]);
-    $c['skill'] = $cmd[3];
-    $c['stam'] = $cmd[4];
-    $c['max']['skill'] = $c['skill'];
-    $c['max']['stam'] = $c['stam'];
-    if ($cmd[5]) {
+    $c = roll_sst_crew($pos, $c['combatpenalty']);
+    if ($cmd[2] && $cmd[2] != '?') {
+        $c['name'] = ucfirst($cmd[2]);
+    }
+    if ($cmd[3] && $cmd[3] != '?') {
+        $c['skill'] = $cmd[3];
+        $c['max']['skill'] = $c['skill'];
+    }
+    if ($cmd[4] && $cmd[4] != '?') {
+        $c['stam'] = $cmd[4];
+        $c['max']['stam'] = $c['stam'];
+    }
+    if ($cmd[5] && $cmd[5] != '?') {
         $c['gender'] = ucfirst($cmd[5]);
     }
-    if ($cmd[6]) {
+    if ($cmd[6] && $cmd[6] != '?') {
         $c['race'] = ucfirst($cmd[6]);
     }
     $c['referrers'] = ['you' => $c['name'], 'youare' => $c['name'].' is', 'your' => $c['name']."'s"];
@@ -1269,9 +1276,9 @@ function _cmd_beam($cmd, &$player)
     $out = "";
     $crew = array();
     $dir = strtolower($cmd[1]);
-    if ($cmd[2]) $crew[] = strtolower($cmd[2]);
-    if ($cmd[3]) $crew[] = strtolower($cmd[3]);
-    if ($cmd[4]) $crew[] = strtolower($cmd[4]);
+    for ($c = 2; $c <= 6; $c++) {
+        if ($cmd[$c]) $crew[] = strtolower($cmd[$c]);
+    }
 
     if (sizeof($crew) < 1 && $dir == 'up') {
         $crew = array_keys($player['crew']);
