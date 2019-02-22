@@ -68,7 +68,7 @@ Stats Management
 
 !<stat> [max/temp] [+/-]<amount>
 
-    Set the stat called to .
+    Set the stat called to <amount>.
     Valid values are: skill, stam, luck, weapon, gold and prov. (Depending which booktype you are playing, additional stats may be available.)
     If max is used, the stat's maximum is changed instead.
     If temp is used, you set a bonus that will be applied to the stat for the next !test or !fight only.
@@ -83,10 +83,15 @@ Examples:
 
 Roll Automation
 
-    !test <stat> [successpage] [failpage] Roll test for . Valid stats are: luck, skill and stam. Turn to [successpage] if successful, [failpage] otherwise (optional.)
+    !test <stat> [+/-dicemodifier] [successpage] [failpage] Roll test for <stat>. Valid stats are: luck, skill and stam. (Depending which booktype you are playing, additional stats may be available.) Add or subtract [dicemodifier] from the roll (optional.) Turn to [successpage] if successful, [failpage] otherwise (optional.)
     !roll [dienumber] Roll [dienumber] six-sided dice and sum the result. If dienumber is missing, rolls one die.
     !luckyescape or !le Test luck to try to negate damage. Lose 3 stamina on a failure and 1 stamina on a success.
     !randpage <page 1> [page 2] [page 3] [...] Turn randomly to one of the listed pages.
+
+Examples:
+
+    !test skill -2 12 Test skill with a -2 to the dice roll. Turn to 12 if successful.
+    !roll 10 Roll ten dice.
 
 Fight Automation
 
@@ -100,9 +105,9 @@ The following covers many custom fight rules:
     !fighttwo <name 1> <skill 1> <stamina 1> [<name 2> <skill 2> <stamina 2>] Fight two opponents at the same time. If a second monster isn't provided, you'll fight two copies of the first.
     !fightbackup [name] <skill> <stamina> [allyname] <allyskill> Fight an opponent with an ally named [allyname] (optional) and with skill <allyskill> backing you up in the fight.
     !vs <name 1> <skill 1> <stamina 1> <name 2> <skill 2> <stamina 2> Fight two monsters against each other.
-    !battle [name] <strike> <strength> [stopafter] Fight a large scale battle with opponent named [name] (optional) with strike <strike> and strength , using your strike and strength. This command is only available for some books.
+    !battle [name] <strike> <strength> [stopafter] Fight a large scale battle with opponent named [name] (optional) with strike <strike> and strength <strength>. This command is only available for some books.
     !phaser [-/+penalty] [stun/kill] [name] <skill> [stun/kill] [maxrounds] or !gun. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of . The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.
-    !shipbattle [name] <skill> <stamina> [stopafter] Battle a ship named [name] (optional) with weapons and shields . This command is only available for some books.
+    !shipbattle [name] <weapons> <shields> [stopafter] Battle a ship named [name] (optional) with weapons <weapons> and shields <shields>. This command is only available for some books.
 
 Restoring To Earlier
 
@@ -136,9 +141,9 @@ Ordering crew
 
     !<position> <command> Order the crew member in to perform <command>. Command is a valid command including parameters.
     !everyone <command> Shorthand to make every crew member and yourself perform <command>.
-    !beam <up/down> [position] [position] [position] Mark crew as in the away team with up, and remove them with down. `!beam up` on it's own beams everybody up.
+    !beam <up/down> [position] [position] [position] Mark crew as in the away team with up, and remove them with down. `!beam up` on it's own beams everybody up.  If your medic is alive, 2 stamina will be restored to returning crew.
     !awayteam <command> Shorthand to make every crew member in the away team and yourself perform <command>.
-    !recruit <position> <name> <skill> <stam> [gender] [race] Replace one of the crew with a new crew member with the given information.
+    !recruit <position> [name] [skill] [stam] [gender] [race] Replace one of the crew with a new crew member with the given information.  Information not provided will be randomly generated.
 
 The following commands are available for ordering: `bonusfight`, `critfight`, `dead`, `fight`, `fighttwo`, `fightbackup`, `phaser`, `skill`, `stam`, `test`.
 
@@ -146,6 +151,7 @@ Examples
 
     !medic test skill - Order medic to test skill
     !security phaser kill Salt Monster 7 - Order security officer to phaser fight Salt Monster, Shoot to kill
+    !guard dead - He's dead, Jim.
     !everyone stam +2 - Everyone gain 2 stamina
     !beam down science guard - Add your science officer and guard to the away team.
 

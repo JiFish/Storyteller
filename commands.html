@@ -47,9 +47,9 @@ h3 { font-size: 2.3rem; }
 <h3>Character Management</h3>
 <ul>
 <li><code>!newgame [name] [m/f] [emoji]</code> Rolls a new character and resets the game. Optionally set name, gender and emoji. e.g. <code>!newgame Jill f</code></li>
-<li><code>!&lt;stat&gt; [+/-]&lt;amount&gt;</code> Set <stat> to <amount>. Use + or - to <em>alter</em> <stat> by <amount>. e.g. <code>!skill 3</code> or <code>!gold +2</code></li>
-<li><code>!&lt;stat&gt; max [+/-]&lt;amount&gt;</code> Set or alter the MAX of <stat> with <amount>. e.g. <code>!stam max -1</code>
-<stat> values are: <code>skill</code>, <code>stam</code>, <code>luck</code>, <code>weapon</code>, <code>gold</code> and <code>prov</code></li>
+<li><code>!&lt;stat&gt; [+/-]&lt;amount&gt;</code> Set &lt;stat&gt; to &lt;amount&gt;. Use + or - to <em>alter</em> &lt;stat&gt; by &lt;amount&gt;. e.g. <code>!skill 3</code> or <code>!gold +2</code></li>
+<li><code>!&lt;stat&gt; max [+/-]&lt;amount&gt;</code> Set or alter the MAX of &lt;stat&gt; with &lt;amount&gt;. e.g. <code>!stam max -1</code>
+&lt;stat&gt; values are: <code>skill</code>, <code>stam</code>, <code>luck</code>, <code>weapon</code>, <code>gold</code> and <code>prov</code></li>
 <li><code>!eat</code> Eats one provision for 4 stamina.</li>
 <li><code>!get &lt;item&gt;</code> Adds <item> to your inventory.</li>
 <li><code>!lose &lt;item&gt;</code> Removes <item> to your inventory. You can also use <code>!drop</code> and <code>!use</code> for different descriptions.</li>
@@ -87,18 +87,18 @@ h3 { font-size: 2.3rem; }
 <li><code>!lose &lt;item&gt;</code> Removes <item> to your inventory. You don't have to provide a full match. e.g. Drop 'leather armor' with <code>!drop armor</code>. Will attempt to manage gold and provisions as above.</li>
 <li><code>!drop &lt;item&gt;</code> or <code>!use &lt;item&gt;</code> As above, but with thematic descriptions.</li>
 <li><code>!eat</code> Eats one provision for 4 stamina.</li>
-<li><code>!pay &lt;amount&gt;</code> or <code>!spend &lt;amount&gt;</code> Subtracts <amount> of gold. See stats below.</li>
+<li><code>!pay &lt;amount&gt;</code> or <code>!spend &lt;amount&gt;</code> Subtracts &lt;amount&gt; of gold. See stats below.</li>
 <li><code>!buy &lt;item&gt; [cost]</code> Add <item> to your inventory and subtracts [cost] gold. If cost is missing, 2 gold will be taken.</li>
 <li><code>!shield &lt;on/off&gt;</code> Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using !fight (and variants.)</li>
 </ul>
 <h3>Stats Management</h3>
 <p><code>!&lt;stat&gt; [max/temp] [+/-]&lt;amount&gt;</code></p>
 <ul>
-<li>Set the stat called <stat> to <amount>.</li>
-<li>Valid <stat> values are: <code>skill</code>, <code>stam</code>, <code>luck</code>, <code>weapon</code>, <code>gold</code> and <code>prov</code>. (Depending which booktype you are playing, additional stats may be available.)</li>
+<li>Set the stat called &lt;stat&gt; to &lt;amount&gt;.</li>
+<li>Valid &lt;stat&gt; values are: <code>skill</code>, <code>stam</code>, <code>luck</code>, <code>weapon</code>, <code>gold</code> and <code>prov</code>. (Depending which booktype you are playing, additional stats may be available.)</li>
 <li>If <code>max</code> is used, the stat's maximum is changed instead.</li>
 <li>If <code>temp</code> is used, you set a bonus that will be applied to the stat for the next !test or !fight only.</li>
-<li>If <amount> starts with a - or +, <amount> will be subtracted or added from the total. Otherwise the value is <em>replaced</em> with <amount>. Only the weapon stat and temp bonuses can be reduced below 0.</li>
+<li>If &lt;amount&gt; starts with a - or +, &lt;amount&gt; will be subtracted or added from the total. Otherwise the value is <em>replaced</em> with &lt;amount&gt;. Only the weapon stat and temp bonuses can be reduced below 0.</li>
 </ul>
 <h5>Examples:</h5>
 <ul>
@@ -109,10 +109,15 @@ h3 { font-size: 2.3rem; }
 </ul>
 <h3>Roll Automation</h3>
 <ul>
-<li><code>!test &lt;stat&gt; [successpage] [failpage]</code> Roll test for <stat>. Valid stats are: <code>luck</code>, <code>skill</code> and <code>stam</code>. Turn to [successpage] if successful, [failpage] otherwise (optional.)</li>
+<li><code>!test &lt;stat&gt; [+/-dicemodifier] [successpage] [failpage]</code> Roll test for &lt;stat&gt;. Valid stats are: <code>luck</code>, <code>skill</code> and <code>stam</code>. (Depending which booktype you are playing, additional stats may be available.) Add or subtract [dicemodifier] from the roll (optional.) Turn to [successpage] if successful, [failpage] otherwise (optional.)</li>
 <li><code>!roll [dienumber]</code> Roll [dienumber] six-sided dice and sum the result. If dienumber is missing, rolls one die.</li>
 <li><code>!luckyescape</code> or <code>!le</code> Test luck to try to negate damage. Lose 3 stamina on a failure and 1 stamina on a success.</li>
 <li><code>!randpage &lt;page 1&gt; [page 2] [page 3] [...]</code> Turn randomly to one of the listed pages.</li>
+</ul>
+<h5>Examples:</h5>
+<ul>
+<li><code>!test skill -2 12</code> Test skill with a -2 to the dice roll. Turn to 12 if successful.</li>
+<li><code>!roll 10</code> Roll ten dice.</li>
 </ul>
 <h3>Fight Automation</h3>
 <ul>
@@ -126,9 +131,9 @@ h3 { font-size: 2.3rem; }
 <li><code>!fighttwo &lt;name 1&gt; &lt;skill 1&gt; &lt;stamina 1&gt; [&lt;name 2&gt; &lt;skill 2&gt; &lt;stamina 2&gt;]</code> Fight two opponents at the same time. If a second monster isn't provided, you'll fight two copies of the first.</li>
 <li><code>!fightbackup [name] &lt;skill&gt; &lt;stamina&gt; [allyname] &lt;allyskill&gt;</code> Fight an opponent with an ally named [allyname] (optional) and with skill &lt;allyskill&gt; backing you up in the fight.</li>
 <li><code>!vs &lt;name 1&gt; &lt;skill 1&gt; &lt;stamina 1&gt; &lt;name 2&gt; &lt;skill 2&gt; &lt;stamina 2&gt;</code> Fight two monsters against each other.</li>
-<li><code>!battle [name] &lt;strike&gt; &lt;strength&gt; [stopafter]</code> Fight a large scale battle with opponent named [name] (optional) with strike &lt;strike&gt; and strength <strength>, using your strike and strength. This command is only available for some books.</li>
+<li><code>!battle [name] &lt;strike&gt; &lt;strength&gt; [stopafter]</code> Fight a large scale battle with opponent named [name] (optional) with strike &lt;strike&gt; and strength &lt;strength&gt;. This command is only available for some books.</li>
 <li><code>!phaser [-/+penalty] [stun/kill] [name] &lt;skill&gt; [stun/kill] [maxrounds]</code> or <code>!gun</code>. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of &lt;skill&gt;. The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.</li>
-<li><code>!shipbattle [name] &lt;skill&gt; &lt;stamina&gt; [stopafter]</code> Battle a ship named [name] (optional) with weapons <weapons> and shields <shields>. This command is only available for some books.</li>
+<li><code>!shipbattle [name] &lt;weapons&gt; &lt;shields&gt; [stopafter]</code> Battle a ship named [name] (optional) with weapons &lt;weapons&gt; and shields &lt;shields&gt;. This command is only available for some books.</li>
 </ul>
 <h3>Restoring To Earlier</h3>
 <ul>
@@ -160,15 +165,16 @@ h3 { font-size: 2.3rem; }
 <ul>
 <li><code>!&lt;position&gt; &lt;command&gt;</code> Order the crew member in <position> to perform &lt;command&gt;. Command is a valid command including parameters.</li>
 <li><code>!everyone &lt;command&gt;</code> Shorthand to make every crew member and yourself perform &lt;command&gt;.</li>
-<li><code>!beam &lt;up/down&gt; [position] [position] [position]</code> Mark crew as in the away team with up, and remove them with down. <code>!beam up</code> on it's own beams everybody up.</li>
+<li><code>!beam &lt;up/down&gt; [position] [position] [position]</code> Mark crew as in the away team with up, and remove them with down. <code>!beam up</code> on it's own beams everybody up. If your medic is alive, 2 stamina will be restored to returning crew.</li>
 <li><code>!awayteam &lt;command&gt;</code> Shorthand to make every crew member in the away team and yourself perform &lt;command&gt;.</li>
-<li><code>!recruit &lt;position&gt; &lt;name&gt; &lt;skill&gt; &lt;stam&gt; [gender] [race]</code> Replace one of the crew with a new crew member with the given information.</li>
+<li><code>!recruit &lt;position&gt; [name] [skill] [stam] [gender] [race]</code> Replace one of the crew with a new crew member with the given information. Information not provided will be randomly generated.</li>
 </ul>
-<p>The following commands are available for ordering: <code>bonusfight</code>, <code>critfight</code>, <code>dead</code>, <code>fight</code>, <code>fighttwo</code>,, <code>fightbackup</code>, <code>phaser</code>, <code>skill</code>, <code>stam</code>, <code>test</code>.</p>
+<p>The following commands are available for ordering: <code>bonusfight</code>, <code>critfight</code>, <code>dead</code>, <code>fight</code>, <code>fighttwo</code>, <code>fightbackup</code>, <code>phaser</code>, <code>skill</code>, <code>stam</code>, <code>test</code>.</p>
 <h4>Examples</h4>
 <ul>
 <li><code>!medic test skill</code> - Order medic to test skill</li>
 <li><code>!security phaser kill Salt Monster 7</code> - Order security officer to phaser fight Salt Monster, Shoot to kill</li>
+<li><code>!guard dead</code> - He's dead, Jim.</li>
 <li><code>!everyone stam +2</code> - Everyone gain 2 stamina</li>
 <li><code>!beam down science guard</code> - Add your science officer and guard to the away team.</li>
 </ul>
