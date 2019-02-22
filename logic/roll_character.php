@@ -229,6 +229,10 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['prov'] = 2;
     } elseif ($gamebook == 'coc') {
         $p['prov'] = 0;
+        $d1 = dice(); $d2 = dice();
+        array_push($p['creationdice'],$d1,$d2);
+        $p['magic'] = 6+$d1+$d2;
+        $p['max']['magic'] = $p['magic'];
     } elseif ($gamebook == 'ss') {
         $p['prov'] = 0;
         $p['stuff'] = array('Sword (+0)','Chainmail Armor');
