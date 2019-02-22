@@ -64,9 +64,9 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     $p['max']['skill']  = $p['skill'];
     $p['max']['stam']   = $p['stam'];
     $p['max']['luck']   = $p['luck'];
-    $p['max']['prov']   = 999;
-    $p['max']['gold']   = 999;
-    $p['max']['weapon'] = 999;
+    $p['max']['prov']   = 99999;
+    $p['max']['gold']   = 99999;
+    $p['max']['weapon'] = 99999;
 
     // Character Fluff - Gender, name, race etc.
     if (!$gender || $gender == '?') {
