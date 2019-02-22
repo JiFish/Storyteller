@@ -125,7 +125,7 @@ function advanced_command_split($command,$def)
                 $regex .= "\s+([0-9]+)";
                 break;
             case 'onm':  //optional number modifier
-                $regex .= "(\s+[+\-]?[0-9]+)?";
+                $regex .= "(\s+[+\-][0-9]+)?";
                 break;
             case 'nm':  //number modifier
                 $regex .= "\s+([+\-]?[0-9]+)";
