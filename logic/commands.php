@@ -965,13 +965,13 @@ function _cmd_spellbook($cmd, &$player)
     $in = strtolower($cmd[1]);
 
     if ($in == 'all') {
-        $out = "_*~ All Spells ~*_\n";
+        $out = "_*— All Spells —*_\n";
         $list = $spells;
         usort($list, function($a, $b) {
             return strcmp($a["name"], $b["name"]);
         });
     } elseif (in_array($in,$typeslist)) {
-        $out = "_*~ ".ucfirst($in)." Spells ~*_\n";
+        $out = "_*— ".ucfirst($in)." Spells —*_\n";
         $list = array_filter($spells,function($v) use ($in){
             return ($v['type'] == $in);
         });
@@ -983,13 +983,13 @@ function _cmd_spellbook($cmd, &$player)
         if ($in < 1 || $in > $total) {
             $in = 1;
         }
-        $out = "_*~ PAGE $in of $total ~*_\n";
+        $out = "_*— PAGE $in of $total —*_\n";
         usort($spells, function($a, $b) {
             return strcmp($a["name"], $b["name"]);
         });
         $list = array_slice($spells,($in-1)*$pagesize,$pagesize);
     } else {
-        $out = "_*~ Spellbook Contents ~*_\n";
+        $out = "_*— Spellbook Contents —*_\n";
         $out .= "By Page: `!spellbook 1` ... `!spellbook $total`\n";
         $out .= "By Type: ";
         foreach ($typeslist as $t) {
