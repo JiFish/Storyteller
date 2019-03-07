@@ -66,6 +66,10 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     } else {
         $data['icon_url'] = str_replace(['<','>'],'',$icon);
     }
+    // Undocumented hook to allow the config file to alter output
+    if (function_exists('hook_alter_output')) {
+        hook_alter_output($data);
+    }
     if (DISCORD_MODE) {
         discordize($data);
     }
