@@ -171,6 +171,21 @@ function register_command($name, $function, $args = [])
     $commandsargs[$name] = $args;
 }
 
+/// register new command
+function unregister_commands($names)
+{
+    global $commandslist, $commandsargs;
+
+    if (!is_array($names)) {
+        $names = array($names);
+    }
+
+    foreach ($names as $name) {
+        unset($commandslist[$name]);
+        unset($commandsargs[$name]);
+    }
+}
+
 // Figure out what rules we are running
 function getbook()
 {
@@ -194,6 +209,15 @@ function getbook()
     return BOOK_TYPE_FILTERED;
 }
 
+function gamebook_is_sonic()
+{
+    if (defined("BOOK_TYPE_IS_SONIC")) {
+        return BOOK_TYPE_IS_SONIC;
+    }
+    $sonic_books = ['sonic','sonicmcm','soniczr'];
+    define("BOOK_TYPE_IS_SONIC", in_array(getbook(), $sonic_books));
+    return BOOK_TYPE_IS_SONIC;
+}
 
 // Load the player array from a serialized array
 // If we can't find the file, generate a new character
@@ -242,6 +266,12 @@ function addcommand($cmd)
 // along with message $text
 function send_charsheet($player, $text = "", $sendstuff = false)
 {
+    $gamebook = getbook();
+    // Special case for sonic
+    if (gamebook_is_sonic()) {
+        return send_charsheet_sonic($player, $text, $sendstuff);
+    }
+
     $attachments = array([
         'color'    => '#ff6600',
         'fields'   => array(
@@ -287,7 +317,6 @@ function send_charsheet($player, $text = "", $sendstuff = false)
         );
     }
 
-    $gamebook = getbook();
     if ($gamebook == 'rtfm') {
         $attachments[0]['fields'][3] = array (
             'title' => 'Weapon: '.sprintf("%+d",$player['weapon']),
@@ -461,7 +490,7 @@ function get_stuff_attachment(&$player) {
     $s = $player['stuff'];
 
     // Special inventory
-    if ($player['shield']) {
+    if (isset($player['shield']) && $player['shield']) {
         $s[] .= 'Shield *(Equipped)*';
     }
 
@@ -473,7 +502,7 @@ function get_stuff_attachment(&$player) {
     }
 
     $attachments = array(
-            'color'    => '#0066ff',
+            'color'    => '#666666',
             'fields'   => array(
             [
                 'title' => 'Inventory',
@@ -504,7 +533,7 @@ function format_story($page, $text, &$player) {
     }
 
     // Look for choices in the text and give them bold formatting
-    $story = preg_replace('/\(?turn(ing)? to [0-9]+\)?/i', '*${0}*', $text);
+    $story = preg_replace('/\(?turn(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $text);
     $story = preg_replace('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', '*${0}*', $story);
     $story = preg_replace('/((Add|Subject|Deduct|Regain|Gain|Lose) )?([1-9] (points? )?from your (SKILL|LUCK|STAMINA)|([1-9] )?(SKILL|LUCK|STAMINA) points?|your (SKILL|LUCK|STAMINA))/', '*${0}*', $story);
 

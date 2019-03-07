@@ -1,0 +1,10 @@
+_*Sonic Gamebook Commands*_
+
+`![number]` Read page [number]. e.g. `!42`
+`!info` Show character stats and inventory.
+`!test [stat] [target]` Test stat named [stat] against [target]. e.g. `!test cool 5`
+`!get [item]` or `!lose [item]` Adds or removes [item] to your inventory. e.g. `!get 3 gold` or `!lose Ring`
+`!rings +[number]` Get [number] rings. e.g. `!rings +10` If `+` omitted, sets total rings instead. 
+`!hit` Lose all your rings, or one life.
+`!fight [stat] [name] [rating]` Fight a badnick named [name] (optional) that has [rating], using your [stat]. e.g. `!fight robot speed 6`
+`!newgame` Rolls and new character and resets the game. You can specify stats in the order speed, strength, agility, cool, wits and looks. e.g. `!newgame 5 4 3 2 2 2`

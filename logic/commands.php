@@ -71,6 +71,20 @@ function register_commands(&$player)
             register_command('awayteam', '_cmd_everyone',['l']);
             register_command('recruit',  '_cmd_recruit', ['s','os','on','on','os','os']);
             register_command('beam',     '_cmd_beam',['(\sup|\sdown)','os','os','os','os','os']);
+    } elseif (gamebook_is_sonic()) {
+            if ($gamebook == 'soniczr') {
+                register_command('tails', '_cmd_order',['s','ol']);
+            }
+            // re-register test, newgame, fight, help commands for sonic version
+            register_command('test',    '_cmd_sonictest',['s','n','on','on']);
+            register_command('ng',      '_cmd_sonicnewgame',['on','on','on','on','on','on']);
+            register_command('newgame', '_cmd_sonicnewgame',['on','on','on','on','on','on']);
+            register_command('fight',   '_cmd_sonicfight',['s','onm','oms','n']);
+            register_command('help',    '_cmd_sonichelp');
+            register_command('?',       '_cmd_sonichelp');
+            register_command('hit',     '_cmd_sonichit');
+            unregister_commands(['eat','pay','spend','buy','luckyescape','le','critfight','fighttwo',
+                                 'fightbackup','phaser','gun','attack','a','shield']);
     }
 
     // Stats commands
@@ -90,6 +104,11 @@ function register_commands(&$player)
         $stats = array_merge($stats,['magic']);
     } elseif ($gamebook == 'rp') {
         $stats = array_merge($stats,['credits']);
+    } elseif (gamebook_is_sonic()) {
+        $stats = array_merge($stats,['str','strength','speed','agility','cool','wits','looks','rings','lives']);
+        if ($gamebook == 'sonicmcm') {
+            $stats[] = 'egghits';
+        }
     }
     foreach($stats as $s) {
         register_command($s, '_cmd_stat_adjust',['os','nm']);
@@ -130,9 +149,9 @@ function _cmd_page($cmd, &$player)
             && stripos($story,"otherwise") === false) {
             // Attempt to find pages that give you only one choice
             // Find pages with only one turn to and add that page to the command list
-            preg_match_all('/turn to ([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
+            preg_match_all('/turn to (section )?([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
             if (sizeof($matches) == 1) {
-                    addcommand("page ".$matches[0][1]." nobackup");
+                    addcommand("page ".$matches[0][2]." nobackup");
                 }
             // Attempt to find pages that end the story, kill the player if found
             elseif (sizeof($matches) < 1 &&
@@ -200,6 +219,10 @@ function _cmd_stat_adjust($cmd, &$player)
     if ($cmd[0] == 'gz') $cmd[0] = 'goldzagors';
     if ($cmd[0] == 'strength') $cmd[0] = 'str';
     if ($cmd[0] == 'booty') $cmd[0] = 'gold';
+    if ($cmd[0] == 'credits') $cmd[0] = 'gold';
+    if ($cmd[0] == 'lives' && gamebook_is_sonic()) {
+        $cmd[0] = 'stam';
+    }
 
     // Referrers
     if (isset($player['referrers'])) {
@@ -215,7 +238,11 @@ function _cmd_stat_adjust($cmd, &$player)
     // $val is the adjustment or new value
     switch ($cmd[0]) {
         case 'stam':
-            $statname = "Stamina";
+            if (gamebook_is_sonic()) {
+                $statname = "Lives";
+            } else {
+                $statname = "Stamina";
+            }
             break;
         case 'prov':
             $statname = "Provisions";
@@ -231,6 +258,9 @@ function _cmd_stat_adjust($cmd, &$player)
             break;
         case 'str':
             $statname = "Crew Strength";
+            break;
+        case 'egghits':
+            $statname = "Egg-o-matic hits";
             break;
         default:
             $statname = ucfirst($cmd[0]);
@@ -306,6 +336,14 @@ function _cmd_stat_adjust($cmd, &$player)
         $player['stam'] = 0;
     }
 
+    // Gaining a life via rings in sonic
+    if ($cmd[0] == 'rings' && !$cmd[1] && gamebook_is_sonic()) {
+        if (floor($statref/100) > floor($oldval/100)) {
+            $msg .= "\n*".$player['name']." got an extra life!*";
+            $player['stam'] = min($player['max']['stam'],$player['stam']+1);
+        }
+    }
+
     if ($oldval <= $statref && strtolower($cmd[1]) == "max") {
         $icon = ':arrow_up:';
     } elseif ($oldval > $statref && strtolower($cmd[1]) == "max") {
@@ -326,6 +364,10 @@ function _cmd_stat_adjust($cmd, &$player)
         $icon = ':juggling:';
     } elseif ($cmd[0] == 'fear') {
         $icon = ':scream:';
+    } elseif ($cmd[0] == 'rings') {
+        $icon = ':ring:';
+    } elseif ($cmd[0] == 'egghits') {
+        $icon = ':egg:';
     } else {
         $icon = ':open_book:';
     }
@@ -1191,6 +1233,17 @@ function _cmd_order($cmd, &$player)
         case 'stamina':
         case 'test':
         case 'dead':
+        // Sonic stats
+        case 'str':
+        case 'strength':
+        case 'speed':
+        case 'agility':
+        case 'cool':
+        case 'wits':
+        case 'looks':
+        case 'rings':
+        case 'lives':
+        case 'hit':
             call_user_func_array($commandslist[$order],array($cmd,&$crew));
             break;
         default:
@@ -1198,16 +1251,18 @@ function _cmd_order($cmd, &$player)
     }
 
     if ($crew['stam'] < 1) {
-        require_once('roll_character.php');
         $out = "*".$crew['name']." is dead!* :skull:\n";
-        $newskill = max(1,$crew['max']['skill']-2);
-        $crew = roll_sst_crew($officer, $crew['combatpenalty']);
-        $crew['max']['skill'] = $newskill;
-        $crew['skill'] = $newskill;
-        $crew['replacement'] = true;
-        $crew['awayteam'] = false;
-        $out .= "Their assistant, ".$crew['name'].", is promoted to the ".$crew['position']." position. ";
-        $out .= "(Replacement crew cannot beam down to planets.)";
+        if (getbook() == 'sst') {
+            require_once('roll_character.php');
+            $newskill = max(1,$crew['max']['skill']-2);
+            $crew = roll_sst_crew($officer, $crew['combatpenalty']);
+            $crew['max']['skill'] = $newskill;
+            $crew['skill'] = $newskill;
+            $crew['replacement'] = true;
+            $crew['awayteam'] = false;
+            $out .= "Their assistant, ".$crew['name'].", is promoted to the ".$crew['position']." position. ";
+            $out .= "(Replacement crew cannot beam down to planets.)";
+        }
         sendqmsg($out,':dead:');
     }
 }

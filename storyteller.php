@@ -5,6 +5,9 @@ require_once('logic/commands.php');
 require_once('logic/functions.php');
 require_once('logic/slack.php');
 require_once('logic/fight_logic.php');
+if (gamebook_is_sonic()) {
+    require_once('logic/sonic_gamebooks.php');
+}
 
 // Check the incoming data for the secret slack token
 if ($_POST['token'] != SLACK_TOKEN) {
@@ -43,7 +46,11 @@ while (sizeof($commandlist) > 0)
     // If stamina ever drops to less than 1, the player if dead
     // Stop processing any queued commands and tell the player they are dead
     if ($player['stam'] < 1) {
-        sendqmsg("_*You are dead.*_ :skull:",":skull:");
+        if (isset($player['referrers'])) {
+            sendqmsg("_*".$player['referrers']['youare']." dead.*_ :skull:",":skull:");
+        } else {
+            sendqmsg("_*You are dead.*_ :skull:",":skull:");
+        }
         break;
     }
 
