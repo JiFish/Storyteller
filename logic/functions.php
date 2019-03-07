@@ -174,18 +174,24 @@ function register_command($name, $function, $args = [])
 // Figure out what rules we are running
 function getbook()
 {
+    if (defined("BOOK_TYPE_FILTERED")) {
+        return BOOK_TYPE_FILTERED;
+    }
+
     if (!defined("BOOK_TYPE")) {
-        return 'none';
+        define("BOOK_TYPE_FILTERED", 'none');
+    } else {
+        $supported_books = array('none','wofm','dotd','coh','poe','bvp','rtfm',
+                                 'loz','tot','hoh','sob','sst','coc','ss','rp',
+                                 'sonic','sonicmcm','soniczr');
+        if (!in_array(BOOK_TYPE, $supported_books)) {
+            define("BOOK_TYPE_FILTERED", 'none');
+        } else {
+            define("BOOK_TYPE_FILTERED", BOOK_TYPE);
+        }
     }
 
-    $supported_books = array('none','wofm','dotd','coh','poe','bvp','rtfm',
-                             'loz','tot','hoh','sob','sst','coc','ss','rp');
-
-    if (!in_array(BOOK_TYPE, $supported_books)) {
-        return 'none';
-    }
-
-    return BOOK_TYPE;
+    return BOOK_TYPE_FILTERED;
 }
 
 
