@@ -592,25 +592,24 @@ function _cmd_test($cmd, &$player)
     } else {
         $target = $player[$stat];
     }
-    $targetstr = $target;
 
     // Check roll versus target number
     if ($roll+$dicemod <= $target) {
         if ($stat == "luck") {
             $player['luck']--;
-            sendqmsg("_*$youare lucky*_\n_(_ $emojidice _ vs $targetstr, Remaining luck ".$player['luck'].")_",':four_leaf_clover:');
+            sendqmsg("_*$youare lucky*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':four_leaf_clover:');
         } else if ($stat == "skill") {
-            sendqmsg("_*$youare skillful*_\n_(_ $emojidice _ vs $targetstr)_",':juggling:');
+            sendqmsg("_*$youare skillful*_\n_(_ $emojidice _ vs $target)_",':juggling:');
         } else if ($stat == "stam") {
-            sendqmsg("_*$youare strong enough*_\n_(_ $emojidice _ vs $targetstr)_",':muscle:');
+            sendqmsg("_*$youare strong enough*_\n_(_ $emojidice _ vs $target)_",':muscle:');
         } else if ($stat == "spot") {
-            sendqmsg("_*$you spotted something*_\n_(_ $emojidice _ vs $targetstr)_",':eyes:');
+            sendqmsg("_*$you spotted something*_\n_(_ $emojidice _ vs $target)_",':eyes:');
         } else if ($stat == "str" && $gamebook != 'sonic') {
-            sendqmsg("_*Your crew is strong enough*_\n_(_ $emojidice _ vs $targetstr)_",':muscle:');
+            sendqmsg("_*Your crew is strong enough*_\n_(_ $emojidice _ vs $target)_",':muscle:');
         } else if ($stat == "shields") {
-            sendqmsg("_*Your shields hold up*_\n_(_ $emojidice _ vs $targetstr)_",':rocket:');
+            sendqmsg("_*Your shields hold up*_\n_(_ $emojidice _ vs $target)_",':rocket:');
         } else {
-            sendqmsg("_*".ucfirst($stat)." test passed!*_\n_(_ $emojidice _ vs $targetstr)_",':smile:');
+            sendqmsg("_*".ucfirst($stat)." test passed!*_\n_(_ $emojidice _ vs $target)_",':smile:');
         }
         // Show follow up page
         if (isset($success_page)) {
@@ -620,19 +619,19 @@ function _cmd_test($cmd, &$player)
     else {
         if ($stat == "luck") {
             $player['luck']--;
-            sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _ vs $targetstr, Remaining luck ".$player['luck'].")_",':lightning:');
+            sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':lightning:');
         } else if ($stat == "skill") {
-            sendqmsg("_*$youare not skillful*_\n_(_ $emojidice _ vs $targetstr)_",':tired_face:');
+            sendqmsg("_*$youare not skillful*_\n_(_ $emojidice _ vs $target)_",':tired_face:');
         } else if ($stat == "stam") {
-            sendqmsg("_*$youare not strong enough*_\n_(_ $emojidice _ vs $targetstr)_",':sweat:');
+            sendqmsg("_*$youare not strong enough*_\n_(_ $emojidice _ vs $target)_",':sweat:');
         } else if ($stat == "spot") {
-            sendqmsg("_*$you didn't spot anything*_\n_(_ $emojidice _ vs $targetstr)_",':persevere:');
+            sendqmsg("_*$you didn't spot anything*_\n_(_ $emojidice _ vs $target)_",':persevere:');
         } else if ($stat == "str" && $gamebook != 'sonic') {
-            sendqmsg("_*Your crew is not strong enough*_\n_(_ $emojidice _ vs $targetstr)_",':sweat:');
+            sendqmsg("_*Your crew is not strong enough*_\n_(_ $emojidice _ vs $target)_",':sweat:');
         } else if ($stat == "shields") {
-            sendqmsg("_*Your shields do not protect you*_\n_(_ $emojidice _ vs $targetstr)_",':rocket:');
+            sendqmsg("_*Your shields do not protect you*_\n_(_ $emojidice _ vs $target)_",':rocket:');
         } else {
-            sendqmsg("_*".ucfirst($stat)." test failed!*_\n_(_ $emojidice _ vs $targetstr)_",':frowning:');
+            sendqmsg("_*".ucfirst($stat)." test failed!*_\n_(_ $emojidice _ vs $target)_",':frowning:');
         }
         // Show follow up page
         if (isset($fail_page)) {
