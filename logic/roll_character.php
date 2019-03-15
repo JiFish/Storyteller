@@ -356,6 +356,16 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
             $cm = roll_sst_crew($c, ($k > 0 && $k < 4), $races, [$d1, $d2, $d3]);
             $p['crew'][$c] = $cm;
         }
+    }  elseif ($gamebook == 'bb') {
+        //nothing to do
+        $p['prov'] = 0;
+        $p['stuff'][] = 'Tinderbox';
+        $d1 = dice();
+        $d2 = dice();
+        array_push($p['creationdice'],$d1,$d2);
+        $p['gold'] = $d1+$d2+12;
+        $p['time'] = 0;
+        $p['max']['time'] = 999;
     }  elseif ($gamebook == 'tot') {
         //nothing to do
         null;

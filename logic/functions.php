@@ -197,7 +197,7 @@ function getbook()
         define("BOOK_TYPE_FILTERED", 'none');
     } else {
         $supported_books = array('none','wofm','dotd','coh','poe','bvp','rtfm',
-                                 'loz','tot','hoh','sob','sst','coc','ss','rp',
+                                 'loz','tot','hoh','sob','sst','coc','ss','rp','bb',
                                  'sonic','sonicmcm','soniczr');
         if (!in_array(BOOK_TYPE, $supported_books)) {
             define("BOOK_TYPE_FILTERED", 'none');
@@ -355,6 +355,19 @@ function send_charsheet($player, $text = "", $sendstuff = false)
             'short' => true
         );
         unset($attachments[0]['fields'][5]);
+    }
+
+    if ($gamebook == 'bb') {
+        $attachments[0]['fields'][3] = array (
+            'title' => 'Weapon: '.sprintf("%+d",$player['weapon']),
+            'value' => '*Provisions: '.$player['prov'].'*',
+            'short' => true
+        );
+        $attachments[0]['fields'][5] = array (
+            'title' => 'Time',
+            'value' => $player['time'],
+            'short' => true
+        );
     }
 
     // Sea of Blood Ship Stats
