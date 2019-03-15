@@ -160,28 +160,12 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
                 break;
         }
     } elseif ($gamebook == 'dotd') {
-        // Make human
-        if ($gender == 'Male') {
-            $emojilist = array(':man:',':blond-haired-man:',':older_man:');
-        } elseif ($gender == 'Female') {
-            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
-        } else {
-            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
-        }
-        $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
+        make_character_human($p, $race, $emoji, $skintone);
         $p['race'] = array('Sailor','Pirate','Seafarer','Mariner','Seaswab','Deck Hand','Navigator')[rand(0,6)];
         // Remove lantern
         unset($p['stuff'][2]);
     } elseif ($gamebook == 'sob') {
-        // Make human
-        if ($gender == 'Male') {
-            $emojilist = array(':man:',':blond-haired-man:',':older_man:');
-        } elseif ($gender == 'Female') {
-            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
-        } else {
-            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
-        }
-        $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
+        make_character_human($p, $race, $emoji, $skintone);
         $p['race'] = 'Pirate';
         $shipnames = file('resources/ship_names.txt');
         $p['shipname'] = trim($shipnames[array_rand($shipnames)]);
@@ -205,15 +189,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['gold'] = 20;
         $p['stuff'] = array('Cutlass (+0)');
     } elseif ($gamebook == 'hoh') {
-        // Make human
-        if ($gender == 'Male') {
-            $emojilist = array(':man:',':blond-haired-man:',':older_man:');
-        } elseif ($gender == 'Female') {
-            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
-        } else {
-            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
-        }
-        $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
+        make_character_human($p, $race, $emoji, $skintone);
         $p['stuff'] = array();
         $p['prov'] = 0;
         $p['weapon'] = -3;
@@ -240,20 +216,7 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
         $p['prov'] = 0;
         $p['stuff'] = array('Laser Sword (+0)');
         $p['gold'] = 2000;
-        // Make human
-        if (!$race || $race == '?') {
-            $p['race'] = 'Human';
-        }
-        if (!$emoji || $emoji == '?') {
-            if ($gender == 'Male') {
-                $emojilist = array(':man:',':blond-haired-man:',':older_man:');
-            } elseif ($gender == 'Female') {
-                $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
-            } else {
-                $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
-            }
-            $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
-        }
+        make_character_human($p, $race, $emoji, $skintone);
     } elseif ($gamebook == 'bvp') {
         $p['creationdice'] = array();
         $p['stam'] = $p['max']['stam'] = 1;
@@ -472,5 +435,21 @@ function generate_andorian_name() {
         return ['Th','Sh'][rand(0,1)].$v[rand(0,4)].$c[rand(0,10)].$v[rand(0,4)].$c[rand(0,10)];
     } else {
         return ['Ta','Ke'][rand(0,1)].$c[rand(0,10)].$v[rand(0,4)].$c[rand(0,10)];
+    }
+}
+
+function make_character_human(&$p, $race, $emoji, $skintone) {
+    if (!$race || $race == '?') {
+        $p['race'] = 'Human';
+    }
+    if (!$emoji || $emoji == '?') {
+        if ($p['gender'] == 'Male') {
+            $emojilist = array(':man:',':blond-haired-man:',':older_man:');
+        } elseif ($p['gender'] == 'Female') {
+            $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:');
+        } else {
+            $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:');
+        }
+        $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
     }
 }
