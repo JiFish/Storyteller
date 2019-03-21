@@ -141,6 +141,7 @@ function roll_sonic_character($statarray = null) {
     $p['race'] = 'Anthropomorphic Hedgehog';
     $p['emoji'] = ':hedgehog:';
     $p['referrers'] = ['you' => 'Sonic', 'youare' => 'Sonic is', 'your' =>"Sonic's"];
+    $p['colourhex'] = '#0066ff';
     if (!$statarray) {
         $statarray = [5,4,3,2,2,2];
         shuffle($statarray);
@@ -258,7 +259,6 @@ function _cmd_sonichelp($cmd, &$player)
 function send_charsheet_sonic(&$player, $text = "", $sendstuff = false) {
     $gamebook = getbook();
 
-    $attachments[0]['color'] = '#0066ff';
     $attachments[0]['fields'] = [
         ['title' => 'Speed: '.$player['speed'],
          'value' => '*Strength: '.$player['str'].'*',

@@ -1,5 +1,7 @@
 <?php
 
+require_once('RandomColor.php');
+
 function dice() {
     $r = rand(1,6);
     switch(CHARACTER_ROLLS) {
@@ -137,6 +139,9 @@ function roll_character($name = '?', $gender = '?', $emoji = '?', $race = '?', $
     } else {
         $p['emoji'] = $emoji;
     }
+
+    // Random Colour
+    $p['colourhex'] = \Colors\RandomColor::one();
 
     // End of bare character generation.
 

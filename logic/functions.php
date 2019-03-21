@@ -273,7 +273,7 @@ function send_charsheet($player, $text = "", $sendstuff = false)
     }
 
     $attachments = array([
-        'color'    => '#ff6600',
+        'color'    => $player['colourhex'],
         'fields'   => array(
         [
             'title' => 'Skill',
