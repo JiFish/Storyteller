@@ -1,7 +1,7 @@
 General Licence
 ---------------
 
-All code is copyright Joseph Fowler.
+All code, unless otherwise specified, is copyright Joseph Fowler.
 
 Permission to use, copy, modify, and/or distribute this software for any
 non-commercial purpose without fee is hereby granted, provided that the
