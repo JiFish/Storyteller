@@ -11,7 +11,7 @@ Storyteller is programmed in PHP, requires no database and is state-based. This 
 * Discord is also supported, with some caveats, see *Using Discord* below.
 
 ## Set-Up
-Download and extract the bot to start.
+Download and unzip. Place on a webserver running PHP. PHP7 is recommended.
 
 ### 1. Set-Up Slack
 First you must create an incoming and outgoing webhook. In Slack, go to **Administration > Manage Apps > Custom Integrations**.
