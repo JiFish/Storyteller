@@ -13,8 +13,7 @@ $input = file($argv[1]);
 $page = "";
 $expected_num = 1;
 
-foreach($input as $line)
-{
+foreach ($input as $line) {
     $line = trim($line);
     if ($line == "") { continue; }
     if (is_numeric($line)) {
@@ -30,5 +29,5 @@ foreach($input as $line)
 }
 $book[] = trim($page);
 
-echo ("<?php\n\n");
-echo '$book = '.var_export($book,1).";";
+echo "<?php\n\n";
+echo '$book = '.var_export($book, 1).";";

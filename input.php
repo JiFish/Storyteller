@@ -7,17 +7,17 @@
 // you to create alternate ways of inputting commands, e.g. a webform
 
 if (isset($argv[1])) {
-    $_POST['text'] = implode(" ",array_slice($argv,1));
+    $_POST['text'] = implode(" ", array_slice($argv, 1));
 } else if (isset($_REQUEST['c'])) {
     $_POST['text'] = $_REQUEST['c'];
 } else {
     die("No command!");
 }
 
-require_once('config.php');
+require_once 'config.php';
 
 $_POST['trigger_word'] = '!';
 $_POST['token'] = SLACK_TOKEN;
 
-require('storyteller.php');
+require 'storyteller.php';
 echo "OK";

@@ -1,11 +1,12 @@
 <?php
 
-require_once('ff_magic.php');
+require_once 'ff_magic.php';
 
 class book_loz extends book_ff_magic {
     public function getId() {
         return 'loz';
     }
+
 
     public function getStats() {
         $stats = parent::getStats();
@@ -32,49 +33,50 @@ class book_loz extends book_ff_magic {
         return $stats;
     }
 
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name,$gender,$emoji,$race,$adjective,$seed);
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         // Starting Equipment
         $p['stuff'] = array(
             'Knife (+0, -1 dmg)',
             'Leather Armor',
             'Small Shield',
-            );
+        );
 
         // Reuse adjective as player class
         // Miner is the old Dwarf class (to separate from races above)
-        $classes = ['Barbarian','Warrior','Miner','Wizard'];
-        if (in_array(ucfirst(strtolower($adjective)),$classes)) {
+        $classes = ['Barbarian', 'Warrior', 'Miner', 'Wizard'];
+        if (in_array(ucfirst(strtolower($adjective)), $classes)) {
             $p['adjective'] = ucfirst(strtolower($adjective));
         } else {
-            $p['adjective'] = $classes[rand(0,3)];
+            $p['adjective'] = $classes[rand(0, 3)];
         }
         switch ($p['adjective']) {
-            case 'Barbarian':
-                $p['magic'] = 1;
-                $p['advantages'] = "Can't be surprised.";
-                $p['disadvantages'] = "Can't wear plate mail. No bonus to attack strength with chain mail. Subtract 2 from attack strength with crossbow.";
-                $p['stuff'][] = "Axe (+0)";
-                break;
-            case 'Warrior':
-                $p['magic'] = 3;
-                $p['advantages'] = "Can use any weapons.";
-                $p['disadvantages'] = "None.";
-                $p['stuff'][] = "Sword (+0)";
-                break;
-            case 'Miner':
-                $p['magic'] = 2;
-                $p['advantages'] = "Add 2 to attack strength vs. stone monsters.";
-                $p['disadvantages'] = "Can't use longbow or two-handed weapons.";
-                $p['stuff'][] = "Axe (+0)";
-                $p['gold'] += 5;
-                break;
-            case 'Wizard':
-                $p['magic'] = 7;
-                $p['advantages'] = "Add 2 to skill when testing spot skill.";
-                $p['disadvantages'] = "Can't use metal armour, bow or two-handed weapons.";
-                $p['stuff'][] = "Wooden Staff (+0)";
-                break;
+        case 'Barbarian':
+            $p['magic'] = 1;
+            $p['advantages'] = "Can't be surprised.";
+            $p['disadvantages'] = "Can't wear plate mail. No bonus to attack strength with chain mail. Subtract 2 from attack strength with crossbow.";
+            $p['stuff'][] = "Axe (+0)";
+            break;
+        case 'Warrior':
+            $p['magic'] = 3;
+            $p['advantages'] = "Can use any weapons.";
+            $p['disadvantages'] = "None.";
+            $p['stuff'][] = "Sword (+0)";
+            break;
+        case 'Miner':
+            $p['magic'] = 2;
+            $p['advantages'] = "Add 2 to attack strength vs. stone monsters.";
+            $p['disadvantages'] = "Can't use longbow or two-handed weapons.";
+            $p['stuff'][] = "Axe (+0)";
+            $p['gold'] += 5;
+            break;
+        case 'Wizard':
+            $p['magic'] = 7;
+            $p['advantages'] = "Add 2 to skill when testing spot skill.";
+            $p['disadvantages'] = "Can't use metal armour, bow or two-handed weapons.";
+            $p['stuff'][] = "Wooden Staff (+0)";
+            break;
         }
         $p['max']['magic'] = $p['magic'];
         // Special emoji for human wizards
@@ -86,31 +88,33 @@ class book_loz extends book_ff_magic {
             } else {
                 $p['emoji'] = ':mage:';
             }
-            $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:',':skin-tone-2:');
+            $skintone = array(':skin-tone-2:', ':skin-tone-3:', ':skin-tone-4:', ':skin-tone-5:', ':skin-tone-2:');
             $p['emoji'] .= $skintone[array_rand($skintone)];
         }
         return $p;
     }
 
+
     protected function getCharcterSheetAttachments(&$player) {
         $attachments = parent::getCharcterSheetAttachments($player);
         $attachments[0]['fields'] = array_merge($attachments[0]['fields'],
-        array([
-                'title' => 'Talismans: '.$player['talismans'],
-                'value' => '*Daggers: '.$player['daggers'].'*',
-                'short' => true
-            ],[
-                'title' => 'Advantages',
-                'value' => $player['advantages'],
-                'short' => false
-            ],[
-                'title' => 'Disadvantages',
-                'value' => $player['disadvantages'],
-                'short' => false
-            ])
+            array([
+                    'title' => 'Talismans: '.$player['talismans'],
+                    'value' => '*Daggers: '.$player['daggers'].'*',
+                    'short' => true
+                ], [
+                    'title' => 'Advantages',
+                    'value' => $player['advantages'],
+                    'short' => false
+                ], [
+                    'title' => 'Disadvantages',
+                    'value' => $player['disadvantages'],
+                    'short' => false
+                ])
         );
         return $attachments;
     }
+
 
     protected function getSpells() {
         $spells[] = array(
@@ -120,7 +124,7 @@ class book_loz extends book_ff_magic {
             'target' => false,
             'desc' => 'This spell creates an extra provision. Add 1 to your provisions. This spell cannot be cast during combat.',
             'func' => function() {
-                sendqmsg('> A '.['sandwich','hunk of cheese','meat shank','baked potato'][mt_rand(0,3)].' appears from nowhere.',':fireworks:');
+                sendqmsg('> A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appears from nowhere.', ':fireworks:');
                 addcommand('prov +1');
             }
         );
@@ -132,7 +136,7 @@ class book_loz extends book_ff_magic {
             'target' => false,
             'desc' => 'This spell creates extra provisions. Add 2 to your provisions. This spell cannot be cast during combat.',
             'func' => function() {
-                sendqmsg('> A '.['sandwich','hunk of cheese','meat shank','baked potato'][mt_rand(0,3)].' and a '.['sandwich','hunk of cheese','meat shank','baked potato'][mt_rand(0,3)].' appear from nowhere.',':fireworks:');
+                sendqmsg('> A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' and a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appear from nowhere.', ':fireworks:');
                 addcommand('prov +2');
             }
         );
@@ -144,7 +148,7 @@ class book_loz extends book_ff_magic {
             'target' => false,
             'desc' => 'This spell creates extra provisions. Add 3 to your provisions. This spell cannot be cast during combat.',
             'func' => function() {
-                sendqmsg('> A '.['sandwich','hunk of cheese','meat shank','baked potato'][mt_rand(0,3)].', a '.['sandwich','hunk of cheese','meat shank','baked potato'][mt_rand(0,3)].' and a '.['sandwich','hunk of cheese','meat shank','baked potato'][mt_rand(0,3)].' appear from nowhere.',':fireworks:');
+                sendqmsg('> A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].', a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' and a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appear from nowhere.', ':fireworks:');
                 addcommand('prov +3');
             }
         );
@@ -173,7 +177,7 @@ class book_loz extends book_ff_magic {
             'target' => false,
             'desc' => 'This spell increases your current luck score by 1 point. You current luck score cannot exceed it\'s Initial value. This spell cannot be cast during combat.',
             'func' => function() {
-                sendqmsg('> _Felicitus Populi!_',':fireworks:');
+                sendqmsg('> _Felicitus Populi!_', ':fireworks:');
                 addcommand('luck +1');
             }
         );
@@ -194,7 +198,7 @@ class book_loz extends book_ff_magic {
             'target' => false,
             'desc' => 'This spell enables you to react and move faster, adding 1 to your current skill for a short time. It can be cast just before combat begins (not during one!) to aid your fighting, or just just before you have to Test your Skill for some reason. The spell expires as soon as one combat has finished, or after you have Tested your Skill.',
             'func' => function() {
-                sendqmsg('> _You feel quicker._',':fireworks:');
+                sendqmsg('> _You feel quicker._', ':fireworks:');
                 addcommand('skill temp +1');
             }
         );
@@ -205,13 +209,13 @@ class book_loz extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell can be cast immediately before any combat begins but not during one. For the first three Attack Rounds of the combat, you may roll dice twice when working out your Attack Strength and take the higher total rolled.',
-            'func' => function(&$player,$name,$skill,$stam) {
+            'func' => function(&$player, $name, $skill, $stam) {
                 $out = run_fight(['player' => &$player,
-                                  'monstername' => $name,
-                                  'monsterskill' => $skill,
-                                  'monsterstam' => $stam,
-                                  'fasthands' => true]);
-                sendqmsg($out,":crossed_swords:");
+                        'monstername' => $name,
+                        'monsterskill' => $skill,
+                        'monsterstam' => $stam,
+                        'fasthands' => true]);
+                sendqmsg($out, ":crossed_swords:");
             }
         );
 
@@ -221,9 +225,9 @@ class book_loz extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell can be used in any attack round instead of a weapon attack. If you have the higher Attack Strength, your adversary\'s body is shrouded in flames and he loses 5 Stamina points. If you have the lower attack strength, your spell is ruined and the creature hits you.',
-            'func' => function(&$player,$name,$skill,$stam) {
+            'func' => function(&$player, $name, $skill, $stam) {
                 $out = run_single_attack($player, $name, $skill, $stam, 2, 5);
-                sendqmsg($out,':fireworks:');
+                sendqmsg($out, ':fireworks:');
             }
         );
 
@@ -235,7 +239,7 @@ class book_loz extends book_ff_magic {
             'target' => false,
             'desc' => 'Once this spell is cast, the next spell which is cast at you by an enemy will not effect you. The Magic screen only neutralizes one spell against you, however.',
             'func' => function() {
-                sendqmsg("> _Counter-spell!_",':fireworks:');
+                sendqmsg("> _Counter-spell!_", ':fireworks:');
                 addcommand('get note: Immune to the next spell');
             }
         );
@@ -246,12 +250,12 @@ class book_loz extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell can be used in any attack round instead of a weapon attack. If you have the higher Attack Strength, this spell kills any creature with a skill score of 9 or less. If you have the lower attack strength, your spell is ruined and the creature hits you. This spell will not affect any Undead creature or Zagor, your nemesis!',
-            'func' => function(&$player,$name,$skill,$stam) {
+            'func' => function(&$player, $name, $skill, $stam) {
                 if ($skill > 9) {
-                    sendqmsg("*$name is immune to this spell!*",':interrobang:');
+                    sendqmsg("*$name is immune to this spell!*", ':interrobang:');
                 } else {
                     $out = run_single_attack($player, $name, $skill, $stam, 2, 1000);
-                    sendqmsg($out,':fireworks:');
+                    sendqmsg($out, ':fireworks:');
                 }
             }
         );
@@ -262,9 +266,9 @@ class book_loz extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell can be used in any attack round instead of a weapon attack. If you have the higher Attack Strength, your opponent is struck by a ball of white-hot electricity and loses 7 Stamina points. If you have the lower attack strength, your spell is ruined and the creature hits you.',
-            'func' => function(&$player,$name,$skill,$stam) {
+            'func' => function(&$player, $name, $skill, $stam) {
                 $out = run_single_attack($player, $name, $skill, $stam, 2, 7);
-                sendqmsg($out,':fireworks:');
+                sendqmsg($out, ':fireworks:');
             }
         );
 
@@ -283,8 +287,8 @@ class book_loz extends book_ff_magic {
             'type' => 'object',
             'target' => false,
             'desc' => 'This spell summons a Golden Talisman from the hidden treasures of the dungeon. You may only cast two steal spells during the adventure. (This includes castings of Steal Dagger.) You do not gain any Luck for acquiring Talismans this way.',
-            'func' => function(&$player,$name,$skill,$stam) {
-                sendqmsg('> A Golden Talisman appears from nowhere.',':fireworks:');
+            'func' => function(&$player, $name, $skill, $stam) {
+                sendqmsg('> A Golden Talisman appears from nowhere.', ':fireworks:');
                 addcommand('talismans +1');
             }
         );
@@ -295,20 +299,22 @@ class book_loz extends book_ff_magic {
             'type' => 'object',
             'target' => false,
             'desc' => 'This spell summons a Silver Dagger from the hidden treasures of the dungeon. You may only cast two steal spells during the adventure. (This includes castings of Steal Talisman.) You do not gain any Luck for acquiring Daggers this way.',
-            'func' => function(&$player,$name,$skill,$stam) {
-                sendqmsg('> A Silver Dagger appears from nowhere.',':fireworks:');
+            'func' => function(&$player, $name, $skill, $stam) {
+                sendqmsg('> A Silver Dagger appears from nowhere.', ':fireworks:');
                 addcommand('daggers +1');
             }
         );
         return $spells;
     }
 
+
     //// !test <luck/skill/stam> (run a skill test) OVERRIDE
-    public function _cmd_test($cmd, &$player)
-    {
+    public function _cmd_test($cmd, &$player) {
         if (strtolower($cmd[1] == 'spot')) {
             $player['spot'] = $player['skill'] + ($player['adjective'] == 'Wizard'?2:0);
         }
         parent::_cmd_test($cmd, $player);
     }
+
+
 }

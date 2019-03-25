@@ -73,8 +73,8 @@ function run_fight($input) {
     $round = 0;
     while ($player['stam'] > 0 && $mstam > 0) {
         $round++;
-        $mroll = rand(1,6); $mroll2 = rand(1,6);
-        $proll = rand(1,6); $proll2 = rand(1,6);
+        $mroll = rand(1, 6); $mroll2 = rand(1, 6);
+        $proll = rand(1, 6); $proll2 = rand(1, 6);
         $memoji = diceemoji($mroll).diceemoji($mroll2);
         $pemoji = diceemoji($proll).diceemoji($proll2);
 
@@ -90,8 +90,8 @@ function run_fight($input) {
 
         // Fast hands gives 1 extra dice, drop lowest for attack power
         if ($fasthands) {
-            $fhroll  = rand(1,6);
-            $fhroll2 = rand(1,6);
+            $fhroll  = rand(1, 6);
+            $fhroll2 = rand(1, 6);
             if ($fhroll+$fhroll2 > $proll+$proll2) {
                 $pattack = $player['skill']+$player['weapon']+$fhroll;
                 $pemoji = "~".$pemoji."~ / ".diceemoji($fhroll).diceemoji($fhroll2);
@@ -104,7 +104,7 @@ function run_fight($input) {
         }
 
         if ($critsfor != 'nobody') {
-            $croll = rand(1,6);
+            $croll = rand(1, 6);
             $cemoji = diceemoji($croll);
         }
 
@@ -135,7 +135,7 @@ function run_fight($input) {
                     $out .= " but failed to get a critical strike. (_ $cemoji _)";
                 }
             }
-            if ($player['shield'] && rand(1,6) == 6) {
+            if ($player['shield'] && rand(1, 6) == 6) {
                 $out .= " :shield: $your shield reduces the damage by 1! (_ ".diceemoji(6)." _) ";
                 $player['stam'] += 1;
             }
@@ -149,8 +149,8 @@ function run_fight($input) {
 
         // Monster 2 attack
         if ($m2) {
-            $mroll = rand(1,6); $mroll2 = rand(1,6);
-            $proll = rand(1,6); $proll2 = rand(1,6);
+            $mroll = rand(1, 6); $mroll2 = rand(1, 6);
+            $proll = rand(1, 6); $proll2 = rand(1, 6);
             $mattack = $mskill2+$mroll+$mroll2;
             $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
 
@@ -172,8 +172,8 @@ function run_fight($input) {
 
         //  Your backup attack
         if ($backupname) {
-            $mroll = rand(1,6); $mroll2 = rand(1,6);
-            $proll = rand(1,6); $proll2 = rand(1,6);
+            $mroll = rand(1, 6); $mroll2 = rand(1, 6);
+            $proll = rand(1, 6); $proll2 = rand(1, 6);
             $mattack = $mskill+$mroll+$mroll2;
             $pattack = $backupskill+$proll+$proll2;
 
@@ -189,25 +189,25 @@ function run_fight($input) {
                 $out .= "_$m blocks the attack of $backupname! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
             }
             else {
-                 $out .= "_$backupname's attack fails to hit $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                $out .= "_$backupname's attack fails to hit $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
             }
         }
 
         // Bonus damage
         if ($bonusdmg && $mstam > 0) {
-            $bdroll = rand(1,6);
+            $bdroll = rand(1, 6);
             if ($bdroll > 6-$bonusdmgchance) {
                 $bdemoji = ($bonusdmgchance < 6?'(_ '.diceemoji($bdroll).' _)':'');
                 $out .= "_$m hits $youlc with ".$bonusdmg." bonus damage! $bdemoji _\n";
                 $player['stam'] -= $bonusdmg;
             }
-        }            
+        }
 
         //stave off death
         if ($player['stam'] == 0 && $player['luck'] > 0) {
             // roll 2d6
-            $d1 = rand(1,6);
-            $d2 = rand(1,6);
+            $d1 = rand(1, 6);
+            $d2 = rand(1, 6);
             $e1 = diceemoji($d1);
             $e2 = diceemoji($d2);
             $out .= "_Testing luck to stave off death... ";
@@ -244,13 +244,13 @@ function run_fight($input) {
     return $out;
 }
 
-function run_single_attack(&$player, $mname, $mskill, $mstam, $mdamage = 2, $pdamage = 2)
-{
+
+function run_single_attack(&$player, $mname, $mskill, $mstam, $mdamage = 2, $pdamage = 2) {
     // Apply temp bonuses, if any
     apply_temp_stats($player);
 
-    $mroll = rand(1,6); $mroll2 = rand(1,6);
-    $proll = rand(1,6); $proll2 = rand(1,6);
+    $mroll = rand(1, 6); $mroll2 = rand(1, 6);
+    $proll = rand(1, 6); $proll2 = rand(1, 6);
     $mattack = $mskill+$mroll+$mroll2;
     $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
 
@@ -289,6 +289,7 @@ function run_single_attack(&$player, $mname, $mskill, $mstam, $mdamage = 2, $pda
     return $out;
 }
 
+
 function run_phaser_fight($input) {
     // Inputs
     if (!isset($input['player'])) return false;
@@ -318,11 +319,11 @@ function run_phaser_fight($input) {
     // Fight loop
     $out = "";
     $round = 0;
-    while(true) {
+    while (true) {
         $round++;
         // Player
-        $roll = rand(1,6); $roll2 = rand(1,6);
-        $emoji = diceemoji($roll).diceemoji($roll2).($modifier?sprintf("%+d",$modifier):'');
+        $roll = rand(1, 6); $roll2 = rand(1, 6);
+        $emoji = diceemoji($roll).diceemoji($roll2).($modifier?sprintf("%+d", $modifier):'');
         if (($roll+$roll2+$modifier) >= $player['skill']) {
             $out .= "_$your shot missed!_ ($emoji vs ".$player['skill'].")\n";
         } else {
@@ -331,7 +332,7 @@ function run_phaser_fight($input) {
             break;
         }
         // Monster
-        $roll = rand(1,6); $roll2 = rand(1,6);
+        $roll = rand(1, 6); $roll2 = rand(1, 6);
         $emoji = diceemoji($roll).diceemoji($roll2);
         if (($roll+$roll2) >= $mskill) {
             $out .= "_$m's shot missed!_ ($emoji vs $mskill)\n";
@@ -356,6 +357,7 @@ function run_phaser_fight($input) {
     return $out;
 }
 
+
 function run_ship_battle($input) {
     // Inputs
     if (!isset($input['player'])) return false;
@@ -374,15 +376,15 @@ function run_ship_battle($input) {
     // Fight loop
     $out = "";
     $round = 0;
-    while(true) {
+    while (true) {
         $round++;
         // Player
         // Roll to hit
-        $roll = rand(1,6); $roll2 = rand(1,6);
+        $roll = rand(1, 6); $roll2 = rand(1, 6);
         $emoji = diceemoji($roll).diceemoji($roll2);
-        if ($roll+$roll2 < $player['weapons'])  {
+        if ($roll+$roll2 < $player['weapons']) {
             // Roll for damage
-            $roll = rand(1,6); $roll2 = rand(1,6);
+            $roll = rand(1, 6); $roll2 = rand(1, 6);
             $hemoji = diceemoji($roll).diceemoji($roll2);
             if ($roll+$roll2 == 12) {
                 $out .= "_Your ship made a critical hit!_ ($emoji vs ".$player['weapons']." - $hemoji)\n";
@@ -405,11 +407,11 @@ function run_ship_battle($input) {
         }
         // Monster
         // Roll to hit
-        $roll = rand(1,6); $roll2 = rand(1,6);
+        $roll = rand(1, 6); $roll2 = rand(1, 6);
         $emoji = diceemoji($roll).diceemoji($roll2);
-        if ($roll+$roll2 < $mweapons)  {
+        if ($roll+$roll2 < $mweapons) {
             // Roll for damage
-            $roll = rand(1,6); $roll2 = rand(1,6);
+            $roll = rand(1, 6); $roll2 = rand(1, 6);
             $hemoji = diceemoji($roll).diceemoji($roll2);
             if ($roll+$roll2 == 12) {
                 $out .= "_$m made a critical hit!_ ($emoji vs $mweapons - $hemoji)\n";
@@ -444,6 +446,7 @@ function run_ship_battle($input) {
     return $out;
 }
 
+
 function run_sonic_fight(&$player, $skill, $mod, $monster, $mskill) {
     $mod = ($mod?(int)$mod:0);
     $monster = ($monster?$monster:'Badnik');
@@ -451,11 +454,11 @@ function run_sonic_fight(&$player, $skill, $mod, $monster, $mskill) {
 
     while (1) {
         // Sonic hit
-        $roll = rand(1,6);
+        $roll = rand(1, 6);
         if ($mod == 0) {
             $teststr = diceemoji($roll)."+$skill vs $mskill";
         } else {
-            $teststr = diceemoji($roll)."+$skill ".sprintf("%+d",$mod)." vs $mskill";
+            $teststr = diceemoji($roll)."+$skill ".sprintf("%+d", $mod)." vs $mskill";
         }
         if ($roll+$skill+$mod >= $mskill) {
             $out .= "_*".$player['name']." has defeated the $monster!*_ ($teststr)\n";
@@ -465,7 +468,7 @@ function run_sonic_fight(&$player, $skill, $mod, $monster, $mskill) {
         }
 
         // Monster hit
-        $roll = rand(1,6);
+        $roll = rand(1, 6);
         $teststr = diceemoji($roll)."+$mskill vs 10";
         if ($roll+$mskill >= 10) {
             $out .= "_$monster has hit ".$player['name']."!_ ($teststr)\n";
@@ -476,7 +479,7 @@ function run_sonic_fight(&$player, $skill, $mod, $monster, $mskill) {
                 $out .= "_*".$player['name']." lost a life!*_\n";
                 $player['stam']--;
                 if ($player['stam'] > 0) {
-                    $out .= "Sonic Lives: ".str_repeat(html_entity_decode('&#x1f994;').' ',$player['stam']);
+                    $out .= "Sonic Lives: ".str_repeat(html_entity_decode('&#x1f994;').' ', $player['stam']);
                 } else {
                     $out .= "*GAME OVER*";
                 }

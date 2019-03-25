@@ -1,11 +1,12 @@
 <?php
 
-require_once('ff_magic.php');
+require_once 'ff_magic.php';
 
 class book_ss extends book_ff_magic {
     public function getId() {
         return 'ss';
     }
+
 
     public function getStats() {
         $stats = parent::getStats();
@@ -13,16 +14,19 @@ class book_ss extends book_ff_magic {
         return $stats;
     }
 
+
     protected function getCharcterSheetAttachments(&$player) {
         return $this->getCharcterSheetAttachmentsNoMagic($player);
     }
 
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name,$gender,$emoji,$race,$adjective,$seed);
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         // Starting Equipment
-        $p['stuff'] = array('Sword (+0)','Chainmail Armor');
+        $p['stuff'] = array('Sword (+0)', 'Chainmail Armor');
         return $p;
     }
+
 
     protected function getSpells() {
         $spells = parent::getSpells();
@@ -110,11 +114,13 @@ class book_ss extends book_ff_magic {
             'target' => false,
             'desc' => "This spell is a very powerful spell, and not to be used lightly. When you cast a Curse, you immediately roll one dice and lose that many stamina points. However, something terrible - there is no telling what - will immediately befall your enemy, too.",
             'func' => function() {
-                $dice = rand(1,6);
-                sendqmsg('> You cast curse and pay the price... '.diceemoji($dice),':fireworks:');
+                $dice = rand(1, 6);
+                sendqmsg('> You cast curse and pay the price... '.diceemoji($dice), ':fireworks:');
                 addcommand("stam -$dice");
             }
         );
         return $spells;
     }
+
+
 }

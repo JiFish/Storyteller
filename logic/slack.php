@@ -1,43 +1,42 @@
 <?php
 
 // Send a direct message to a user or channel on slack
-function senddirmsg($message, $user = false)
-{
+function senddirmsg($message, $user = false) {
     if (!$user) {
         $user = $_POST['user_id'];
     }
     return sendmsg($message, true, ':open_book:', '@'.$user);
 }
 
+
 // Send a quick and basic message to slack
-function sendqmsg($message, $icon = ':open_book:')
-{
+function sendqmsg($message, $icon = ':open_book:') {
     return sendmsg($message, true, $icon);
 }
 
+
 // Send an image to slack
-function sendimgmsg($message, $imgurl, $icon = ':open_book:')
-{
+function sendimgmsg($message, $imgurl, $icon = ':open_book:') {
     $attachments = array([
             'image_url'    => $imgurl
-    ]);
+        ]);
     return sendmsg($message, $attachments, $icon);
 }
 
+
 // Full whistles and bells send message to slack
 // Normally use one of the convenience functions above
-function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = false)
-{
+function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = false) {
     // Split long messages for discord
     if (DISCORD_MODE && strlen($message) > 1975) {
-        $m = str_replace(' ','¥',$message);
-        $m = str_replace("\n"," ",$m);
-        $m = wordwrap($m,1950,"[BREAK]", true);
-        $m = str_replace(' ',"\n",$m);
-        $m = str_replace('¥',' ',$m);
-        $m = explode("[BREAK]",$m);
+        $m = str_replace(' ', '¥', $message);
+        $m = str_replace("\n", " ", $m);
+        $m = wordwrap($m, 1950, "[BREAK]", true);
+        $m = str_replace(' ', "\n", $m);
+        $m = str_replace('¥', ' ', $m);
+        $m = explode("[BREAK]", $m);
         $lastm = count($m)-1;
-        foreach($m as $key => $val) {
+        foreach ($m as $key => $val) {
             if ($key != $lastm) {
                 sendmsg($val, false, $icon, $chan);
             } else {
@@ -61,10 +60,10 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     if ($chan) {
         $data['channel'] = $chan;
     }
-    if (strpos($icon,'https://') === false) {
+    if (strpos($icon, 'https://') === false) {
         $data['icon_emoji'] = $icon;
     } else {
-        $data['icon_url'] = str_replace(['<','>'],'',$icon);
+        $data['icon_url'] = str_replace(['<', '>'], '', $icon);
     }
     // Undocumented hook to allow the config file to alter output
     if (function_exists('hook_alter_output')) {
@@ -75,14 +74,14 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     }
     $data_string = json_encode($data);
     $ch = curl_init(SLACK_HOOK);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
             'Content-Length: ' . strlen($data_string))
-        );
+    );
     //Execute CURL
     $result = get_headers_from_curl_response(curl_exec($ch));
 
@@ -94,8 +93,8 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     return true;
 }
 
-function get_headers_from_curl_response($response)
-{
+
+function get_headers_from_curl_response($response) {
     $headers = array();
 
     $header_text = substr($response, 0, strpos($response, "\r\n\r\n"));
@@ -103,8 +102,7 @@ function get_headers_from_curl_response($response)
     foreach (explode("\r\n", $header_text) as $i => $line)
         if ($i === 0)
             $headers['http_code'] = $line;
-        else
-        {
+        else {
             list ($key, $value) = explode(': ', $line);
 
             $headers[strtolower($key)] = $value;
@@ -113,9 +111,10 @@ function get_headers_from_curl_response($response)
     return $headers;
 }
 
+
 function discordize(&$data) {
-    $data['text'] = str_replace(['*','~'],['**','~~'],$data['text']);
-    $data['text'] = str_replace('> ','',$data['text']);
+    $data['text'] = str_replace(['*', '~'], ['**', '~~'], $data['text']);
+    $data['text'] = str_replace('> ', '', $data['text']);
     if (isset($data['attachments'])) {
         foreach ($data['attachments'] as $akey => $aval) {
             if (isset($aval['fields'])) {
@@ -123,7 +122,7 @@ function discordize(&$data) {
                     if ($fval['title']) {
                         $data['attachments'][$akey]['fields'][$fkey]['title'] = '**'.$data['attachments'][$akey]['fields'][$fkey]['title'].'**';
                     }
-                    $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace(['*','~'],['**','~~'],$data['attachments'][$akey]['fields'][$fkey]['value']);
+                    $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace(['*', '~'], ['**', '~~'], $data['attachments'][$akey]['fields'][$fkey]['value']);
                 }
             }
         }
@@ -135,6 +134,7 @@ function discordize(&$data) {
     }
 }
 
+
 function discordize_emoji($e) {
     if (!isset($_SERVER['HTTP_HOST'])) {
         // Must be running from command line, can't send emoji
@@ -142,7 +142,7 @@ function discordize_emoji($e) {
     }
 
     // Check for emoji in cache and send url if found
-    $clean = str_replace(':','',$e);
+    $clean = str_replace(':', '', $e);
     $path = 'images'.DIRECTORY_SEPARATOR.'emoji_cache'.DIRECTORY_SEPARATOR.$clean.'.png';
     $url = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/emoji_cache/'.$clean.'.png';
     if (file_exists($path)) {
@@ -164,11 +164,12 @@ function discordize_emoji($e) {
     return $url;
 }
 
+
 function get_emoji_remote_url($e) {
-    $emojis = explode(':',$e);
-    $emoji2html = json_decode(file_get_contents('resources/slack_emoticons_to_html_unicode.json'),1);
+    $emojis = explode(':', $e);
+    $emoji2html = json_decode(file_get_contents('resources/slack_emoticons_to_html_unicode.json'), 1);
     $url = "";
-    foreach($emojis as $e) {
+    foreach ($emojis as $e) {
         if (!$e) continue;
         $e = $emoji2html[$e];
         $e = html_entity_decode($e);

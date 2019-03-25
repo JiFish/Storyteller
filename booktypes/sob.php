@@ -1,21 +1,22 @@
 <?php
 
-require_once('ff_basic.php');
+require_once 'ff_basic.php';
 
 class book_sob extends book_ff_basic {
     public function getId() {
         return 'sob';
     }
 
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollHumanCharacter($name,$gender,$emoji,$race,$adjective,$seed);
+        $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         $p['race'] = 'Pirate';
         $shipnames = file('resources/ship_names.txt');
         $p['shipname'] = trim($shipnames[array_rand($shipnames)]);
         if (!$adjective || $adjective == '?') {
-            $adjectives = array('Bold','Bloodthirsty','Cut-throat','Despicable','Dread-Pirate','Foul','Fearsome','Horrible',
-                                'Hook-handed','Killer','Loathsome','Low','Mad','Murderous','Nasty','Navigator','Peg-legged',
-                                'Reviled','Ruthless','Strong','Scurviest','Tough','Terrible','Weird','Vile','Villainous');
+            $adjectives = array('Bold', 'Bloodthirsty', 'Cut-throat', 'Despicable', 'Dread-Pirate', 'Foul', 'Fearsome', 'Horrible',
+                'Hook-handed', 'Killer', 'Loathsome', 'Low', 'Mad', 'Murderous', 'Nasty', 'Navigator', 'Peg-legged',
+                'Reviled', 'Ruthless', 'Strong', 'Scurviest', 'Tough', 'Terrible', 'Weird', 'Vile', 'Villainous');
             $p['adjective'] = trim($adjectives[array_rand($adjectives)]);
         }
         // starting items
@@ -24,11 +25,12 @@ class book_sob extends book_ff_basic {
         return $p;
     }
 
+
     public function getStats() {
         $stats = parent::getStats();
         $stats['str'] = [
             'friendly' => 'Crew Strength',
-            'alias' => ['strength','crewstrength'],
+            'alias' => ['strength', 'crewstrength'],
             'icons' => ':muscle:',
             'roll' => 'ff2die',
             'testdice' => 3,
@@ -61,11 +63,12 @@ class book_sob extends book_ff_basic {
         return $stats;
     }
 
+
     protected function getCharcterSheetAttachments(&$player) {
         $attachments = parent::getCharcterSheetAttachments($player);
         // QOL for discord with 3 per row instead of two
         if (DISCORD_MODE) {
-            $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d",$player['weapon']).')';
+            $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d", $player['weapon']).')';
             unset($attachments[0]['fields'][3]);
         }
         unset($attachments[0]['fields'][4]);
@@ -73,48 +76,49 @@ class book_sob extends book_ff_basic {
         $attachments[] = [
             'color'    => '#8b4513',
             'fields'   => array(
-            [
-                'title' => 'Ship Name',
-                'value' => $player['shipname'],
-                'short' => true
-            ],
-            [
-                'title' => 'Crew Strike (strike)',
-                'value' => $player['strike']." / ".$player['max']['strike'],
-                'short' => true
-            ],
-            [
-                'title' => 'Crew Strength (str)',
-                'value' => $player['str']." / ".$player['max']['str'],
-                'short' => true
-            ],
-            [
-                'title' => 'Booty (Gold)',
-                'value' => $player['gold'],
-                'short' => true
-            ],
-            [
-                'title' => 'Slaves',
-                'value' => $player['slaves'],
-                'short' => true
-            ],
-            [
-                'title' => 'Log',
-                'value' => $player['log'].' days',
-                'short' => true
-            ])
+                [
+                    'title' => 'Ship Name',
+                    'value' => $player['shipname'],
+                    'short' => true
+                ],
+                [
+                    'title' => 'Crew Strike (strike)',
+                    'value' => $player['strike']." / ".$player['max']['strike'],
+                    'short' => true
+                ],
+                [
+                    'title' => 'Crew Strength (str)',
+                    'value' => $player['str']." / ".$player['max']['str'],
+                    'short' => true
+                ],
+                [
+                    'title' => 'Booty (Gold)',
+                    'value' => $player['gold'],
+                    'short' => true
+                ],
+                [
+                    'title' => 'Slaves',
+                    'value' => $player['slaves'],
+                    'short' => true
+                ],
+                [
+                    'title' => 'Log',
+                    'value' => $player['log'].' days',
+                    'short' => true
+                ])
         ];
         return $attachments;
     }
 
+
     public function registerCommands() {
         parent::registerCommands();
-        register_command('battle', '_cmd_battle',['oms','n','n','osl']);
+        register_command('battle', '_cmd_battle', ['oms', 'n', 'n', 'osl']);
     }
 
+
     //// !battle [name] <skill> <stamina> [maxrounds] (run battle logic)
-    public function _cmd_battle($cmd, &$player)
-    {
+    public function _cmd_battle($cmd, &$player) {
         // Construct battle player
         $bp = array(
             'name' => "The crew of ".$player['shipname'],
@@ -127,17 +131,19 @@ class book_sob extends book_ff_basic {
             'temp' => []
         );
         $out = run_fight(['player' => &$bp,
-                          'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
-                          'monsterskill' => $cmd[2],
-                          'monsterstam' => $cmd[3],
-                          'maxrounds' => ($cmd[4]?$cmd[4]:50),
-                          'healthstatname' => 'strength']);
+                'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
+                'monsterskill' => $cmd[2],
+                'monsterstam' => $cmd[3],
+                'maxrounds' => ($cmd[4]?$cmd[4]:50),
+                'healthstatname' => 'strength']);
 
         $player['str'] = $bp['stam'];
         if ($player['str'] < 1) {
             $player['stam'] = 0;
         }
 
-        sendqmsg($out,":crossed_swords:");
+        sendqmsg($out, ":crossed_swords:");
     }
+
+
 }

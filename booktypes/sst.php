@@ -1,14 +1,15 @@
 <?php
 
-require_once('ff_basic.php');
+require_once 'ff_basic.php';
 
 class book_sst extends book_ff_basic {
     public function getId() {
         return 'sst';
     }
 
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name,$gender,$emoji,$race,$adjective,$seed);
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         if (!$race || $race == '?') {
             if ($p['race'] == 'Elf') {
                 $p['race'] = 'Vulcan';
@@ -22,7 +23,7 @@ class book_sst extends book_ff_basic {
         }
         if (!$name || $name == '?') {
             if ($p['race'] == 'Droid') {
-                $p['name'] = chr(mt_rand(68,90)).chr(mt_rand(65,87)).'-'.mt_rand(1,9);
+                $p['name'] = chr(mt_rand(68, 90)).chr(mt_rand(65, 87)).'-'.mt_rand(1, 9);
             } elseif ($p['race'] == 'Vulcan') {
                 $p['name'] = $this->generateVulcanName($p['gender']);
             } elseif ($p['race'] == 'Andorian') {
@@ -39,31 +40,32 @@ class book_sst extends book_ff_basic {
         $names = file('resources/starship_names.txt');
         $p['shipname'] = trim($names[array_rand($names)]);
         // Crew
-        $cl = ['no1','science','medic','engineer','security','guard'];
-        $races = array('Human','Human','Human','Human','Human','Vulcan','Andorian','Caitian','Droid');
+        $cl = ['no1', 'science', 'medic', 'engineer', 'security', 'guard'];
+        $races = array('Human', 'Human', 'Human', 'Human', 'Human', 'Vulcan', 'Andorian', 'Caitian', 'Droid');
         foreach ($cl as $k => $c) {
             $d1 = dice();
             $d2 = dice();
             $d3 = dice();
-            array_push($p['creationdice'],$d1,$d2,$d3);
+            array_push($p['creationdice'], $d1, $d2, $d3);
             $cm = $this->rollCrew($c, ($k > 0 && $k < 4), $races, [$d1, $d2, $d3]);
             $p['crew'][$c] = $cm;
         }
         return $p;
     }
 
+
     protected function rollCrew($position, $combatpenalty, &$races = null, $dice = null) {
         if ($races == null) {
-            $races = array('Human','Human','Human','Vulcan','Andorian','Caitian','Droid');
+            $races = array('Human', 'Human', 'Human', 'Vulcan', 'Andorian', 'Caitian', 'Droid');
         }
         if ($dice == null) {
-            $dice = [dice(),dice(),dice()];
+            $dice = [dice(), dice(), dice()];
         }
         $cm = array(
             'skill' =>  6+$dice[0],
             'stam' => 12+$dice[1]+$dice[2],
             'position' => ($position=='redshirt'?'RedShirt':ucfirst($position)),
-            'gender' => (rand(0,1)?'Male':'Female'),
+            'gender' => (rand(0, 1)?'Male':'Female'),
             'combatpenalty' => $combatpenalty,
             'replacement' => false,
             'awayteam' => false,
@@ -79,7 +81,7 @@ class book_sst extends book_ff_basic {
         $cm['race'] = trim($races[$r]);
         unset($races[$r]);
         if ($cm['race'] == 'Droid') {
-            $cm['name'] = chr(mt_rand(68,90)).chr(mt_rand(65,87)).'-'.mt_rand(1,9);
+            $cm['name'] = chr(mt_rand(68, 90)).chr(mt_rand(65, 87)).'-'.mt_rand(1, 9);
         } elseif ($cm['race'] == 'Caitian') {
             $names = file('resources/cat_names.txt');
             $cm['name'] = trim($names[array_rand($names)]);
@@ -96,29 +98,32 @@ class book_sst extends book_ff_basic {
         return $cm;
     }
 
+
     private function generateVulcanName($gender) {
-        $c = ["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","x","z"];
-        $v = ["a","e","i","o","u"];
+        $c = ["b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "x", "z"];
+        $v = ["a", "e", "i", "o", "u"];
 
         if (strtolower($gender) == 'male') {
-            return 'S'.$v[rand(0,4)].$c[rand(0,18)].$v[rand(0,4)].'k';
+            return 'S'.$v[rand(0, 4)].$c[rand(0, 18)].$v[rand(0, 4)].'k';
         } else {
-            $b = array_merge($c,$v);
-            return "T'P".$v[rand(0,4)].$b[rand(0,23)];
+            $b = array_merge($c, $v);
+            return "T'P".$v[rand(0, 4)].$b[rand(0, 23)];
         }
     }
+
 
     private function generateAndorianName() {
-        $c = ["g","h","k","l","m","n","p","r","s","t","v"];
-        $v = ["a","e","i","o","u"];
-        $s = ["Ta","Th","Sh","Ke"];
+        $c = ["g", "h", "k", "l", "m", "n", "p", "r", "s", "t", "v"];
+        $v = ["a", "e", "i", "o", "u"];
+        $s = ["Ta", "Th", "Sh", "Ke"];
 
-        if (rand(0,1) == 1) {
-            return ['Th','Sh'][rand(0,1)].$v[rand(0,4)].$c[rand(0,10)].$v[rand(0,4)].$c[rand(0,10)];
+        if (rand(0, 1) == 1) {
+            return ['Th', 'Sh'][rand(0, 1)].$v[rand(0, 4)].$c[rand(0, 10)].$v[rand(0, 4)].$c[rand(0, 10)];
         } else {
-            return ['Ta','Ke'][rand(0,1)].$c[rand(0,10)].$v[rand(0,4)].$c[rand(0,10)];
+            return ['Ta', 'Ke'][rand(0, 1)].$c[rand(0, 10)].$v[rand(0, 4)].$c[rand(0, 10)];
         }
     }
+
 
     public function getStats() {
         $stats = parent::getStats();
@@ -140,6 +145,7 @@ class book_sst extends book_ff_basic {
         return $stats;
     }
 
+
     protected function getCharcterSheetAttachments(&$player) {
         $attachments = parent::getCharcterSheetAttachments($player);
         // ship
@@ -158,7 +164,7 @@ class book_sst extends book_ff_basic {
             'value' => $player['shields']." / ".$player['max']['shields'],
             'short' => true
         ];
-        $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d",$player['weapon']).')';
+        $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d", $player['weapon']).')';
         // crew
         $cname = "";
         $cskill = "";
@@ -172,20 +178,20 @@ class book_sst extends book_ff_basic {
             $cboth .= 'SKILL: '.$cm['skill'].' / '.$cm['max']['skill'].' | STAMINA: '.$cm['stam'].' / '.$cm['max']['stam'].($cm['combatpenalty']?' *†*':'').($cm['replacement']?' *R*':'')."\n";
         }
         $fields = array([ 'title' => 'Crew (⇓: away team)',
-                          'value' => $cname,
-                          'short' => true ]);
+                'value' => $cname,
+                'short' => true ]);
         // Discord QOL
         if (DISCORD_MODE) {
             $fields[] = ['title' => 'Skill (†: -2 in combat)',
-                         'value' => $cskill,
-                         'short' => true ];
+                'value' => $cskill,
+                'short' => true ];
             $fields[] = ['title' => 'Stamina (R: Replaced)',
-                         'value' => $cstam,
-                         'short' => true ];
+                'value' => $cstam,
+                'short' => true ];
         } else {
             $fields[] = ['title' => 'Stats (†: -2 in combat, R: Replaced)',
-                         'value' => $cboth,
-                         'short' => true ];
+                'value' => $cboth,
+                'short' => true ];
         }
         $attachments[] = [
             'color'    => '#BB0000',
@@ -193,36 +199,37 @@ class book_sst extends book_ff_basic {
         return $attachments;
     }
 
+
     public function registerCommands() {
         parent::registerCommands();
-        register_command('phaser',     '_cmd_phaser',['onm','(\sstun|\skill)?','oms','n','(\sstun|\skill)?','on']);
-        register_command('shipbattle', '_cmd_shipbattle',['oms','n','n']);
-        register_command('recruit',    '_cmd_recruit', ['s','os','on','on','os','os']);
-        register_command('beam',       '_cmd_beam',['(\sup|\sdown)','os','os','os','os','os']);
-        register_command('everyone',   '_cmd_everyone',['l']);
-        register_command('awayteam',   '_cmd_everyone',['l']);
-        foreach(['no1','science','medic','engineer','security','guard'] as $pos) {
-            register_command($pos, '_cmd_order',['s','ol']);
+        register_command('phaser',     '_cmd_phaser', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
+        register_command('shipbattle', '_cmd_shipbattle', ['oms', 'n', 'n']);
+        register_command('recruit',    '_cmd_recruit', ['s', 'os', 'on', 'on', 'os', 'os']);
+        register_command('beam',       '_cmd_beam', ['(\sup|\sdown)', 'os', 'os', 'os', 'os', 'os']);
+        register_command('everyone',   '_cmd_everyone', ['l']);
+        register_command('awayteam',   '_cmd_everyone', ['l']);
+        foreach (['no1', 'science', 'medic', 'engineer', 'security', 'guard'] as $pos) {
+            register_command($pos, '_cmd_order', ['s', 'ol']);
         }
     }
 
+
     //// !shipbattle [name] <skill> <stamina> (run ship battle logic)
-    public function _cmd_shipbattle($cmd, &$player)
-    {
+    public function _cmd_shipbattle($cmd, &$player) {
         $out = run_ship_battle(['player' => &$player,
-                                'oppname' => ($cmd[1]?$cmd[1]:"Opponent"),
-                                'oppweapons' => $cmd[2],
-                                'oppshields' => $cmd[3],
-                               ]);
-        sendqmsg($out,":rocket:");
+                'oppname' => ($cmd[1]?$cmd[1]:"Opponent"),
+                'oppweapons' => $cmd[2],
+                'oppshields' => $cmd[3],
+            ]);
+        sendqmsg($out, ":rocket:");
     }
 
+
     //// Replace crew
-    public function _cmd_recruit($cmd, &$player)
-    {
+    public function _cmd_recruit($cmd, &$player) {
         $pos = $cmd[1];
 
-        if (!array_key_exists($pos,$player['crew'])) {
+        if (!array_key_exists($pos, $player['crew'])) {
             sendqmsg("*$pos: invalid position*", ':interrobang:');
         }
 
@@ -250,9 +257,9 @@ class book_sst extends book_ff_basic {
         sendqmsg("*".$c['name']." recruited!*", ':handshake:');
     }
 
+
     //// !beam <up/down> [crew] [crew] [crew]
-    public function _cmd_beam($cmd, &$player)
-    {
+    public function _cmd_beam($cmd, &$player) {
         $out = "";
         $crew = array();
         $dir = strtolower($cmd[1]);
@@ -273,61 +280,61 @@ class book_sst extends book_ff_basic {
                 $crew[$k] = $player['crew'][$c]['name'];
             }
         }
-        array_unshift($crew,"You");
+        array_unshift($crew, "You");
         $out = "_".basic_num_to_word(count($crew))." to beam $dir!_\n";
         $out .= "*".implode(', ', array_slice($crew, 0, -1)) . (count($crew)>1?' and ':'') . end($crew)." have beamed $dir.*\n";
 
         // If we are beaming up and have our original MO, we get some healing
         if ($dir == 'up' && $player['crew']['medic']['replacement'] == false) {
             if ($player['stam'] < $player['max']['stam']) {
-                $r = min($player['max']['stam']-$player['stam'],2);
+                $r = min($player['max']['stam']-$player['stam'], 2);
                 $out .= "_Your medic treats you restoring $r stamina._\n";
                 $player['stam'] += $r;
             }
             foreach ($player['crew'] as $key => $c) {
                 if ($c['stam'] < $c['max']['stam']) {
-                    $r = min($c['max']['stam']-$c['stam'],2);
+                    $r = min($c['max']['stam']-$c['stam'], 2);
                     $out .= "_Your medic treats ".($key=='medic'?'themself':$c['name'])." restoring $r stamina._\n";
                     $player['crew'][$key]['stam'] += $r;
                 }
             }
         }
 
-        sendqmsg($out,":rocket:");
+        sendqmsg($out, ":rocket:");
     }
 
+
     //// Special case, order various crew to do commands
-    public function _cmd_order($cmd, &$player)
-    {
+    public function _cmd_order($cmd, &$player) {
         global $commandslist, $commandsargs;
 
         $officer = strtolower($cmd[0]);
         $crew = &$player['crew'][$officer];
         $order = strtolower($cmd[1]);
         $valid_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup',
-                         'skill', 'stam', 'stamina', 'test', 'dead'];
+            'skill', 'stam', 'stamina', 'test', 'dead'];
         $combat_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup'];
 
-        if (!in_array($order,$valid_orders)) {
-            sendqmsg('Cannot order crew to '.$order,':interrobang:');
+        if (!in_array($order, $valid_orders)) {
+            sendqmsg('Cannot order crew to '.$order, ':interrobang:');
             return;
         }
         if (array_key_exists($order, $commandsargs)) {
             $cmd = advanced_command_split(trim($order.' '.$cmd[2]), $commandsargs[$order]);
         } else {
-            sendqmsg("Sorry, I didn't understand that command!",":interrobang:");
+            sendqmsg("Sorry, I didn't understand that command!", ":interrobang:");
             return;
         }
         // Apply combat penalty
-        if ($crew['combatpenalty'] && in_array($order,$combat_orders)) {
+        if ($crew['combatpenalty'] && in_array($order, $combat_orders)) {
             $crew['temp']['skill'] += -2;
         }
 
-        call_user_func_array([$this,$commandslist[$cmd[0]]],array($cmd,&$crew));
+        call_user_func_array([$this, $commandslist[$cmd[0]]], array($cmd, &$crew));
 
         if ($crew['stam'] < 1) {
             $out = "*".$crew['name']." is dead!* :skull:\n";
-            $newskill = max(1,$crew['max']['skill']-2);
+            $newskill = max(1, $crew['max']['skill']-2);
             $crew = $this>rollCrew($officer, $crew['combatpenalty']);
             $crew['max']['skill'] = $newskill;
             $crew['skill'] = $newskill;
@@ -335,13 +342,13 @@ class book_sst extends book_ff_basic {
             $crew['awayteam'] = false;
             $out .= "Their assistant, ".$crew['name'].", is promoted to the ".$crew['position']." position. ";
             $out .= "(Replacement crew cannot beam down to planets.)";
-            sendqmsg($out,':dead:');
+            sendqmsg($out, ':dead:');
         }
     }
 
+
     //// Special case, order WHOLE crew, or away team, to do command
-    public function _cmd_everyone($cmd, &$player)
-    {
+    public function _cmd_everyone($cmd, &$player) {
         addcommand($cmd[1]);
         foreach ($player['crew'] as $key => $val) {
             if ($cmd[0] != 'awayteam' || $val['awayteam']) {
@@ -349,4 +356,6 @@ class book_sst extends book_ff_basic {
             }
         }
     }
+
+
 }

@@ -1,27 +1,29 @@
 <?php
 
-require_once('none.php');
+require_once 'none.php';
 
 class book_ff_basic extends book_none {
     public function getId() {
         return 'ff_basic';
     }
 
+
     public function isDead(&$player) {
-        return ($player['stam'] < 1);
+        return $player['stam'] < 1;
     }
+
 
     public function getStats() {
         $stats = array(
             'skill' => [
                 'friendly' => 'Skill',
-                'icons' => [':juggling:',':tired_face:'],
+                'icons' => [':juggling:', ':tired_face:'],
                 'roll' => 'ff1die',
                 'display' => 'current_and_max',
                 'testdice' => 2,
                 'testpass' => '{youare} skillful',
                 'testfail' => '{youare} not skillful',
-                ],
+            ],
             'stam' => [
                 'friendly' => 'Stamina',
                 'alias' => ['stamina'],
@@ -31,51 +33,53 @@ class book_ff_basic extends book_none {
                 'testdice' => 3,
                 'testpass' => '{youare} strong enough',
                 'testfail' => '{youare} not strong enough',
-                ],
+            ],
             'luck' => [
                 'friendly' => 'Luck',
-                'icons' => [':four_leaf_clover:',':lightning:'],
+                'icons' => [':four_leaf_clover:', ':lightning:'],
                 'roll' => 'ff1die',
                 'display' => 'current_and_max',
                 'testdice' => 2,
                 'testpass' => '{youare} lucky!',
                 'testfail' => '{youare} unlucky',
-                ],
+            ],
             'prov' => [
                 'friendly' => 'Provisions',
-                'alias' => ['provisions','food'],
+                'alias' => ['provisions', 'food'],
                 'icons' => ':bread:',
-                ],
+            ],
             'weapon' => [
                 'friendly' => 'Weapon Bonus',
-                'alias' => ['weaponbonus','weapon'],
+                'alias' => ['weaponbonus', 'weapon'],
                 'icons' => ':dagger_knife:',
                 'display' => 'bonus_value',
-                ],
+            ],
             'gold' => [
                 'friendly' => 'Gold',
-                'alias' => ['cash','money'],
+                'alias' => ['cash', 'money'],
                 'icons' => ':moneybag:',
-                ],
+            ],
         );
         return $stats;
     }
 
+
     public function rollHumanCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name,$gender,$emoji,$race,$adjective,$seed);
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         // Add shield flag
         $p['shield'] = false;
         return $p;
     }
 
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name,$gender,$emoji,$race,$adjective,$seed);
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         // Add shield flag
         $p['shield'] = false;
         // Add fantasy races
         if (!$race || $race = '?') {
-            $races = array('Human','Human','Human','Elf','Djinnin','Catling','Dwarf');
-            $needsskintone = array(true,true,true,true,false,false,true);
+            $races = array('Human', 'Human', 'Human', 'Elf', 'Djinnin', 'Catling', 'Dwarf');
+            $needsskintone = array(true, true, true, true, false, false, true);
             $selection = array_rand($races);
             $p['race'] = $races[$selection];
         }
@@ -85,13 +89,13 @@ class book_ff_basic extends book_none {
             $p['name'] = trim($names[array_rand($names)]);
         }
         if (!$emoji || $emoji == '?') {
-            $skintone = array(':skin-tone-2:',':skin-tone-3:',':skin-tone-4:',':skin-tone-5:',':skin-tone-2:');
+            $skintone = array(':skin-tone-2:', ':skin-tone-3:', ':skin-tone-4:', ':skin-tone-5:', ':skin-tone-2:');
             if ($gender == 'Male') {
-                $emojilist = array(':man:',':blond-haired-man:',':older_man:',':male_elf:',':male_genie:',':smirk_cat:',':bearded_person:');
+                $emojilist = array(':man:', ':blond-haired-man:', ':older_man:', ':male_elf:', ':male_genie:', ':smirk_cat:', ':bearded_person:');
             } elseif ($gender == 'Female') {
-                $emojilist = array(':woman:',':blond-haired-woman:',':older_woman:',':female_elf:',':female_genie:',':smile_cat:',':bearded_person:');
+                $emojilist = array(':woman:', ':blond-haired-woman:', ':older_woman:', ':female_elf:', ':female_genie:', ':smile_cat:', ':bearded_person:');
             } else {
-                $emojilist = array(':adult:',':person_with_blond_hair:',':older_adult:',':elf:',':genie:',':smiley_cat:',':bearded_person:');
+                $emojilist = array(':adult:', ':person_with_blond_hair:', ':older_adult:', ':elf:', ':genie:', ':smiley_cat:', ':bearded_person:');
             }
             $p['emoji'] = $emojilist[$selection];
             if ($needsskintone[$selection]) {
@@ -101,44 +105,46 @@ class book_ff_basic extends book_none {
         return $p;
     }
 
+
     // In Slack format
     protected function getCharcterSheetAttachments(&$player) {
         $attachments = array([
-            'color'    => $player['colourhex'],
-            'fields'   => array(
-            [
-                'title' => 'Skill',
-                'value' => $player['skill']." / ".$player['max']['skill'],
-                'short' => true
-            ],
-            [
-                'title' => 'Stamina (stam)',
-                'value' => $player['stam']." / ".$player['max']['stam'],
-                'short' => true
-            ],
-            [
-                'title' => 'Luck',
-                'value' => $player['luck']." / ".$player['max']['luck'],
-                'short' => true
-            ],
-            [
-                'title' => 'Weapon Bonus (weapon)',
-                'value' => sprintf("%+d",$player['weapon']),
-                'short' => true
-            ],
-            [
-                'title' => 'Gold',
-                'value' => $player['gold'],
-                'short' => true
-            ],
-            [
-                'title' => 'Provisions (prov)',
-                'value' => $player['prov'],
-                'short' => true
-            ])
-        ]);
+                'color'    => $player['colourhex'],
+                'fields'   => array(
+                    [
+                        'title' => 'Skill',
+                        'value' => $player['skill']." / ".$player['max']['skill'],
+                        'short' => true
+                    ],
+                    [
+                        'title' => 'Stamina (stam)',
+                        'value' => $player['stam']." / ".$player['max']['stam'],
+                        'short' => true
+                    ],
+                    [
+                        'title' => 'Luck',
+                        'value' => $player['luck']." / ".$player['max']['luck'],
+                        'short' => true
+                    ],
+                    [
+                        'title' => 'Weapon Bonus (weapon)',
+                        'value' => sprintf("%+d", $player['weapon']),
+                        'short' => true
+                    ],
+                    [
+                        'title' => 'Gold',
+                        'value' => $player['gold'],
+                        'short' => true
+                    ],
+                    [
+                        'title' => 'Provisions (prov)',
+                        'value' => $player['prov'],
+                        'short' => true
+                    ])
+            ]);
         return $attachments;
     }
+
 
     protected function getStuffAttachment(&$player) {
         $p = $player;
@@ -149,33 +155,34 @@ class book_ff_basic extends book_none {
         return parent::getStuffAttachment($p);
     }
 
+
     public function registerCommands() {
         parent::registerCommands();
         register_command('eat',         '_cmd_eat');
-        register_command('pay',         '_cmd_pay',['n']);
-        register_command('spend',       '_cmd_pay',['n']);
-        register_command('buy',         '_cmd_buy',['ms','on']);
+        register_command('pay',         '_cmd_pay', ['n']);
+        register_command('spend',       '_cmd_pay', ['n']);
+        register_command('buy',         '_cmd_buy', ['ms', 'on']);
         register_command('luckyescape', '_cmd_luckyescape');
         register_command('le',          '_cmd_luckyescape');
-        register_command('shield',      '_cmd_shield',['os']);
-        register_command('test',        '_cmd_test',['s','onm','on','on']);
-        register_command('fight',       '_cmd_fight',['oms','n','n','osl']);
-        register_command('critfight',   '_cmd_critfight',['oms','n','os','on']);
-        register_command('bonusfight',  '_cmd_bonusfight',['oms','n','n','n','on']);
-        register_command('vs',          '_cmd_vs',['ms','n','n','ms','n','n']);
-        register_command('fighttwo',    '_cmd_fighttwo',['ms','n','n','oms','on','on']);
-        register_command('fightbackup', '_cmd_fightbackup',['oms','n','n','oms','n']);
-        register_command('gun',         '_cmd_phaser',['onm','(\sstun|\skill)?','oms','n','(\sstun|\skill)?','on']);
-        register_command('attack',      '_cmd_attack',['n','on']);
-        register_command('a',           '_cmd_attack',['n','on']);
+        register_command('shield',      '_cmd_shield', ['os']);
+        register_command('test',        '_cmd_test', ['s', 'onm', 'on', 'on']);
+        register_command('fight',       '_cmd_fight', ['oms', 'n', 'n', 'osl']);
+        register_command('critfight',   '_cmd_critfight', ['oms', 'n', 'os', 'on']);
+        register_command('bonusfight',  '_cmd_bonusfight', ['oms', 'n', 'n', 'n', 'on']);
+        register_command('vs',          '_cmd_vs', ['ms', 'n', 'n', 'ms', 'n', 'n']);
+        register_command('fighttwo',    '_cmd_fighttwo', ['ms', 'n', 'n', 'oms', 'on', 'on']);
+        register_command('fightbackup', '_cmd_fightbackup', ['oms', 'n', 'n', 'oms', 'n']);
+        register_command('gun',         '_cmd_phaser', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
+        register_command('attack',      '_cmd_attack', ['n', 'on']);
+        register_command('a',           '_cmd_attack', ['n', 'on']);
         register_command('dead',        '_cmd_dead');
         register_command('π',           '_cmd_easteregg');
         register_command(':pie:',       '_cmd_easteregg');
     }
 
+
     //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_get($cmd, &$player)
-    {
+    public function _cmd_get($cmd, &$player) {
         $item = $cmd[1];
         // Attempt to catch cases where people get or take gold or provisions
         // and turn them in to stat adjustments
@@ -204,9 +211,9 @@ class book_ff_basic extends book_none {
         parent::_cmd_get($cmd, $player);
     }
 
+
     //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_drop($cmd, &$player)
-    {
+    public function _cmd_drop($cmd, &$player) {
         $drop = strtolower($cmd[1]);
         // TODO: This is code repetition
         // Attempt to catch cases where people get or take gold or provisions
@@ -236,47 +243,47 @@ class book_ff_basic extends book_none {
         parent::_cmd_drop($cmd, $player);
     }
 
+
     //// !help (send basic help)
-    public function _cmd_help($cmd, &$player)
-    {
+    public function _cmd_help($cmd, &$player) {
         $help = file_get_contents('resources/help.txt');
         // Replace "!" with whatever the trigger word is
-        $help = str_replace("!",$_POST['trigger_word'],$help);
+        $help = str_replace("!", $_POST['trigger_word'], $help);
         $helpurl = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI']).'commands.html';
         sendqmsg($help."\nMore commands can be found here: ".$helpurl);
     }
 
+
     //// !eat
-    public function _cmd_eat($cmd, &$player)
-    {
+    public function _cmd_eat($cmd, &$player) {
         if ($player['prov'] < 1) {
-            sendqmsg("*No food to eat!*",':interrobang:');
+            sendqmsg("*No food to eat!*", ':interrobang:');
         } else {
             $player['prov']--;
             $player['stam']+=4;
             if ($player['stam'] > $player['max']['stam']) {
                 $player['stam'] = $player['max']['stam'];
             }
-            $icon = array(":bread:",":cheese_wedge:",":meat_on_bone:")[rand(0,2)];
-            sendqmsg("*Yum! Stamina now ".$player['stam']." and ".$player['prov']." provisions left.*",$icon);
+            $icon = array(":bread:", ":cheese_wedge:", ":meat_on_bone:")[rand(0, 2)];
+            sendqmsg("*Yum! Stamina now ".$player['stam']." and ".$player['prov']." provisions left.*", $icon);
         }
     }
 
+
     //// !pay (alias for losing gold)
-    public function _cmd_pay($cmd, &$player)
-    {
+    public function _cmd_pay($cmd, &$player) {
         if (!is_numeric($cmd[1])) {
             return;
         } else if ($player['gold'] < $cmd[1]) {
-            sendqmsg("* You don't have ".$cmd[1]." gold! *",':interrobang');
+            sendqmsg("* You don't have ".$cmd[1]." gold! *", ':interrobang');
         } else {
             addcommand("gold -".$cmd[1]);
         }
     }
 
+
     //// !buy (alias for get & losing gold)
-    public function _cmd_buy($cmd, &$player)
-    {
+    public function _cmd_buy($cmd, &$player) {
         if ($cmd[2]) {
             $cost = $cmd[2];
         } else {
@@ -285,21 +292,21 @@ class book_ff_basic extends book_none {
         $item = $cmd[1];
 
         if ($player['gold'] < $cost) {
-            sendqmsg("* You don't have $cost gold! *",':interrobang');
+            sendqmsg("* You don't have $cost gold! *", ':interrobang');
         } else if (array_search(strtolower($item), array_map('strtolower', $player['stuff'])) !== false) {
-            sendqmsg("*You already have '".$item."'. Try giving this item a different name.*",':interrobang:');
+            sendqmsg("*You already have '".$item."'. Try giving this item a different name.*", ':interrobang:');
         } else {
             $player['gold'] -= $cost;
             $player['stuff'][] = $item;
-            sendqmsg("*Bought $item for $cost Gold*",':handshake:');
+            sendqmsg("*Bought $item for $cost Gold*", ':handshake:');
         }
     }
 
+
     //// !luckyescape (roll for running away)
-    public function _cmd_luckyescape($cmd, &$player)
-    {
-        $d1 = rand(1,6);
-        $d2 = rand(1,6);
+    public function _cmd_luckyescape($cmd, &$player) {
+        $d1 = rand(1, 6);
+        $d2 = rand(1, 6);
         $e1 = diceemoji($d1);
         $e2 = diceemoji($d2);
         $out = "_Testing luck to negate escape damage!_\n";
@@ -321,12 +328,12 @@ class book_ff_basic extends book_none {
             $icon = ':lightning:';
         }
 
-        sendqmsg($out,$icon);
+        sendqmsg($out, $icon);
     }
 
+
     //// !shield [on/off] - Toggle shield
-    public function _cmd_shield($cmd, &$player)
-    {
+    public function _cmd_shield($cmd, &$player) {
         $state = strtolower($cmd[1]);
         if ($state != 'on' && $state != 'off') {
             $state = ($player['shield']?'off':'on');
@@ -337,14 +344,14 @@ class book_ff_basic extends book_none {
         sendqmsg("*Shield $state*", ':shield:');
     }
 
+
     //// !test <luck/skill/stam> (run a skill test)
-    public function _cmd_test($cmd, &$player)
-    {
+    public function _cmd_test($cmd, &$player) {
         // Prevent restore
         backup_remove();
 
         $stats = $this->getStats();
-        $stat = get_stat_from_alias(strtolower($cmd[1]),$stats);
+        $stat = get_stat_from_alias(strtolower($cmd[1]), $stats);
         $sinfo = &$stats[$stat];
         $dicemod = ($cmd[2]?(int)$cmd[2]:0);
         // Setup outcome pages to read if provided
@@ -366,7 +373,7 @@ class book_ff_basic extends book_none {
 
         // Check for valid test types
         if (!isset($sinfo['testdice'])) {
-            sendqmsg("*Don't know how to test ".$stat."*",':interrobang:');
+            sendqmsg("*Don't know how to test ".$stat."*", ':interrobang:');
             return;
         }
 
@@ -374,10 +381,10 @@ class book_ff_basic extends book_none {
         $roll = 0;
         $emojidice = '';
         for ($a = 0; $a < $sinfo['testdice']; $a++) {
-            $r = rand(1,6);
+            $r = rand(1, 6);
             $roll += $r;
             $emojidice .= diceemoji($r).' ';
-            
+
         }
 
         // Dice modifier
@@ -392,7 +399,7 @@ class book_ff_basic extends book_none {
         if ($roll+$dicemod <= $target) {
             if ($stat == "luck") {
                 $player['luck']--;
-                sendqmsg("_*$youare lucky*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':four_leaf_clover:');
+                sendqmsg("_*$youare lucky*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_", ':four_leaf_clover:');
             } else {
                 if (!isset($sinfo['icons'])) {
                     $icon = ':smile:';
@@ -401,9 +408,9 @@ class book_ff_basic extends book_none {
                 } else {
                     $icon = $sinfo['icons'];
                 }
-                $text = str_replace('{youare}',$youare,$sinfo['testpass']);
-                $text = str_replace('{you}',$you,$text);
-                sendqmsg("_*$text*_\n_(_ $emojidice _ vs $target)_",$icon);
+                $text = str_replace('{youare}', $youare, $sinfo['testpass']);
+                $text = str_replace('{you}', $you, $text);
+                sendqmsg("_*$text*_\n_(_ $emojidice _ vs $target)_", $icon);
             }
             // Show follow up page
             if (isset($success_page)) {
@@ -413,7 +420,7 @@ class book_ff_basic extends book_none {
         else {
             if ($stat == "luck") {
                 $player['luck']--;
-                sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_",':lightning:');
+                sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_", ':lightning:');
             } else {
                 if (!isset($sinfo['icons'])) {
                     $icon = ':frowning:';
@@ -422,9 +429,9 @@ class book_ff_basic extends book_none {
                 } else {
                     $icon = $sinfo['icons'];
                 }
-                $text = str_replace('{youare}',$youare,$sinfo['testfail']);
-                $text = str_replace('{you}',$you,$text);
-                sendqmsg("_*$text*_\n_(_ $emojidice _ vs $target)_",$icon);
+                $text = str_replace('{youare}', $youare, $sinfo['testfail']);
+                $text = str_replace('{you}', $you, $text);
+                sendqmsg("_*$text*_\n_(_ $emojidice _ vs $target)_", $icon);
             }
             // Show follow up page
             if (isset($fail_page)) {
@@ -436,24 +443,24 @@ class book_ff_basic extends book_none {
         unapply_temp_stats($player);
     }
 
+
     //// !fight [name] <skill> <stamina> [maxrounds] (run fight logic)
-    public function _cmd_fight($cmd, &$player)
-    {
+    public function _cmd_fight($cmd, &$player) {
         $out = run_fight(['player' => &$player,
-                          'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
-                          'monsterskill' => $cmd[2],
-                          'monsterstam' => $cmd[3],
-                          'maxrounds' => ($cmd[4]?$cmd[4]:50)
-                          ]);
-        sendqmsg($out,":crossed_swords:");
+                'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
+                'monsterskill' => $cmd[2],
+                'monsterstam' => $cmd[3],
+                'maxrounds' => ($cmd[4]?$cmd[4]:50)
+            ]);
+        sendqmsg($out, ":crossed_swords:");
     }
 
+
     //// !critfight [name] <skill> [who] [critchance] (run crit fight logic)
-    public function _cmd_critfight($cmd, &$player)
-    {
+    public function _cmd_critfight($cmd, &$player) {
         $critsfor = ($cmd[3]?$cmd[3]:'me');
         $critchance = ($cmd[4]?$cmd[4]:2);
-        if (!in_array($critsfor,['both','me'])) {
+        if (!in_array($critsfor, ['both', 'me'])) {
             $critsfor = 'me';
         }
         if (!is_numeric($critchance) || $critchance < 1 || $critchance > 6) {
@@ -462,29 +469,29 @@ class book_ff_basic extends book_none {
 
         $out = "_*You".($critsfor == 'both'?' both':'')." have to hit critical strikes!* ($critchance in 6 chance)_\n";
         $out = run_fight(['player' => &$player,
-                          'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
-                          'monsterskill' => $cmd[2],
-                          'critsfor' => $critsfor,
-                          'critchance' => $critchance]);
-        sendqmsg($out,":crossed_swords:");
+                'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
+                'monsterskill' => $cmd[2],
+                'critsfor' => $critsfor,
+                'critchance' => $critchance]);
+        sendqmsg($out, ":crossed_swords:");
     }
+
 
     //// !bonusfight [name] <skill> <stamina> <bonusdamage> [bonusdmgchance] (run bonus attack fight logic)
-    public function _cmd_bonusfight($cmd, &$player)
-    {
+    public function _cmd_bonusfight($cmd, &$player) {
         $out = run_fight(['player' => &$player,
-                          'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
-                          'monsterskill' => $cmd[2],
-                          'monsterstam' => $cmd[3],
-                          'bonusdmg' => $cmd[4],
-                          'bonusdmgchance' => ($cmd[5]?$cmd[5]:3)
-                          ]);
-        sendqmsg($out,":crossed_swords:");
+                'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
+                'monsterskill' => $cmd[2],
+                'monsterstam' => $cmd[3],
+                'bonusdmg' => $cmd[4],
+                'bonusdmgchance' => ($cmd[5]?$cmd[5]:3)
+            ]);
+        sendqmsg($out, ":crossed_swords:");
     }
 
-    //// !vs <name 1> <skill 1> <stamina 1> <name 2> <skill 2> <stamina 2> 
-    public function _cmd_vs($cmd, &$player)
-    {
+
+    //// !vs <name 1> <skill 1> <stamina 1> <name 2> <skill 2> <stamina 2>
+    public function _cmd_vs($cmd, &$player) {
         $vsplayer = array(
             'name' => $cmd[1],
             'referrers' => ['you' => $cmd[1], 'youare' => $cmd[1].' is', 'your' => $cmd[1]."'s"],
@@ -496,16 +503,16 @@ class book_ff_basic extends book_none {
             'temp' => []
         );
         $out = run_fight(['player' => &$vsplayer,
-                          'monstername' => $cmd[4],
-                          'monsterskill' => $cmd[5],
-                          'monsterstam' => $cmd[6]
-                          ]);
-        sendqmsg($out,":crossed_swords:");
+                'monstername' => $cmd[4],
+                'monsterskill' => $cmd[5],
+                'monsterstam' => $cmd[6]
+            ]);
+        sendqmsg($out, ":crossed_swords:");
     }
 
+
     //// !fighttwo <name 1> <skill 1> <stamina 1> [<name 2> <skill 2> <stamina 2>]
-    public function _cmd_fighttwo($cmd, &$player)
-    {
+    public function _cmd_fighttwo($cmd, &$player) {
         // Set monster 1
         $m = $cmd[1];
         $mskill = $cmd[2];
@@ -529,20 +536,20 @@ class book_ff_basic extends book_none {
         }
 
         $out = run_fight(['player' => &$player,
-                          'monstername' => $m,
-                          'monsterskill' => $mskill,
-                          'monsterstam' => $mstam,
-                          'monster2name' => $m2,
-                          'monster2skill' => $mskill2]);
+                'monstername' => $m,
+                'monsterskill' => $mskill,
+                'monsterstam' => $mstam,
+                'monster2name' => $m2,
+                'monster2skill' => $mskill2]);
         if ($player['stam'] > 0) {
             addcommand("fight $m2 $mskill2 $mstam2");
         }
-        sendqmsg($out,":crossed_swords:");
+        sendqmsg($out, ":crossed_swords:");
     }
 
+
     //// !fightbackup [name 1] <skill 1> <stamina 1> [backup's name] <backup's skill>
-    public function _cmd_fightbackup($cmd, &$player)
-    {
+    public function _cmd_fightbackup($cmd, &$player) {
         // Set monster
         $m = ($cmd[1]?$cmd[1]:'Opponent');
         $mskill = $cmd[2];
@@ -553,52 +560,54 @@ class book_ff_basic extends book_none {
         $backupskill = $cmd[5];
 
         $out = run_fight(['player' => &$player,
-                          'monstername' => $m,
-                          'monsterskill' => $mskill,
-                          'monsterstam' => $mstam,
-                          'backupname' => $backupname,
-                          'backupskill' => $backupskill]);
-        sendqmsg($out,":crossed_swords:");
+                'monstername' => $m,
+                'monsterskill' => $mskill,
+                'monsterstam' => $mstam,
+                'backupname' => $backupname,
+                'backupskill' => $backupskill]);
+        sendqmsg($out, ":crossed_swords:");
     }
 
+
     //// !attack <skill>
-    public function _cmd_attack($cmd, &$player)
-    {
+    public function _cmd_attack($cmd, &$player) {
         $dmg = ($cmd[2]?$cmd[2]:0);
         $out = run_single_attack($player, 'Opponent', $cmd[1], 999, $dmg, 0);
 
-        sendqmsg($out,":crossed_swords:");
+        sendqmsg($out, ":crossed_swords:");
     }
 
+
     //// !dead - Kill your character.
-    public function _cmd_dead($cmd, &$player)
-    {
+    public function _cmd_dead($cmd, &$player) {
         $player['stam'] = 0;
     }
 
+
     //// !phaser/gun [-/+modifier] [stun/kill] [name] <skill> [stun/kill] [maxrounds] (run phaser fight logic)
-    public function _cmd_phaser($cmd, &$player)
-    {
+    public function _cmd_phaser($cmd, &$player) {
         $out = run_phaser_fight(['player' => &$player,
-                                 'modifier' => ($cmd[1]?$cmd[1]:0),
-                                 'stunkill' => ($cmd[2]?$cmd[2]:'stun'),
-                                 'monstername' => ($cmd[3]?$cmd[3]:"Opponent"),
-                                 'monsterskill' => $cmd[4],
-                                 'mstunkill' => ($cmd[5]?$cmd[5]:'kill'),
-                                 'maxrounds' => ($cmd[6]?$cmd[6]:50)
-                                 ]);
-        sendqmsg($out,":gun:");
+                'modifier' => ($cmd[1]?$cmd[1]:0),
+                'stunkill' => ($cmd[2]?$cmd[2]:'stun'),
+                'monstername' => ($cmd[3]?$cmd[3]:"Opponent"),
+                'monsterskill' => $cmd[4],
+                'mstunkill' => ($cmd[5]?$cmd[5]:'kill'),
+                'maxrounds' => ($cmd[6]?$cmd[6]:50)
+            ]);
+        sendqmsg($out, ":gun:");
     }
 
+
     //// !π - Easter egg
-    public function _cmd_easteregg($cmd, &$player)
-    {
+    public function _cmd_easteregg($cmd, &$player) {
         $eggs = file('resources/easter_eggs.txt');
         $fullcmd = trim($eggs[array_rand($eggs)]);
 
-        $cmdlist = explode(";",$fullcmd);
+        $cmdlist = explode(";", $fullcmd);
         for ($k = count($cmdlist)-1; $k >= 0; $k--) {
             addcommand($cmdlist[$k]);
         }
     }
+
+
 }

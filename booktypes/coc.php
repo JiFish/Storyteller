@@ -1,18 +1,20 @@
 <?php
 
-require_once('ff_magic.php');
+require_once 'ff_magic.php';
 
 class book_coc extends book_ff_magic {
     public function getId() {
         return 'coc';
     }
 
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name,$gender,$emoji,$race,$adjective,$seed);
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         // Starting Equipment
-        $p['stuff'] = array('Sword (+0)','Leather Armor','Lantern');
+        $p['stuff'] = array('Sword (+0)', 'Leather Armor', 'Lantern');
         return $p;
     }
+
 
     protected function getSpells() {
         $spells = parent::getSpells();
@@ -22,8 +24,8 @@ class book_coc extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell will allow you to conjure up an exact duplicate of any creature you are fighting. The duplicate will have the same skill and stamina scores, and the same powers, as its orginal. But the duplicate will be under the control of your will and you may, for example, instruct it to attack the orginal creature and then sit back and watch the battle!',
-            'func' => function(&$player,$name,$skill,$stam) {
-                sendqmsg("> A duplicate of the $name appears!",':fireworks:');
+            'func' => function(&$player, $name, $skill, $stam) {
+                sendqmsg("> A duplicate of the $name appears!", ':fireworks:');
                 addcommand("vs $name Duplicate $skill $stam $name $skill $stam");
             }
         );
@@ -101,4 +103,6 @@ class book_coc extends book_ff_magic {
         );
         return $spells;
     }
+
+
 }
