@@ -174,8 +174,8 @@ function getbook() {
 function load($file = 'save.txt') {
     $save = file_get_contents($file);
     if (!$save) {
-        require_once 'logic/roll_character.php';
-        $p = roll_character();
+        global $gamebook;
+        $p = $gamebook->rollCharacter();
     } else {
         $p = unserialize($save);
     }
