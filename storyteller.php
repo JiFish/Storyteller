@@ -1,13 +1,9 @@
 <?php
 
 require_once('config.php');
-require_once('logic/commands.php');
 require_once('logic/functions.php');
 require_once('logic/slack.php');
 require_once('logic/fight_logic.php');
-if (gamebook_is_sonic()) {
-    require_once('logic/sonic_gamebooks.php');
-}
 
 // Check the incoming data for the secret slack token
 if ($_POST['token'] != SLACK_TOKEN) {
@@ -15,8 +11,22 @@ if ($_POST['token'] != SLACK_TOKEN) {
     die('Access Denied. Token does not match');
 }
 
+// Gamebook Object
+require_once('booktypes/'.getbook().'.php');
+$bookclass = 'Book_'.getbook();
+$gamebook = new $bookclass;
+$gamebook->registerCommands();
+// Stats commands
+foreach($gamebook->getStats() as $s => $val) {
+    register_command($s, '_cmd_stat_adjust',['os','nm']);
+    if (isset($val['alias'])) {
+        foreach($val['alias'] as $a) {
+            register_command($a, '_cmd_stat_adjust',['os','nm']);
+        }
+    }
+}
+
 $player = load();
-register_commands($player);
 
 // Split the command list by semi-colons. Allows multiple commands to be queued
 // Note, some commands will queue other commands
@@ -45,7 +55,7 @@ while (sizeof($commandlist) > 0)
 
     // If stamina ever drops to less than 1, the player if dead
     // Stop processing any queued commands and tell the player they are dead
-    if ($player['stam'] < 1) {
+    if ($gamebook->isDead($player)) {
         if (isset($player['referrers'])) {
             sendqmsg("_*".$player['referrers']['youare']." dead.*_ :skull:",":skull:");
         } else {

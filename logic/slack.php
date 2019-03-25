@@ -118,11 +118,13 @@ function discordize(&$data) {
     $data['text'] = str_replace('> ','',$data['text']);
     if (isset($data['attachments'])) {
         foreach ($data['attachments'] as $akey => $aval) {
-            foreach ($aval['fields'] as $fkey => $fval) {
-                if ($fval['title']) {
-                    $data['attachments'][$akey]['fields'][$fkey]['title'] = '**'.$data['attachments'][$akey]['fields'][$fkey]['title'].'**';
+            if (isset($aval['fields'])) {
+                foreach ($aval['fields'] as $fkey => $fval) {
+                    if ($fval['title']) {
+                        $data['attachments'][$akey]['fields'][$fkey]['title'] = '**'.$data['attachments'][$akey]['fields'][$fkey]['title'].'**';
+                    }
+                    $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace(['*','~'],['**','~~'],$data['attachments'][$akey]['fields'][$fkey]['value']);
                 }
-                $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace(['*','~'],['**','~~'],$data['attachments'][$akey]['fields'][$fkey]['value']);
             }
         }
     }

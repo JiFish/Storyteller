@@ -6,7 +6,7 @@
 // Process command text and call command's function
 function processcommand($command, &$player)
 {
-    global $commandslist, $commandsargs;
+    global $commandslist, $commandsargs, $gamebook;
 
     $command = pre_processes_magic($command, $player);
 
@@ -29,7 +29,7 @@ function processcommand($command, &$player)
         if (!$cmd) {
             sendqmsg("Sorry, I didn't understand that command!",":interrobang:");
         } else {
-            call_user_func_array($commandslist[$cmd[0]],array($cmd,&$player));
+            call_user_func_array([$gamebook,$commandslist[$cmd[0]]],array($cmd,&$player));
         }
     }
 }
@@ -130,15 +130,6 @@ function advanced_command_split($command,$def)
             case 'nm':  //number modifier
                 $regex .= "\s+([+\-]?[0-9]+)";
                 break;
-            case 'spell': //spell name
-                require('logic/spells.php');
-                $regex .= "\s+(";
-                foreach ($spells as $s) {
-                    $regex .= preg_quote($s['name']).'|';
-                }
-                $regex = substr($regex,0,-1);
-                $regex .= ")";
-                break;
             default:  //misc
                 $regex .= $d;
                 break;
@@ -171,52 +162,10 @@ function register_command($name, $function, $args = [])
     $commandsargs[$name] = $args;
 }
 
-/// register new command
-function unregister_commands($names)
-{
-    global $commandslist, $commandsargs;
-
-    if (!is_array($names)) {
-        $names = array($names);
-    }
-
-    foreach ($names as $name) {
-        unset($commandslist[$name]);
-        unset($commandsargs[$name]);
-    }
-}
-
 // Figure out what rules we are running
 function getbook()
 {
-    if (defined("BOOK_TYPE_FILTERED")) {
-        return BOOK_TYPE_FILTERED;
-    }
-
-    if (!defined("BOOK_TYPE")) {
-        define("BOOK_TYPE_FILTERED", 'none');
-    } else {
-        $supported_books = array('none','wofm','dotd','coh','poe','bvp','rtfm',
-                                 'loz','tot','hoh','sob','sst','coc','ss','rp','bb',
-                                 'sonic','sonicmcm','soniczr');
-        if (!in_array(BOOK_TYPE, $supported_books)) {
-            define("BOOK_TYPE_FILTERED", 'none');
-        } else {
-            define("BOOK_TYPE_FILTERED", BOOK_TYPE);
-        }
-    }
-
-    return BOOK_TYPE_FILTERED;
-}
-
-function gamebook_is_sonic()
-{
-    if (defined("BOOK_TYPE_IS_SONIC")) {
-        return BOOK_TYPE_IS_SONIC;
-    }
-    $sonic_books = ['sonic','sonicmcm','soniczr'];
-    define("BOOK_TYPE_IS_SONIC", in_array(getbook(), $sonic_books));
-    return BOOK_TYPE_IS_SONIC;
+    return BOOK_TYPE;
 }
 
 // Load the player array from a serialized array
@@ -261,276 +210,6 @@ function addcommand($cmd)
 
 /// ----------------------------------------------------------------------------
 /// Send message to slack functions
-
-// Convert the player array to a character sheet and send it to slack
-// along with message $text
-function send_charsheet($player, $text = "", $sendstuff = false)
-{
-    $gamebook = getbook();
-    // Special case for sonic
-    if (gamebook_is_sonic()) {
-        return send_charsheet_sonic($player, $text, $sendstuff);
-    }
-
-    $attachments = array([
-        'color'    => $player['colourhex'],
-        'fields'   => array(
-        [
-            'title' => 'Skill',
-            'value' => $player['skill']." / ".$player['max']['skill'],
-            'short' => true
-        ],
-        [
-            'title' => 'Stamina (stam)',
-            'value' => $player['stam']." / ".$player['max']['stam'],
-            'short' => true
-        ],
-        [
-            'title' => 'Luck',
-            'value' => $player['luck']." / ".$player['max']['luck'],
-            'short' => true
-        ],
-        [
-            'title' => 'Weapon Bonus (weapon)',
-            'value' => sprintf("%+d",$player['weapon']),
-            'short' => true
-        ],
-        [
-            'title' => 'Gold',
-            'value' => $player['gold'],
-            'short' => true
-        ],
-        [
-            'title' => 'Provisions (prov)',
-            'value' => $player['prov'],
-            'short' => true
-        ])
-    ]);
-
-    if (isset($player['max']['magic'])) {
-        array_splice($attachments[0]['fields'], 3, 0,
-            array([
-                'title' => 'Magic',
-                'value' => $player['magic']." / ".$player['max']['magic'],
-                'short' => true
-            ])
-        );
-    }
-
-    if ($gamebook == 'rtfm') {
-        $attachments[0]['fields'][3] = array (
-            'title' => 'Weapon: '.sprintf("%+d",$player['weapon']),
-            'value' => '*Provisions: '.$player['prov'].'*',
-            'short' => true
-        );
-        $attachments[0]['fields'][5] = array (
-            'title' => 'Gold Zagors (gz)',
-            'value' => $player['goldzagors'],
-            'short' => true
-        );
-    }
-
-    if ($gamebook == 'loz') {
-        $attachments[0]['fields'] = array_merge($attachments[0]['fields'],
-        array([
-                'title' => 'Talismans: '.$player['talismans'],
-                'value' => '*Daggers: '.$player['daggers'].'*',
-                'short' => true
-            ],[
-                'title' => 'Advantages',
-                'value' => $player['advantages'],
-                'short' => false
-            ],[
-                'title' => 'Disadvantages',
-                'value' => $player['disadvantages'],
-                'short' => false
-            ])
-        );
-    }
-
-    if ($gamebook == 'hoh') {
-        $attachments[0]['fields'][4] = array (
-            'title' => 'Fear',
-            'value' => $player['fear']." / ".$player['max']['fear'],
-            'short' => true
-        );
-        unset($attachments[0]['fields'][5]);
-    }
-
-    if ($gamebook == 'bb') {
-        $attachments[0]['fields'][3] = array (
-            'title' => 'Weapon: '.sprintf("%+d",$player['weapon']),
-            'value' => '*Provisions: '.$player['prov'].'*',
-            'short' => true
-        );
-        $attachments[0]['fields'][5] = array (
-            'title' => 'Time',
-            'value' => $player['time'],
-            'short' => true
-        );
-    }
-
-    // Sea of Blood Ship Stats
-    if ($gamebook == 'sob') {
-        // QOL for discord with 3 per row instead of two
-        if (DISCORD_MODE) {
-            $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d",$player['weapon']).')';
-            unset($attachments[0]['fields'][3]);
-        }
-        unset($attachments[0]['fields'][4]);
-        unset($attachments[0]['fields'][5]);
-        $attachments[] = [
-            'color'    => '#8b4513',
-            'fields'   => array(
-            [
-                'title' => 'Ship Name',
-                'value' => $player['shipname'],
-                'short' => true
-            ],
-            [
-                'title' => 'Crew Strike (strike)',
-                'value' => $player['strike']." / ".$player['max']['strike'],
-                'short' => true
-            ],
-            [
-                'title' => 'Crew Strength (str)',
-                'value' => $player['str']." / ".$player['max']['str'],
-                'short' => true
-            ],
-            [
-                'title' => 'Booty (Gold)',
-                'value' => $player['gold'],
-                'short' => true
-            ],
-            [
-                'title' => 'Slaves',
-                'value' => $player['slaves'],
-                'short' => true
-            ],
-            [
-                'title' => 'Log',
-                'value' => $player['log'].' days',
-                'short' => true
-            ])
-        ];
-    }
-
-    // starship traveller crew & ship
-    if ($gamebook == 'sst') {
-        // ship
-        $attachments[0]['fields'][3] = [
-            'title' => 'Ship',
-            'value' => $player['shipname'],
-            'short' => true
-        ];
-        $attachments[0]['fields'][4] = [
-            'title' => 'Weapons (weapons)',
-            'value' => $player['weapons']." / ".$player['max']['weapons'],
-            'short' => true
-        ];
-        $attachments[0]['fields'][5] = [
-            'title' => 'Shields',
-            'value' => $player['shields']." / ".$player['max']['shields'],
-            'short' => true
-        ];
-        $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d",$player['weapon']).')';
-        // crew
-        $cname = "";
-        $cskill = "";
-        $cstam = "";
-        $cboth = "";
-        foreach ($player['crew'] as $cm) {
-            $thisname = '*'.($cm['awayteam']?' *⇓*':'').$cm['position'].':* '.$cm['name']." ".($cm['gender']=='Male'?'♂':'♀')." ".$cm['race'];
-            $cname .= mb_substr($thisname, 0, 36)."\n";
-            $cskill .= $cm['skill'].' / '.$cm['max']['skill'].($cm['combatpenalty']?' *†*':'')."\n";
-            $cstam .= $cm['stam'].' / '.$cm['max']['stam'].($cm['replacement']?' *R*':'')."\n";
-            $cboth .= 'SKILL: '.$cm['skill'].' / '.$cm['max']['skill'].' | STAMINA: '.$cm['stam'].' / '.$cm['max']['stam'].($cm['combatpenalty']?' *†*':'').($cm['replacement']?' *R*':'')."\n";
-        }
-        $fields = array([ 'title' => 'Crew (⇓: away team)',
-                          'value' => $cname,
-                          'short' => true ]);
-        // Discord QOL
-        if (DISCORD_MODE) {
-            $fields[] = ['title' => 'Skill (†: -2 in combat)',
-                         'value' => $cskill,
-                         'short' => true ];
-            $fields[] = ['title' => 'Stamina (R: Replaced)',
-                         'value' => $cstam,
-                         'short' => true ];
-        } else {
-            $fields[] = ['title' => 'Stats (†: -2 in combat, R: Replaced)',
-                         'value' => $cboth,
-                         'short' => true ];
-        }
-        $attachments[] = [
-            'color'    => '#BB0000',
-            'fields'   => $fields ];
-    }
-
-    if ($gamebook == 'rp') {
-        $attachments[0]['fields'][4]['title'] = 'Credits';
-        unset($attachments[0]['fields'][5]);
-    }
-
-    if ($sendstuff) {
-        $attachments[] = get_stuff_attachment($player);
-    }
-
-    if ($player['stam'] < 1) {
-        $icon = ":skull:";
-    } else {
-        $icon = $player['emoji'];
-    }
-
-    sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_",$attachments,$icon);
-}
-
-// Send to slack a list of the player's stuff (inventory)
-function send_stuff($player)
-{
-    $attachments[] = get_stuff_attachment($player);
-
-    if ($player['stam'] < 1) {
-        $icon = ":skull:";
-    } else {
-        $icon = $player['emoji'];
-    }
-
-    sendmsg("",$attachments,$icon);
-}
-
-function get_stuff_attachment(&$player) {
-    $s = $player['stuff'];
-
-    // Special inventory
-    if (isset($player['shield']) && $player['shield']) {
-        $s[] .= 'Shield *(Equipped)*';
-    }
-
-    if (sizeof($s) == 0) {
-        $s[] = "(Nothing!)";
-    } else {
-        natcasesort($s);
-        $s = array_map("ucfirst",$s);
-    }
-
-    $attachments = array(
-            'color'    => '#666666',
-            'fields'   => array(
-            [
-                'title' => 'Inventory',
-                'value' => implode("\n",array_slice($s, 0, ceil(sizeof($s) / 2))),
-                'short' => true
-            ],
-            [
-                'title' => html_entity_decode("&nbsp;"),
-                'value' => implode("\n",array_slice($s, ceil(sizeof($s) / 2))),
-                'short' => true
-            ])
-    );
-
-    return $attachments;
-}
 
 function format_story($page, $text, &$player) {
     require("book.php");
@@ -681,4 +360,23 @@ function filter_command_list(&$disabledcommands, &$commandlist) {
             }
         }
     }
+}
+
+function get_stat_from_alias($input, $stats) {
+    foreach($stats as $s => $val) {
+        if ($s == $input) {
+            $thisstat = $s;
+            break;
+        }
+        if (isset($val['alias'])) {
+            foreach($val['alias'] as $a) {
+                if ($a == $input) {
+                    $thisstat = $s;
+                    break;
+                }
+            }
+        }
+    }
+
+    return $thisstat;
 }
