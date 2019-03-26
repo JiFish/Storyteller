@@ -8,6 +8,14 @@ class book_sst extends book_ff_basic {
     }
 
 
+    public function storyModify($story, &$player) {
+        $story = parent::storyModify($story, $player);
+        $story = str_ireplace('The Traveller', $player['shipname'], $story);
+        $story = str_ireplace('Starship Traveller', 'Starship '.substr($player['shipname'], 4), $story);
+        return $story;
+    }
+
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         if (!$race || $race == '?') {

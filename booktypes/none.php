@@ -19,6 +19,11 @@ class book_none {
     }
 
 
+    public function storyModify($story, &$player) {
+        return $story;
+    }
+
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
         $p = array('lastpage' => 1,
             'stuff' => [],

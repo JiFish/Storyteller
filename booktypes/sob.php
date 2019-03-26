@@ -8,6 +8,13 @@ class book_sob extends book_ff_basic {
     }
 
 
+    public function storyModify($story, &$player) {
+        $story = parent::storyModify($story, $player);
+        $story = str_ireplace('The Banshee', $player['shipname'], $story);
+        return $story;
+    }
+
+
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
         $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective, $seed);
         $p['race'] = 'Pirate';

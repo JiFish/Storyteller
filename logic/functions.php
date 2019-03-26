@@ -216,19 +216,13 @@ function format_story($page, $text, &$player) {
     require "book.php";
 
     // Book specific specials
-    $gamebook = getbook();
-    if ($gamebook == 'sob') {
-        $text = str_ireplace('The Banshee', $player['shipname'], $text);
-    }
-    if ($gamebook == 'sst') {
-        $text = str_ireplace('The Traveller', $player['shipname'], $text);
-        $text = str_ireplace('Starship Traveller', 'Starship '.substr($player['shipname'], 4), $text);
-    }
+    global $gamebook;
+    echo $gamebook->getId();
+    $story = $gamebook->storyModify($text, $player);
 
     // Look for choices in the text and give them bold formatting
-    $story = preg_replace('/\(?turn(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $text);
+    $story = preg_replace('/\(?turn(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $story);
     $story = preg_replace('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', '*${0}*', $story);
-    $story = preg_replace('/((Add|Subject|Deduct|Regain|Gain|Lose) )?([1-9] (points? )?from your (SKILL|LUCK|STAMINA)|([1-9] )?(SKILL|LUCK|STAMINA) points?|your (SKILL|LUCK|STAMINA))/', '*${0}*', $story);
 
     // Wrapping and formatting
     $story = str_replace("\n", "\n\n", $story);
