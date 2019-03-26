@@ -18,7 +18,7 @@ function processcommand($command, &$player) {
     if (is_numeric($cmd[0])) {
         $cmd[1] = $cmd[0];
         $cmd[0] = 'page';
-        _cmd_page($cmd, $player);
+        $gamebook->_cmd_page($cmd, $player);
         return;
     }
 
