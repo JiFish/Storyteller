@@ -2,17 +2,19 @@
 
 require_once 'ff_basic.php';
 
-class book_poe extends book_ff_basic {
+class book_ff_bvp extends book_ff_basic {
     public function getId() {
-        return 'poe';
+        return 'ff_bvp';
     }
 
 
     public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
-        // Starting Equipment
-        $p['stuff'] = array('Sword (+0)', 'Leather Armor', 'Lantern');
-        $p['prov'] = 2;
+        // All stats start at 1
+        $p['creationdice'] = array();
+        $p['stam'] = $p['max']['stam'] = 1;
+        $p['skill'] = $p['max']['skill'] = 1;
+        $p['luck'] = $p['max']['luck'] = 1;
         return $p;
     }
 

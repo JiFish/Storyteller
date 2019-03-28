@@ -2,9 +2,9 @@
 
 require_once 'ff_basic.php';
 
-class book_hoh extends book_ff_basic {
+class book_ff_hoh extends book_ff_basic {
     public function getId() {
-        return 'hoh';
+        return 'ff_hoh';
     }
 
 

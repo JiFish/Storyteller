@@ -2,9 +2,9 @@
 
 require_once 'sonic.php';
 
-class book_soniczr extends book_sonic {
+class book_sonic_zr extends book_sonic {
     public function getId() {
-        return 'soniczr';
+        return 'sonic_zr';
     }
 
 
