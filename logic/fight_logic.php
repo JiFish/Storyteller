@@ -23,12 +23,12 @@ function run_fight($input) {
     $gamebook = getbook();
 
     // Special case for Starship Traveller Macommonian
-    if ($gamebook == 'sst' && $player['race'] == 'Macommonian') {
+    if ($gamebook == 'ff_sst' && $player['race'] == 'Macommonian') {
         $fasthands = true;
     }
 
     // Special case for rebel planet: players ALWAYS have critchance 1/6
-    if ($gamebook = 'rp') {
+    if ($gamebook = 'ff_rp') {
         if ($critsfor == 'them') {
             $crtisfor = 'both';
         } elseif ($critsfor != 'both') {
@@ -82,7 +82,7 @@ function run_fight($input) {
         $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
 
         // Special case for Creature of Havok instant kills
-        if ($gamebook == 'coh' && $proll == $proll2) {
+        if ($gamebook == 'ff_coh' && $proll == $proll2) {
             $out .= "_*Instant Kill*_ $pemoji\n";
             $mstam = 0;
             break;
@@ -98,7 +98,7 @@ function run_fight($input) {
             } else {
                 $pemoji .= " / ~".diceemoji($fhroll).diceemoji($fhroll2)."~";
             }
-            if ($round >= 3 && !($gamebook == 'sst' && $player['race'] == 'Macommonian')) {
+            if ($round >= 3 && !($gamebook == 'ff_sst' && $player['race'] == 'Macommonian')) {
                 $fasthands = false;
             }
         }
