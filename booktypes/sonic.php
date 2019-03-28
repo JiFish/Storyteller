@@ -1,8 +1,8 @@
 <?php
 
-require_once 'none.php';
+require_once 'character.php';
 
-class book_sonic extends book_none {
+class book_sonic extends book_character {
     public function getId() {
         return 'sonic';
     }

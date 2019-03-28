@@ -1,8 +1,5 @@
 <?php
 
-require_once 'logic/RandomColor.php';
-require_once 'logic/dice.php';
-
 class book_none {
     protected $player = null;
 
@@ -17,11 +14,6 @@ class book_none {
     }
 
 
-    public function getStats() {
-        return [];
-    }
-
-
     public function isDead() {
         return false;
     }
@@ -32,101 +24,8 @@ class book_none {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = array('lastpage' => 1,
-            'stuff' => [],
-            'creationdice' => [],
-            'temp' => [],
-            'seed' => $seed);
-        // Roll/Set stats!
-        roll_stats($p, $this->getStats());
-        // Character Fluff - Gender, name, race etc.
-        if (!$gender || $gender == '?') {
-            $gender = (rand(0, 1)?'Male':'Female');
-            if (rand(0, 99) == 0) {
-                $gender = array('Agender', 'Androgynous', 'Gender neutral', 'Genderfluid',
-                    'Genderless', 'Non-binary', 'Transgender')[rand(0, 6)];
-            }
-        } elseif ($gender == 'm' || $gender == 'M') {
-            $gender = 'Male';
-        } elseif ($gender == 'f' || $gender == 'F') {
-            $gender = 'Female';
-        }
-        $p['gender'] = ucfirst(strtolower($gender));
-        $p['race'] = 'Human';
-        // Name and adjective
-        if (!$name || $name == '?') {
-            if ($gender=='Male') {
-                $namesfile = 'resources/male_names.txt';
-            } else {
-                $namesfile = 'resources/female_names.txt';
-            }
-            $names = file($namesfile);
-            $p['name'] = trim($names[array_rand($names)]);
-        } else {
-            $p['name'] = ucfirst($name);
-        }
-        // Adjective
-        if (!$adjective || $adjective == '?') {
-            $adjectives = file('resources/adjectives.txt');
-            $p['adjective'] = ucfirst(trim($adjectives[array_rand($adjectives)]));
-        } else {
-            $p['adjective'] = ucfirst($adjective);
-        }
-        // Determine emoji
-        if (!$emoji || $emoji == '?') {
-            $skintone = array(':skin-tone-2:', ':skin-tone-3:', ':skin-tone-4:', ':skin-tone-5:', ':skin-tone-2:');
-            if ($gender == 'Male') {
-                $emojilist = array(':man:', ':blond-haired-man:', ':older_man:');
-            } elseif ($gender == 'Female') {
-                $emojilist = array(':woman:', ':blond-haired-woman:', ':older_woman:');
-            } else {
-                $emojilist = array(':adult:', ':person_with_blond_hair:', ':older_adult:');
-            }
-            $p['emoji'] = $emojilist[array_rand($emojilist)].$skintone[array_rand($skintone)];
-        } else {
-            $p['emoji'] = $emoji;
-        }
-        // Random Colour
-        $p['colourhex'] = \Colors\RandomColor::one();
-
-        return $p;
-    }
-
-
-    // In Slack format
-    protected function getCharcterSheetAttachments() {
-        return [];
-    }
-
-
-    // In Slack format
-    protected function getStuffAttachment() {
-        $s = $this->player['stuff'];
-
-        if (sizeof($s) == 0) {
-            $s[] = "(Nothing!)";
-        } else {
-            natcasesort($s);
-            $s = array_map("ucfirst", $s);
-        }
-
-        $attachments = array(
-            'color'    => '#666666',
-            'fields'   => array(
-                [
-                    'title' => 'Inventory',
-                    'value' => implode("\n", array_slice($s, 0, ceil(sizeof($s) / 2))),
-                    'short' => true
-                ],
-                [
-                    'title' => html_entity_decode("&nbsp;"),
-                    'value' => implode("\n", array_slice($s, ceil(sizeof($s) / 2))),
-                    'short' => true
-                ])
-        );
-
-        return $attachments;
+    public function newCharacter() {
+        return array('lastpage' => 1);
     }
 
 
@@ -134,14 +33,7 @@ class book_none {
         register_command('look',       '_cmd_look');
         register_command('page',       '_cmd_page', ['n', 'os']);
         register_command('background', '_cmd_background');
-        register_command('get',        '_cmd_get', ['l']);
-        register_command('take',       '_cmd_get', ['l']);
-        register_command('drop',       '_cmd_drop', ['l']);
-        register_command('lose',       '_cmd_drop', ['l']);
-        register_command('use',        '_cmd_drop', ['l']);
         register_command('roll',       '_cmd_roll', ['on']);
-        register_command('ng',         '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl', 'on']);
-        register_command('newgame',    '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl', 'on']);
         register_command('help',       '_cmd_help');
         register_command('?',          '_cmd_help');
         register_command('echo',       '_cmd_echo', ['l']);
@@ -152,30 +44,7 @@ class book_none {
         register_command('macro',      '_cmd_macro', ['n']);
         register_command('m',          '_cmd_macro', ['n']);
         register_command('undo',       '_cmd_undo');
-        register_command('save',       '_cmd_save', ['on']);
-        register_command('load',       '_cmd_load', ['on']);
-        register_command('clearslots', '_cmd_clearslots', ['osl']);
         register_command('map',        '_cmd_map');
-        register_command('info',       '_cmd_info');
-        register_command('status',     '_cmd_info');
-        register_command('stats',      '_cmd_stats');
-        register_command('s',          '_cmd_stats');
-        register_command('stuff',      '_cmd_stuff');
-        register_command('i',          '_cmd_stuff');
-    }
-
-
-    //// !newgame (roll new character)
-    function _cmd_newgame($cmd) {
-        $player = &$this->player;
-        $cmd = array_pad($cmd, 7, '?');
-        $player = $this->rollCharacter($cmd[1], $cmd[2], $cmd[3], $cmd[4], $cmd[5], $cmd[6]);
-
-        $icon = $player['emoji'];
-        $attach = $this->getCharcterSheetAttachments();
-        $attach[] = $this->getStuffAttachment();
-
-        sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n*".$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
     }
 
 
@@ -253,67 +122,6 @@ class book_none {
         require "book.php";
         $story = format_story(0, $book[0], $this->player);
         senddirmsg($story);
-    }
-
-
-    //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_get($cmd) {
-        $player = &$this->player;
-        $item = $cmd[1];
-
-        // Prevent duplicate entries
-        if (array_search(strtolower($item), array_map('strtolower', $player['stuff'])) !== false) {
-            sendqmsg("*You already have '".$item."'. Try giving this item a different name.*", ':interrobang:');
-            return;
-        }
-
-        // Otherwise just append it to the stuff array
-        $player['stuff'][] = $item;
-        sendqmsg("*Got the ".$item."!*", ":school_satchel:");
-    }
-
-
-    //// !drop / !lose / !use
-    public function _cmd_drop($cmd) {
-        $player = &$this->player;
-        $drop = strtolower($cmd[1]);
-
-        // lazy item search
-        $foundkey = null;
-        $foundlist = array();
-        foreach ($player['stuff'] as $k => $i) {
-            // An exact match always drops
-            if ($drop == strtolower($i)) {
-                $foundkey = $k;
-                $foundlist = array($i);
-                break;
-            }
-            // otherwise look for partial matches
-            elseif (strpos(strtolower($i), $drop) !== false) {
-                $foundkey = $k;
-                $foundlist[] = $i;
-            }
-        }
-
-        if (sizeof($foundlist) < 1) {
-            sendqmsg("*'".$drop."' didn't match anything in inventory. Can't ".strtolower($cmd[0]).".*", ':interrobang:');
-        } elseif (sizeof($foundlist) > 1) {
-            sendqmsg("*Which did you want to ".$cmd[0]."? ".implode(", ", $foundlist)."*", ':interrobang:');
-        } else {
-            $i = $player['stuff'][$foundkey];
-            unset($player['stuff'][$foundkey]);
-            switch ($cmd[0]) {
-            case 'lose':
-                sendqmsg("*Lost the ".$i."!*");
-                break;
-            case 'drop':
-                sendqmsg("*Dropped the ".$i."!*", ":put_litter_in_its_place:");
-                break;
-            case 'use':
-                sendqmsg("*Used the ".$i."!*");
-                break;
-            }
-        }
     }
 
 
@@ -424,8 +232,7 @@ class book_none {
 
     //// !help (send basic help)
     public function _cmd_help($cmd) {
-        $help = file_get_contents('resources/help.txt');
-        // Replace "!" with whatever the trigger word is
+        $help = "Type `![page]` to turn to a page or section. e.g. `!42`";
         $help = str_replace("!", $_POST['trigger_word'], $help);
         sendqmsg($help);
     }
@@ -534,66 +341,6 @@ class book_none {
     }
 
 
-    //// !undo - restore to the previous save
-    public function _cmd_undo($cmd) {
-        $player = &$this->player;
-        if ($player['stam'] > 0) {
-            sendqmsg("*You can only undo when dead.*", ':interrobang:');
-            return;
-        } else if (restore_player($player)) {
-            sendqmsg("*...or maybe this happened...*", ':rewind:');
-            addcommand("look");
-        } else {
-            sendqmsg("*There are some things that cannot be undone...*", ':skull:');
-        }
-    }
-
-
-    //// !save - save copy of player
-    public function _cmd_save($cmd) {
-        $slot = ($cmd[1]?$cmd[1]:0);
-        if ($slot < 0 || $slot > 10) {
-            sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
-            return;
-        }
-        save($this->player, "save_$slot.txt");
-        sendqmsg("*Game saved in slot $slot*", ':floppy_disk:');
-    }
-
-
-    //// !load - save copy of player
-    public function _cmd_load($cmd) {
-        $player = &$this->player;
-        $slot = ($cmd[1]?$cmd[1]:0);
-        if ($slot < 0 || $slot > 10) {
-            sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
-            return;
-        }
-        if (!file_exists("save_$slot.txt")) {
-            sendqmsg("*No save found in slot $slot*", ':interrobang:');
-            return;
-        }
-        $player = load("save_$slot.txt");
-        sendqmsg("*Loaded game in slot $slot*", $player['emoji']);
-        addcommand("look");
-        addcommand("info");
-    }
-
-
-    //// !load - save copy of player
-    public function _cmd_clearslots($cmd) {
-        $slot = ($cmd[1]?$cmd[1]:0);
-        if (strtolower($cmd[1]) != 'confirm') {
-            sendqmsg("*Use `!clearslots confirm` to confirm clear of all save slots.*", ':interrobang:');
-            return;
-        }
-        foreach (glob("save_*.txt") as $f) {
-            unlink($f);
-        }
-        sendqmsg("*All save slots cleared*", ':floppy_disk:');
-    }
-
-
     //// !map - Sends a map image if map.jpg exists in images dir
     public function _cmd_map($cmd) {
         if (file_exists('images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR.'map.jpg')) {
@@ -601,33 +348,6 @@ class book_none {
         } else {
             sendqmsg("*No map found!*", ':interrobang:');
         }
-    }
-
-
-    //// !info / !status (send character sheet and inventory)
-    public function _cmd_info($cmd) {
-        $player = &$this->player;
-        $icon = ($player['stam'] < 1?":skull:":$player['emoji']);
-        $attach = $this->getCharcterSheetAttachments();
-        $attach[] = $this->getStuffAttachment();
-
-        sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
-    }
-
-
-    //// !stats / !s (send character sheet)
-    public function _cmd_stats($cmd) {
-        $player = &$this->player;
-        $icon = ($player['stam'] < 1?":skull:":$player['emoji']);
-        $attach = $this->getCharcterSheetAttachments();
-
-        sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
-    }
-
-
-    //// !stuff / !i (send inventory)
-    public function _cmd_stuff($cmd) {
-        sendmsg("", [$this->getStuffAttachment()], $this->player['emoji']);
     }
 
 

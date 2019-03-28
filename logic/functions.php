@@ -175,7 +175,7 @@ function load($file = 'save.txt') {
     $save = file_get_contents($file);
     if (!$save) {
         global $gamebook;
-        $p = $gamebook->rollCharacter();
+        $p = $gamebook->newCharacter();
     } else {
         $p = unserialize($save);
     }

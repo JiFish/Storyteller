@@ -18,15 +18,6 @@ require_once 'booktypes/'.getbook().'.php';
 $bookclass = 'Book_'.getbook();
 $gamebook = new $bookclass($player);
 $gamebook->registerCommands();
-// Stats commands
-foreach ($gamebook->getStats() as $s => $val) {
-    register_command($s, '_cmd_stat_adjust', ['os', 'nm']);
-    if (isset($val['alias'])) {
-        foreach ($val['alias'] as $a) {
-            register_command($a, '_cmd_stat_adjust', ['os', 'nm']);
-        }
-    }
-}
 
 
 // Split the command list by semi-colons. Allows multiple commands to be queued
