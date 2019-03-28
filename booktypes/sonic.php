@@ -8,8 +8,8 @@ class book_sonic extends book_none {
     }
 
 
-    public function isDead(&$player) {
-        return $player['lives'] < 1;
+    public function isDead() {
+        return $this->player['lives'] < 1;
     }
 
 
@@ -76,7 +76,8 @@ class book_sonic extends book_none {
     }
 
 
-    function getCharcterSheetAttachments(&$player) {
+    function getCharcterSheetAttachments() {
+        $player = &$this->player;
         $attachments[0]['color'] = $player['colourhex'];
         $attachments[0]['fields'] = [
             ['title' => 'Speed: '.$player['speed'],
@@ -107,7 +108,8 @@ class book_sonic extends book_none {
 
 
     //// Gain a life after collecting 100 rings
-    public function _cmd_stat_adjust($cmd, &$player) {
+    public function _cmd_stat_adjust($cmd) {
+        $player = &$this->player;
         // Get the current value
         global $stats, $statalias;
         $thisstat = $statalias[strtolower($cmd[0])];
@@ -135,7 +137,7 @@ class book_sonic extends book_none {
 
 
     //// !help (send sonic help) OVERRIDE
-    function _cmd_help($cmd, &$player) {
+    function _cmd_help($cmd) {
         $help = file_get_contents('resources/sonic_help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
@@ -144,7 +146,8 @@ class book_sonic extends book_none {
 
 
     //// !newgame (roll new character) OVERRIDE
-    function _cmd_newgame($cmd, &$player) {
+    function _cmd_newgame($cmd) {
+        $player = &$this->player;
         // Check stats
         $stats = array_slice($cmd, 1);
         $stattotal = array_sum($stats);
@@ -159,15 +162,16 @@ class book_sonic extends book_none {
         $player = $this->rollSonicCharacter($stats);
 
         $icon = $player['emoji'];
-        $attach = $this->getCharcterSheetAttachments($player);
-        $attach[] = $this->getStuffAttachment($player);
+        $attach = $this->getCharcterSheetAttachments();
+        $attach[] = $this->getStuffAttachment();
 
         sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n*".$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_".$extratext, $attach, $icon);
     }
 
 
     //// !test <stat> <target> SONIC VERSION
-    function _cmd_test($cmd, &$player) {
+    function _cmd_test($cmd) {
+        $player = &$this->player;
         // Apply temp bonuses, if any
         apply_temp_stats($player);
 
@@ -250,7 +254,8 @@ class book_sonic extends book_none {
 
 
     //// !hit - took damage
-    public function _cmd_hit($cmd, &$player) {
+    public function _cmd_hit($cmd) {
+        $player = &$this->player;
         if ($player['rings'] > 0) {
             $player['rings'] = 0;
             sendqmsg("_*".$player['name']." lost all ".($player['gender']=='Male'?'his':'her')." rings!*_", ':ring:');
@@ -262,7 +267,8 @@ class book_sonic extends book_none {
 
 
     //// !fight [stat] <+/-mod> <name> [skill] (run fight logic)
-    public function _cmd_fight($cmd, &$player) {
+    public function _cmd_fight($cmd) {
+        $player = &$this->player;
         $stat = $cmd[1];
         if ($stat == 'strength') $stat = 'str';
 

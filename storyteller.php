@@ -11,10 +11,12 @@ if ($_POST['token'] != SLACK_TOKEN) {
     die('Access Denied. Token does not match');
 }
 
+$player = load();
+
 // Gamebook Object
 require_once 'booktypes/'.getbook().'.php';
 $bookclass = 'Book_'.getbook();
-$gamebook = new $bookclass;
+$gamebook = new $bookclass($player);
 $gamebook->registerCommands();
 // Stats commands
 foreach ($gamebook->getStats() as $s => $val) {
@@ -26,7 +28,6 @@ foreach ($gamebook->getStats() as $s => $val) {
     }
 }
 
-$player = load();
 
 // Split the command list by semi-colons. Allows multiple commands to be queued
 // Note, some commands will queue other commands
@@ -54,7 +55,7 @@ while (sizeof($commandlist) > 0) {
 
     // If stamina ever drops to less than 1, the player if dead
     // Stop processing any queued commands and tell the player they are dead
-    if ($gamebook->isDead($player)) {
+    if ($gamebook->isDead()) {
         if (isset($player['referrers'])) {
             sendqmsg("_*".$player['referrers']['youare']." dead.*_ :skull:", ":skull:");
         } else {

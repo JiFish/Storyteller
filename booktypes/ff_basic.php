@@ -8,13 +8,13 @@ class book_ff_basic extends book_none {
     }
 
 
-    public function isDead(&$player) {
-        return $player['stam'] < 1;
+    public function isDead() {
+        return ($this->player['stam'] < 1);
     }
 
 
-    public function storyModify($story, &$player) {
-        $story = parent::storyModify($story, $player);
+    public function storyModify($story) {
+        $story = parent::storyModify($story);
         $story = preg_replace('/((Add|Subject|Deduct|Regain|Gain|Lose) )?([1-9] (points? )?from your (SKILL|LUCK|STAMINA)|([1-9] )?(SKILL|LUCK|STAMINA) points?|your (SKILL|LUCK|STAMINA))/', '*${0}*', $story);
         return $story;
     }
@@ -114,7 +114,8 @@ class book_ff_basic extends book_none {
 
 
     // In Slack format
-    protected function getCharcterSheetAttachments(&$player) {
+    protected function getCharcterSheetAttachments() {
+        $player = &$this->player;
         $attachments = array([
                 'color'    => $player['colourhex'],
                 'fields'   => array(
@@ -153,13 +154,18 @@ class book_ff_basic extends book_none {
     }
 
 
-    protected function getStuffAttachment(&$player) {
-        $p = $player;
+    protected function getStuffAttachment() {
+        $player = &$this->player;
         // Shield
         if ($player['shield']) {
-            $p['stuff'][] = 'Shield *(Equipped)*';
+            $player['stuff'][] = 'Shield *(Equipped)*';
         }
-        return parent::getStuffAttachment($p);
+        $attach = parent::getStuffAttachment();
+        // Remove shield Shield
+        if ($player['shield']) {
+            array_pop($player['stuff']);
+        }
+        return $attach;
     }
 
 
@@ -189,7 +195,7 @@ class book_ff_basic extends book_none {
 
 
     //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_get($cmd, &$player) {
+    public function _cmd_get($cmd) {
         $item = $cmd[1];
         // Attempt to catch cases where people get or take gold or provisions
         // and turn them in to stat adjustments
@@ -215,12 +221,12 @@ class book_ff_basic extends book_none {
             addcommand("shield on");
             return;
         }
-        parent::_cmd_get($cmd, $player);
+        parent::_cmd_get($cmd);
     }
 
 
     //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_drop($cmd, &$player) {
+    public function _cmd_drop($cmd) {
         $drop = strtolower($cmd[1]);
         // TODO: This is code repetition
         // Attempt to catch cases where people get or take gold or provisions
@@ -247,12 +253,12 @@ class book_ff_basic extends book_none {
             addcommand("shield off");
             return;
         }
-        parent::_cmd_drop($cmd, $player);
+        parent::_cmd_drop($cmd);
     }
 
 
     //// !help (send basic help)
-    public function _cmd_help($cmd, &$player) {
+    public function _cmd_help($cmd) {
         $help = file_get_contents('resources/help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
@@ -262,7 +268,8 @@ class book_ff_basic extends book_none {
 
 
     //// !eat
-    public function _cmd_eat($cmd, &$player) {
+    public function _cmd_eat($cmd) {
+        $player = &$this->player;
         if ($player['prov'] < 1) {
             sendqmsg("*No food to eat!*", ':interrobang:');
         } else {
@@ -278,10 +285,10 @@ class book_ff_basic extends book_none {
 
 
     //// !pay (alias for losing gold)
-    public function _cmd_pay($cmd, &$player) {
+    public function _cmd_pay($cmd) {
         if (!is_numeric($cmd[1])) {
             return;
-        } else if ($player['gold'] < $cmd[1]) {
+        } else if ($this->player['gold'] < $cmd[1]) {
             sendqmsg("* You don't have ".$cmd[1]." gold! *", ':interrobang');
         } else {
             addcommand("gold -".$cmd[1]);
@@ -290,7 +297,8 @@ class book_ff_basic extends book_none {
 
 
     //// !buy (alias for get & losing gold)
-    public function _cmd_buy($cmd, &$player) {
+    public function _cmd_buy($cmd) {
+        $player = &$this->player;
         if ($cmd[2]) {
             $cost = $cmd[2];
         } else {
@@ -311,7 +319,8 @@ class book_ff_basic extends book_none {
 
 
     //// !luckyescape (roll for running away)
-    public function _cmd_luckyescape($cmd, &$player) {
+    public function _cmd_luckyescape($cmd) {
+        $player = &$this->player;
         $d1 = rand(1, 6);
         $d2 = rand(1, 6);
         $e1 = diceemoji($d1);
@@ -340,7 +349,8 @@ class book_ff_basic extends book_none {
 
 
     //// !shield [on/off] - Toggle shield
-    public function _cmd_shield($cmd, &$player) {
+    public function _cmd_shield($cmd) {
+        $player = &$this->player;
         $state = strtolower($cmd[1]);
         if ($state != 'on' && $state != 'off') {
             $state = ($player['shield']?'off':'on');
@@ -353,7 +363,8 @@ class book_ff_basic extends book_none {
 
 
     //// !test <luck/skill/stam> (run a skill test)
-    public function _cmd_test($cmd, &$player) {
+    public function _cmd_test($cmd) {
+        $player = &$this->player;
         // Prevent restore
         backup_remove();
 
@@ -452,8 +463,8 @@ class book_ff_basic extends book_none {
 
 
     //// !fight [name] <skill> <stamina> [maxrounds] (run fight logic)
-    public function _cmd_fight($cmd, &$player) {
-        $out = run_fight(['player' => &$player,
+    public function _cmd_fight($cmd) {
+        $out = run_fight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'monsterstam' => $cmd[3],
@@ -464,7 +475,7 @@ class book_ff_basic extends book_none {
 
 
     //// !critfight [name] <skill> [who] [critchance] (run crit fight logic)
-    public function _cmd_critfight($cmd, &$player) {
+    public function _cmd_critfight($cmd) {
         $critsfor = ($cmd[3]?$cmd[3]:'me');
         $critchance = ($cmd[4]?$cmd[4]:2);
         if (!in_array($critsfor, ['both', 'me'])) {
@@ -475,7 +486,7 @@ class book_ff_basic extends book_none {
         }
 
         $out = "_*You".($critsfor == 'both'?' both':'')." have to hit critical strikes!* ($critchance in 6 chance)_\n";
-        $out = run_fight(['player' => &$player,
+        $out = run_fight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'critsfor' => $critsfor,
@@ -485,8 +496,8 @@ class book_ff_basic extends book_none {
 
 
     //// !bonusfight [name] <skill> <stamina> <bonusdamage> [bonusdmgchance] (run bonus attack fight logic)
-    public function _cmd_bonusfight($cmd, &$player) {
-        $out = run_fight(['player' => &$player,
+    public function _cmd_bonusfight($cmd) {
+        $out = run_fight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'monsterstam' => $cmd[3],
@@ -498,7 +509,7 @@ class book_ff_basic extends book_none {
 
 
     //// !vs <name 1> <skill 1> <stamina 1> <name 2> <skill 2> <stamina 2>
-    public function _cmd_vs($cmd, &$player) {
+    public function _cmd_vs($cmd) {
         $vsplayer = array(
             'name' => $cmd[1],
             'referrers' => ['you' => $cmd[1], 'youare' => $cmd[1].' is', 'your' => $cmd[1]."'s"],
@@ -519,7 +530,7 @@ class book_ff_basic extends book_none {
 
 
     //// !fighttwo <name 1> <skill 1> <stamina 1> [<name 2> <skill 2> <stamina 2>]
-    public function _cmd_fighttwo($cmd, &$player) {
+    public function _cmd_fighttwo($cmd) {
         // Set monster 1
         $m = $cmd[1];
         $mskill = $cmd[2];
@@ -542,13 +553,13 @@ class book_ff_basic extends book_none {
             $m2 = "Second ".$m2;
         }
 
-        $out = run_fight(['player' => &$player,
+        $out = run_fight(['player' => &$this->player,
                 'monstername' => $m,
                 'monsterskill' => $mskill,
                 'monsterstam' => $mstam,
                 'monster2name' => $m2,
                 'monster2skill' => $mskill2]);
-        if ($player['stam'] > 0) {
+        if ($this->player['stam'] > 0) {
             addcommand("fight $m2 $mskill2 $mstam2");
         }
         sendqmsg($out, ":crossed_swords:");
@@ -556,7 +567,7 @@ class book_ff_basic extends book_none {
 
 
     //// !fightbackup [name 1] <skill 1> <stamina 1> [backup's name] <backup's skill>
-    public function _cmd_fightbackup($cmd, &$player) {
+    public function _cmd_fightbackup($cmd) {
         // Set monster
         $m = ($cmd[1]?$cmd[1]:'Opponent');
         $mskill = $cmd[2];
@@ -566,7 +577,7 @@ class book_ff_basic extends book_none {
         $backupname = ($cmd[4]?$cmd[4]:'The backup');
         $backupskill = $cmd[5];
 
-        $out = run_fight(['player' => &$player,
+        $out = run_fight(['player' => &$this->player,
                 'monstername' => $m,
                 'monsterskill' => $mskill,
                 'monsterstam' => $mstam,
@@ -577,23 +588,23 @@ class book_ff_basic extends book_none {
 
 
     //// !attack <skill>
-    public function _cmd_attack($cmd, &$player) {
+    public function _cmd_attack($cmd) {
         $dmg = ($cmd[2]?$cmd[2]:0);
-        $out = run_single_attack($player, 'Opponent', $cmd[1], 999, $dmg, 0);
+        $out = run_single_attack($this->player, 'Opponent', $cmd[1], 999, $dmg, 0);
 
         sendqmsg($out, ":crossed_swords:");
     }
 
 
     //// !dead - Kill your character.
-    public function _cmd_dead($cmd, &$player) {
-        $player['stam'] = 0;
+    public function _cmd_dead($cmd) {
+        $this->player['stam'] = 0;
     }
 
 
     //// !phaser/gun [-/+modifier] [stun/kill] [name] <skill> [stun/kill] [maxrounds] (run phaser fight logic)
-    public function _cmd_phaser($cmd, &$player) {
-        $out = run_phaser_fight(['player' => &$player,
+    public function _cmd_phaser($cmd) {
+        $out = run_phaser_fight(['player' => &$this->player,
                 'modifier' => ($cmd[1]?$cmd[1]:0),
                 'stunkill' => ($cmd[2]?$cmd[2]:'stun'),
                 'monstername' => ($cmd[3]?$cmd[3]:"Opponent"),
@@ -606,7 +617,7 @@ class book_ff_basic extends book_none {
 
 
     //// !π - Easter egg
-    public function _cmd_easteregg($cmd, &$player) {
+    public function _cmd_easteregg($cmd) {
         $eggs = file('resources/easter_eggs.txt');
         $fullcmd = trim($eggs[array_rand($eggs)]);
 

@@ -26,11 +26,11 @@ class book_bb extends book_ff_basic {
     }
 
 
-    protected function getCharcterSheetAttachments(&$player) {
-        $attachments = parent::getCharcterSheetAttachments($player);
+    protected function getCharcterSheetAttachments() {
+        $attachments = parent::getCharcterSheetAttachments();
         $attachments[0]['fields'][5] = array (
             'title' => 'Time',
-            'value' => $player['time'],
+            'value' => $this->player['time'],
             'short' => true
         );
         return $attachments;

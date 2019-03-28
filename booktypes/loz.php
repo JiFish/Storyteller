@@ -95,8 +95,9 @@ class book_loz extends book_ff_magic {
     }
 
 
-    protected function getCharcterSheetAttachments(&$player) {
-        $attachments = parent::getCharcterSheetAttachments($player);
+    protected function getCharcterSheetAttachments() {
+        $player = &$this->player;
+        $attachments = parent::getCharcterSheetAttachments();
         $attachments[0]['fields'] = array_merge($attachments[0]['fields'],
             array([
                     'title' => 'Talismans: '.$player['talismans'],
@@ -309,7 +310,8 @@ class book_loz extends book_ff_magic {
 
 
     //// !test <luck/skill/stam> (run a skill test) OVERRIDE
-    public function _cmd_test($cmd, &$player) {
+    public function _cmd_test($cmd) {
+        $player = &$this->player;
         if (strtolower($cmd[1] == 'spot')) {
             $player['spot'] = $player['skill'] + ($player['adjective'] == 'Wizard'?2:0);
         }

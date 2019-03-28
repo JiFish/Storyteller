@@ -8,9 +8,9 @@ class book_sob extends book_ff_basic {
     }
 
 
-    public function storyModify($story, &$player) {
-        $story = parent::storyModify($story, $player);
-        $story = str_ireplace('The Banshee', $player['shipname'], $story);
+    public function storyModify($story) {
+        $story = parent::storyModify($story);
+        $story = str_ireplace('The Banshee', $this->player['shipname'], $story);
         return $story;
     }
 
@@ -71,8 +71,9 @@ class book_sob extends book_ff_basic {
     }
 
 
-    protected function getCharcterSheetAttachments(&$player) {
-        $attachments = parent::getCharcterSheetAttachments($player);
+    protected function getCharcterSheetAttachments() {
+        $player = &$this->player;
+        $attachments = parent::getCharcterSheetAttachments();
         // QOL for discord with 3 per row instead of two
         if (DISCORD_MODE) {
             $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d", $player['weapon']).')';
@@ -125,7 +126,8 @@ class book_sob extends book_ff_basic {
 
 
     //// !battle [name] <skill> <stamina> [maxrounds] (run battle logic)
-    public function _cmd_battle($cmd, &$player) {
+    public function _cmd_battle($cmd) {
+        $player = &$this->player;
         // Construct battle player
         $bp = array(
             'name' => "The crew of ".$player['shipname'],

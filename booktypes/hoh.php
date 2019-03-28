@@ -8,7 +8,8 @@ class book_hoh extends book_ff_basic {
     }
 
 
-    public function isDead(&$player) {
+    public function isDead() {
+        $player = &$this->player;
         return ($player['stam'] < 1) || ($player['fear'] >= $player['max']['fear']);
     }
 
@@ -36,11 +37,11 @@ class book_hoh extends book_ff_basic {
     }
 
 
-    protected function getCharcterSheetAttachments(&$player) {
-        $attachments = parent::getCharcterSheetAttachments($player);
+    protected function getCharcterSheetAttachments() {
+        $attachments = parent::getCharcterSheetAttachments();
         $attachments[0]['fields'][5] = array (
             'title' => 'Fear',
-            'value' => $player['fear']." / ".$player['max']['fear'],
+            'value' => $this->player['fear']." / ".$this->player['max']['fear'],
             'short' => true
         );
         return $attachments;

@@ -25,8 +25,9 @@ class book_rp extends book_ff_basic {
     }
 
 
-    protected function getCharcterSheetAttachments(&$player) {
-        $attachments = parent::getCharcterSheetAttachments($player);
+    protected function getCharcterSheetAttachments() {
+        $attachments = parent::getCharcterSheetAttachments();
+        $attachments = parent::getCharcterSheetAttachments();
         $attachments[0]['fields'][4]['title'] = 'Credits';
         unset($attachments[0]['fields'][5]);
         return $attachments;

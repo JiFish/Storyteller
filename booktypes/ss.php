@@ -15,8 +15,8 @@ class book_ss extends book_ff_magic {
     }
 
 
-    protected function getCharcterSheetAttachments(&$player) {
-        return $this->getCharcterSheetAttachmentsNoMagic($player);
+    protected function getCharcterSheetAttachments() {
+        return $this->getCharcterSheetAttachmentsNoMagic();
     }
 
 

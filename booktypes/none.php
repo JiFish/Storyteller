@@ -4,6 +4,14 @@ require_once 'logic/RandomColor.php';
 require_once 'logic/dice.php';
 
 class book_none {
+    protected $player = null;
+
+
+    public function __construct(&$player) {
+        $this->player = &$player;
+    }
+
+
     public function getId() {
         return 'none';
     }
@@ -14,12 +22,12 @@ class book_none {
     }
 
 
-    public function isDead(&$player) {
+    public function isDead() {
         return false;
     }
 
 
-    public function storyModify($story, &$player) {
+    public function storyModify($story) {
         return $story;
     }
 
@@ -87,14 +95,14 @@ class book_none {
 
 
     // In Slack format
-    protected function getCharcterSheetAttachments(&$player) {
+    protected function getCharcterSheetAttachments() {
         return [];
     }
 
 
     // In Slack format
-    protected function getStuffAttachment(&$player) {
-        $s = $player['stuff'];
+    protected function getStuffAttachment() {
+        $s = $this->player['stuff'];
 
         if (sizeof($s) == 0) {
             $s[] = "(Nothing!)";
@@ -158,20 +166,21 @@ class book_none {
 
 
     //// !newgame (roll new character)
-    function _cmd_newgame($cmd, &$player) {
+    function _cmd_newgame($cmd) {
+        $player = &$this->player;
         $cmd = array_pad($cmd, 7, '?');
         $player = $this->rollCharacter($cmd[1], $cmd[2], $cmd[3], $cmd[4], $cmd[5], $cmd[6]);
 
         $icon = $player['emoji'];
-        $attach = $this->getCharcterSheetAttachments($player);
-        $attach[] = $this->getStuffAttachment($player);
+        $attach = $this->getCharcterSheetAttachments();
+        $attach[] = $this->getStuffAttachment();
 
         sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n*".$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
     }
 
 
     //// !look
-    public function _cmd_look($cmd, &$player) {
+    public function _cmd_look($cmd) {
         require "book.php";
         $story = format_story($player['lastpage'], $book[$player['lastpage']], $player);
         sendqmsg($story);
@@ -179,7 +188,8 @@ class book_none {
 
 
     //// !page <num> / !<num> (Read page from book)
-    public function _cmd_page($cmd, &$player) {
+    public function _cmd_page($cmd) {
+        $player = &$this->player;
         if (!is_numeric($cmd[1])) {
             return;
         }
@@ -239,15 +249,16 @@ class book_none {
 
 
     //// !background
-    public function _cmd_background($cmd, &$player) {
+    public function _cmd_background($cmd) {
         require "book.php";
-        $story = format_story(0, $book[0], $player);
+        $story = format_story(0, $book[0], $this->player);
         senddirmsg($story);
     }
 
 
     //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_get($cmd, &$player) {
+    public function _cmd_get($cmd) {
+        $player = &$this->player;
         $item = $cmd[1];
 
         // Prevent duplicate entries
@@ -263,7 +274,8 @@ class book_none {
 
 
     //// !drop / !lose / !use
-    public function _cmd_drop($cmd, &$player) {
+    public function _cmd_drop($cmd) {
+        $player = &$this->player;
         $drop = strtolower($cmd[1]);
 
         // lazy item search
@@ -306,7 +318,7 @@ class book_none {
 
 
     //// !roll [x] (roll xd6)
-    public function _cmd_roll($cmd, &$player) {
+    public function _cmd_roll($cmd) {
         $numdice = ($cmd[1]?$cmd[1]:1);
         $numdice = max(min($numdice, 100), 1);
         $out = "Result:";
@@ -326,7 +338,8 @@ class book_none {
 
 
     //// Various statistic adjustment commands
-    public function _cmd_stat_adjust($cmd, &$player) {
+    public function _cmd_stat_adjust($cmd) {
+        $player = &$this->player;
         // Referrers
         if (isset($player['referrers'])) {
             $your = $player['referrers']['your'].' ';
@@ -410,7 +423,7 @@ class book_none {
 
 
     //// !help (send basic help)
-    public function _cmd_help($cmd, &$player) {
+    public function _cmd_help($cmd) {
         $help = file_get_contents('resources/help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
@@ -419,7 +432,7 @@ class book_none {
 
 
     //// !echo - simply repeat the input text
-    public function _cmd_echo($cmd, &$player) {
+    public function _cmd_echo($cmd) {
         if (!$cmd[1]) {
             return;
         }
@@ -430,7 +443,7 @@ class book_none {
 
 
     //// !randpage <page 1> [page 2] [page 3] [...]
-    public function _cmd_randpage($cmd, &$player) {
+    public function _cmd_randpage($cmd) {
         // Prevent restore
         backup_remove();
 
@@ -462,12 +475,12 @@ class book_none {
 
 
     //// !debugset - Set any value
-    public function _cmd_debugset($cmd, &$player) {
+    public function _cmd_debugset($cmd) {
         $key = $cmd[1];
         $val = $cmd[2];
         $silent = (strtolower($cmd[0]) == 'silentset');
         $sa = array();
-        recursive_flatten_player($player, $sa);
+        recursive_flatten_player($this->player, $sa);
 
         if (array_key_exists($key, $sa) && !is_array($sa[$key])) {
             if (is_int($sa[$key])) {
@@ -489,9 +502,9 @@ class book_none {
 
 
     //// !debuglist - List all debug values
-    public function _cmd_debuglist($cmd, &$player) {
+    public function _cmd_debuglist($cmd) {
         $sa = array();
-        recursive_flatten_player($player, $sa);
+        recursive_flatten_player($this->player, $sa);
         ksort($sa);
 
         $msg = "";
@@ -507,7 +520,7 @@ class book_none {
 
 
     //// !macro - Run macro from macro.txt
-    public function _cmd_macro($cmd, &$player) {
+    public function _cmd_macro($cmd) {
         $macros = file('macros.txt');
         if ($cmd[1] < 1 || $cmd[1] > sizeof($macros)) {
             sendqmsg('Macro '.$cmd[1].' not found.', ':interrobang:');
@@ -522,7 +535,8 @@ class book_none {
 
 
     //// !undo - restore to the previous save
-    public function _cmd_undo($cmd, &$player) {
+    public function _cmd_undo($cmd) {
+        $player = &$this->player;
         if ($player['stam'] > 0) {
             sendqmsg("*You can only undo when dead.*", ':interrobang:');
             return;
@@ -536,19 +550,20 @@ class book_none {
 
 
     //// !save - save copy of player
-    public function _cmd_save($cmd, &$player) {
+    public function _cmd_save($cmd) {
         $slot = ($cmd[1]?$cmd[1]:0);
         if ($slot < 0 || $slot > 10) {
             sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
             return;
         }
-        save($player, "save_$slot.txt");
+        save($this->player, "save_$slot.txt");
         sendqmsg("*Game saved in slot $slot*", ':floppy_disk:');
     }
 
 
     //// !load - save copy of player
-    public function _cmd_load($cmd, &$player) {
+    public function _cmd_load($cmd) {
+        $player = &$this->player;
         $slot = ($cmd[1]?$cmd[1]:0);
         if ($slot < 0 || $slot > 10) {
             sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
@@ -566,7 +581,7 @@ class book_none {
 
 
     //// !load - save copy of player
-    public function _cmd_clearslots($cmd, &$player) {
+    public function _cmd_clearslots($cmd) {
         $slot = ($cmd[1]?$cmd[1]:0);
         if (strtolower($cmd[1]) != 'confirm') {
             sendqmsg("*Use `!clearslots confirm` to confirm clear of all save slots.*", ':interrobang:');
@@ -580,7 +595,7 @@ class book_none {
 
 
     //// !map - Sends a map image if map.jpg exists in images dir
-    public function _cmd_map($cmd, &$player) {
+    public function _cmd_map($cmd) {
         if (file_exists('images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR.'map.jpg')) {
             sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.jpg');
         } else {
@@ -590,27 +605,29 @@ class book_none {
 
 
     //// !info / !status (send character sheet and inventory)
-    public function _cmd_info($cmd, &$player) {
+    public function _cmd_info($cmd) {
+        $player = &$this->player;
         $icon = ($player['stam'] < 1?":skull:":$player['emoji']);
-        $attach = $this->getCharcterSheetAttachments($player);
-        $attach[] = $this->getStuffAttachment($player);
+        $attach = $this->getCharcterSheetAttachments();
+        $attach[] = $this->getStuffAttachment();
 
         sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
     }
 
 
     //// !stats / !s (send character sheet)
-    public function _cmd_stats($cmd, &$player) {
+    public function _cmd_stats($cmd) {
+        $player = &$this->player;
         $icon = ($player['stam'] < 1?":skull:":$player['emoji']);
-        $attach = $this->getCharcterSheetAttachments($player);
+        $attach = $this->getCharcterSheetAttachments();
 
         sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
     }
 
 
     //// !stuff / !i (send inventory)
-    public function _cmd_stuff($cmd, &$player) {
-        sendmsg("", [$this->getStuffAttachment($player)], $player['emoji']);
+    public function _cmd_stuff($cmd) {
+        sendmsg("", [$this->getStuffAttachment()], $this->player['emoji']);
     }
 
 

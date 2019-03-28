@@ -8,10 +8,10 @@ class book_sst extends book_ff_basic {
     }
 
 
-    public function storyModify($story, &$player) {
-        $story = parent::storyModify($story, $player);
-        $story = str_ireplace('The Traveller', $player['shipname'], $story);
-        $story = str_ireplace('Starship Traveller', 'Starship '.substr($player['shipname'], 4), $story);
+    public function storyModify($story) {
+        $story = parent::storyModify($story);
+        $story = str_ireplace('The Traveller', $this->player['shipname'], $story);
+        $story = str_ireplace('Starship Traveller', 'Starship '.substr($this->player['shipname'], 4), $story);
         return $story;
     }
 
@@ -154,8 +154,9 @@ class book_sst extends book_ff_basic {
     }
 
 
-    protected function getCharcterSheetAttachments(&$player) {
-        $attachments = parent::getCharcterSheetAttachments($player);
+    protected function getCharcterSheetAttachments() {
+        $player = &$this->player;
+        $attachments = parent::getCharcterSheetAttachments();
         // ship
         $attachments[0]['fields'][3] = [
             'title' => 'Ship',
@@ -223,8 +224,8 @@ class book_sst extends book_ff_basic {
 
 
     //// !shipbattle [name] <skill> <stamina> (run ship battle logic)
-    public function _cmd_shipbattle($cmd, &$player) {
-        $out = run_ship_battle(['player' => &$player,
+    public function _cmd_shipbattle($cmd) {
+        $out = run_ship_battle(['player' => &$this->player,
                 'oppname' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'oppweapons' => $cmd[2],
                 'oppshields' => $cmd[3],
@@ -234,14 +235,14 @@ class book_sst extends book_ff_basic {
 
 
     //// Replace crew
-    public function _cmd_recruit($cmd, &$player) {
+    public function _cmd_recruit($cmd) {
         $pos = $cmd[1];
 
         if (!array_key_exists($pos, $player['crew'])) {
             sendqmsg("*$pos: invalid position*", ':interrobang:');
         }
 
-        $c = &$player['crew'][$pos];
+        $c = &$this->player['crew'][$pos];
         $c = $this->rollCrew($pos, $c['combatpenalty']);
         if ($cmd[2] && $cmd[2] != '?') {
             $c['name'] = ucfirst($cmd[2]);
@@ -267,7 +268,8 @@ class book_sst extends book_ff_basic {
 
 
     //// !beam <up/down> [crew] [crew] [crew]
-    public function _cmd_beam($cmd, &$player) {
+    public function _cmd_beam($cmd) {
+        $player = &$this->player;
         $out = "";
         $crew = array();
         $dir = strtolower($cmd[1]);
@@ -313,11 +315,11 @@ class book_sst extends book_ff_basic {
 
 
     //// Special case, order various crew to do commands
-    public function _cmd_order($cmd, &$player) {
+    public function _cmd_order($cmd) {
         global $commandslist, $commandsargs;
 
         $officer = strtolower($cmd[0]);
-        $crew = &$player['crew'][$officer];
+        $crew = &$this->player['crew'][$officer];
         $order = strtolower($cmd[1]);
         $valid_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup',
             'skill', 'stam', 'stamina', 'test', 'dead'];
@@ -338,7 +340,12 @@ class book_sst extends book_ff_basic {
             $crew['temp']['skill'] += -2;
         }
 
-        call_user_func_array([$this, $commandslist[$cmd[0]]], array($cmd, &$crew));
+        // Set the player to tails
+        $mainplayer = &$this->player;
+        $this->player = &$crew;
+        call_user_func_array([$this, $commandslist[$cmd[0]]], array($cmd));
+        // Set the player back
+        $this->player = &$mainplayer;
 
         if ($crew['stam'] < 1) {
             $out = "*".$crew['name']." is dead!* :skull:\n";
@@ -356,9 +363,9 @@ class book_sst extends book_ff_basic {
 
 
     //// Special case, order WHOLE crew, or away team, to do command
-    public function _cmd_everyone($cmd, &$player) {
+    public function _cmd_everyone($cmd) {
         addcommand($cmd[1]);
-        foreach ($player['crew'] as $key => $val) {
+        foreach ($this->player['crew'] as $key => $val) {
             if ($cmd[0] != 'awayteam' || $val['awayteam']) {
                 addcommand($key.' '.$cmd[1]);
             }

@@ -18,7 +18,7 @@ function processcommand($command, &$player) {
     if (is_numeric($cmd[0])) {
         $cmd[1] = $cmd[0];
         $cmd[0] = 'page';
-        $gamebook->_cmd_page($cmd, $player);
+        $gamebook->_cmd_page($cmd);
         return;
     }
 
@@ -28,7 +28,7 @@ function processcommand($command, &$player) {
         if (!$cmd) {
             sendqmsg("Sorry, I didn't understand that command!", ":interrobang:");
         } else {
-            call_user_func_array([$gamebook, $commandslist[$cmd[0]]], array($cmd, &$player));
+            call_user_func_array([$gamebook, $commandslist[$cmd[0]]], array($cmd));
         }
     }
 }
@@ -212,13 +212,13 @@ function addcommand($cmd) {
 /// ----------------------------------------------------------------------------
 /// Send message to slack functions
 
-function format_story($page, $text, &$player) {
+function format_story($page, $text) {
     require "book.php";
 
     // Book specific specials
     global $gamebook;
     echo $gamebook->getId();
-    $story = $gamebook->storyModify($text, $player);
+    $story = $gamebook->storyModify($text);
 
     // Look for choices in the text and give them bold formatting
     $story = preg_replace('/\(?turn(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $story);

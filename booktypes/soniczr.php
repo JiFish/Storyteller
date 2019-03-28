@@ -33,8 +33,9 @@ class book_soniczr extends book_sonic {
     }
 
 
-    function getCharcterSheetAttachments(&$player) {
-        $attachments = parent::getCharcterSheetAttachments($player);
+    function getCharcterSheetAttachments() {
+        $player = &$this->player;
+        $attachments = parent::getCharcterSheetAttachments();
         $attachments[1]['color'] = '#ff6600';
         $attachments[1]['fields'] = [
             ['title' => 'Tails Speed: '.$player['tails']['speed'],
@@ -71,7 +72,7 @@ class book_soniczr extends book_sonic {
 
 
     //// !help (send sonic help) OVERRIDE
-    public function _cmd_help($cmd, &$player) {
+    public function _cmd_help($cmd) {
         $help = file_get_contents('resources/sonic_help.txt');
         $help .= "`!tails [command]` Ask tails to do something. e.g. `!tails test agility 4`\n";
         // Replace "!" with whatever the trigger word is
@@ -81,8 +82,9 @@ class book_soniczr extends book_sonic {
 
 
     //// Special case, order various tails to do commands
-    public function _cmd_tails($cmd, &$player) {
+    public function _cmd_tails($cmd) {
         global $commandslist, $commandsargs;
+        $player = &$this->player;
 
         $order = strtolower($cmd[1]);
         if (array_key_exists($order, $commandsargs)) {
@@ -95,7 +97,12 @@ class book_soniczr extends book_sonic {
             return;
         }
 
-        call_user_func_array([$this, $commandslist[$cmd[0]]], array($cmd, &$player['tails']));
+        // Set the player to tails
+        $mainplayer = &$this->player;
+        $this->player = &$this->player['tails'];
+        call_user_func_array([$this, $commandslist[$cmd[0]]], array($cmd));
+        // Set the player back
+        $this->player = &$mainplayer;
 
         if ($player['tails']['stam'] < 1) {
             $out = "*Tails is dead!* :skull:\n";

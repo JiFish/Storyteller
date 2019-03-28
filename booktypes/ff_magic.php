@@ -20,12 +20,12 @@ class book_ff_magic extends book_ff_basic {
     }
 
 
-    protected function getCharcterSheetAttachments(&$player) {
-        $attachments = parent::getCharcterSheetAttachments($player);
+    protected function getCharcterSheetAttachments() {
+        $attachments = parent::getCharcterSheetAttachments();
         array_splice($attachments[0]['fields'], 3, 0,
             array([
                     'title' => 'Magic',
-                    'value' => $player['magic']." / ".$player['max']['magic'],
+                    'value' => $this->player['magic']." / ".$this->player['max']['magic'],
                     'short' => true
                 ])
         );
@@ -33,8 +33,8 @@ class book_ff_magic extends book_ff_basic {
     }
 
 
-    protected function getCharcterSheetAttachmentsNoMagic(&$player) {
-        return parent::getCharcterSheetAttachments($player);
+    protected function getCharcterSheetAttachmentsNoMagic() {
+        return parent::getCharcterSheetAttachments();
     }
 
 
@@ -92,7 +92,7 @@ class book_ff_magic extends book_ff_basic {
 
 
     //// !spellbook - read spellbook
-    public function _cmd_spellbook($cmd, &$player) {
+    public function _cmd_spellbook($cmd) {
         $spells = $this->getSpells();
 
         $typeslist = array();
@@ -152,7 +152,8 @@ class book_ff_magic extends book_ff_basic {
 
 
     //// !echo - simply repeat the input text
-    public function _cmd_cast($cmd, &$player) {
+    public function _cmd_cast($cmd) {
+        $player = &$this->player;
         $spells = $this->getSpells();
 
         foreach ($spells as $s) {
