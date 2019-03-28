@@ -1,30 +1,60 @@
 <?php
 
 function dice() {
-    $r = rand(1, 6);
     switch (CHARACTER_ROLLS) {
+    case 'normal':
+        $r = rand(1, 6);
+        break;
     case 'd5+1':
         $r = rand(2, 6);
         break;
     case 'min3':
-        $r = max(3, $r);
+        $r = max(3, rand(1, 6));
         break;
     case 'min4':
-        $r = max(4, $r);
+        $r = max(4, rand(1, 6));
         break;
     case 'roll2':
-        $r = max(rand(1, 6), $r);
+        $r = max(rand(1, 6), rand(1, 6));
         break;
     case 'roll3':
-        $r = max(rand(1, 6), rand(1, 6), $r);
+        $r = max(rand(1, 6), rand(1, 6), rand(1, 6));
+        break;
+    case 'weighted':
+        $r = min(6, rand(1, 8));
+        break;
+    case 'average':
+        global $averageflip;
+        if (!isset($averageflip)) {
+            $averageflip = false;
+        }
+        $r = $averageflip?3:4;
+        $averageflip = !$averageflip;
+        break;
+    case 'all1':
+        $r = 1;
+        break;
+    case 'all2':
+        $r = 2;
+        break;
+    case 'all3':
+        $r = 3;
+        break;
+    case 'all4':
+        $r = 4;
+        break;
+    case 'all5':
+        $r = 5;
         break;
     case 'all6':
         $r = 6;
         break;
+    case 'all7':
     case 'heaven':
         $r = 7;
         break;
     default:
+        die(CHARACTER_ROLLS.' is not a valid roll type.');
     }
     return $r;
 }
