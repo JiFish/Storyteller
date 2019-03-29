@@ -185,7 +185,7 @@ class book_ff_basic extends book_character {
         register_command('vs',          '_cmd_vs', ['ms', 'n', 'n', 'ms', 'n', 'n']);
         register_command('fighttwo',    '_cmd_fighttwo', ['ms', 'n', 'n', 'oms', 'on', 'on']);
         register_command('fightbackup', '_cmd_fightbackup', ['oms', 'n', 'n', 'oms', 'n']);
-        register_command('gun',         '_cmd_phaser', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
+        register_command('gun',         '_cmd_gun', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
         register_command('attack',      '_cmd_attack', ['n', 'on']);
         register_command('a',           '_cmd_attack', ['n', 'on']);
         register_command('dead',        '_cmd_dead');
@@ -603,7 +603,7 @@ class book_ff_basic extends book_character {
 
 
     //// !phaser/gun [-/+modifier] [stun/kill] [name] <skill> [stun/kill] [maxrounds] (run phaser fight logic)
-    public function _cmd_phaser($cmd) {
+    public function _cmd_gun($cmd) {
         $out = run_phaser_fight(['player' => &$this->player,
                 'modifier' => ($cmd[1]?$cmd[1]:0),
                 'stunkill' => ($cmd[2]?$cmd[2]:'stun'),

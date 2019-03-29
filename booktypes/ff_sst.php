@@ -211,7 +211,7 @@ class book_ff_sst extends book_ff_basic {
 
     public function registerCommands() {
         parent::registerCommands();
-        register_command('phaser',     '_cmd_phaser', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
+        register_command('phaser',     '_cmd_gun', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
         register_command('shipbattle', '_cmd_shipbattle', ['oms', 'n', 'n']);
         register_command('recruit',    '_cmd_recruit', ['s', 'os', 'on', 'on', 'os', 'os']);
         register_command('beam',       '_cmd_beam', ['(\sup|\sdown)', 'os', 'os', 'os', 'os', 'os']);
