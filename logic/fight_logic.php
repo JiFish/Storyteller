@@ -477,9 +477,9 @@ function run_sonic_fight(&$player, $skill, $mod, $monster, $mskill) {
                 $player['rings'] = 0;
             } else {
                 $out .= "_*".$player['name']." lost a life!*_\n";
-                $player['stam']--;
-                if ($player['stam'] > 0) {
-                    $out .= "Sonic Lives: ".str_repeat(html_entity_decode('&#x1f994;').' ', $player['stam']);
+                $player['lives']--;
+                if ($player['lives'] > 0) {
+                    $out .= "Sonic Lives: ".str_repeat(html_entity_decode('&#x1f994;').' ', $player['lives']);
                 } else {
                     $out .= "*GAME OVER*";
                 }
