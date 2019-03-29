@@ -381,21 +381,21 @@ class book_character extends book_none {
     //// !info / !status (send character sheet and inventory)
     public function _cmd_info($cmd) {
         $player = &$this->player;
-        $icon = ($player['stam'] < 1?":skull:":$player['emoji']);
+        $icon = ($this->isDead()?":skull:":$player['emoji']);
         $attach = $this->getCharcterSheetAttachments();
         $attach[] = $this->getStuffAttachment();
 
-        sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
+        sendmsg('*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
     }
 
 
     //// !stats / !s (send character sheet)
     public function _cmd_stats($cmd) {
         $player = &$this->player;
-        $icon = ($player['stam'] < 1?":skull:":$player['emoji']);
+        $icon = ($this->isDead()?":skull:":$player['emoji']);
         $attach = $this->getCharcterSheetAttachments();
 
-        sendmsg(($text?$text."\n":'').'*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
+        sendmsg('*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
     }
 
 
