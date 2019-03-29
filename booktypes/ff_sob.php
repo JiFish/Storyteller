@@ -8,6 +8,12 @@ class book_ff_sob extends book_ff_basic {
     }
 
 
+    public function isDead() {
+        $player = &$this->player;
+        return ($player['stam'] < 1) || ($player['str'] < 1);
+    }
+
+
     public function storyModify($story) {
         $story = parent::storyModify($story);
         $story = str_ireplace('The Banshee', $this->player['shipname'], $story);
@@ -147,9 +153,6 @@ class book_ff_sob extends book_ff_basic {
                 'healthstatname' => 'strength']);
 
         $player['str'] = $bp['stam'];
-        if ($player['str'] < 1) {
-            $player['stam'] = 0;
-        }
 
         sendqmsg($out, ":crossed_swords:");
     }
