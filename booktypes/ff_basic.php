@@ -9,7 +9,7 @@ class book_ff_basic extends book_character {
 
 
     public function isDead() {
-        return ($this->player['stam'] < 1);
+        return $this->player['stam'] < 1;
     }
 
 
