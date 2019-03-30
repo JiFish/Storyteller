@@ -127,7 +127,7 @@ class book_ff_sob extends book_ff_basic {
 
     protected function registerCommands() {
         parent::registerCommands();
-        register_command('battle', '_cmd_battle', ['oms', 'n', 'n', 'osl']);
+        $this->registerCommand('battle', '_cmd_battle', ['oms', 'n', 'n', 'osl']);
     }
 
 

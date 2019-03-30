@@ -75,13 +75,13 @@ class book_ff_magic extends book_ff_basic {
 
     protected function registerCommands() {
         parent::registerCommands();
-        register_command('spellbook', '_cmd_spellbook', ['osl']);
+        $this->registerCommand('spellbook', '_cmd_spellbook', ['osl']);
         $spellsregex = "\s+(";
         foreach ($this->getSpells() as $s) {
             $spellsregex .= preg_quote($s['name']).'|';
         }
         $spellsregex = substr($spellsregex, 0, -1).")";
-        register_command('cast', '_cmd_cast', [$spellsregex, 'oms', 'on', 'on']);
+        $this->registerCommand('cast', '_cmd_cast', [$spellsregex, 'oms', 'on', 'on']);
     }
 
 

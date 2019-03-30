@@ -15,6 +15,20 @@ class book_character extends book_none {
     }
 
 
+    public function getAllStatCommands() {
+        $statcmds = [];
+        foreach ($this->getStats() as $s => $val) {
+            $statcmds[] = $s;
+            if (isset($val['alias'])) {
+                foreach ($val['alias'] as $a) {
+                    $statcmds[] = $a;
+                }
+            }
+        }
+        return $statcmds;
+    }
+
+
     public function newCharacter() {
         return $this->rollCharacter();
     }
@@ -120,31 +134,26 @@ class book_character extends book_none {
 
     protected function registerCommands() {
         parent::registerCommands();
-        register_command('get',        '_cmd_get', ['l']);
-        register_command('take',       '_cmd_get', ['l']);
-        register_command('drop',       '_cmd_drop', ['l']);
-        register_command('lose',       '_cmd_drop', ['l']);
-        register_command('use',        '_cmd_drop', ['l']);
-        register_command('ng',         '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl', 'on']);
-        register_command('newgame',    '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl', 'on']);
-        register_command('undo',       '_cmd_undo');
-        register_command('save',       '_cmd_save', ['on']);
-        register_command('load',       '_cmd_load', ['on']);
-        register_command('clearslots', '_cmd_clearslots', ['osl']);
-        register_command('info',       '_cmd_info');
-        register_command('status',     '_cmd_info');
-        register_command('stats',      '_cmd_stats');
-        register_command('s',          '_cmd_stats');
-        register_command('stuff',      '_cmd_stuff');
-        register_command('i',          '_cmd_stuff');
+        $this->registerCommand('get',        '_cmd_get', ['l']);
+        $this->registerCommand('take',       '_cmd_get', ['l']);
+        $this->registerCommand('drop',       '_cmd_drop', ['l']);
+        $this->registerCommand('lose',       '_cmd_drop', ['l']);
+        $this->registerCommand('use',        '_cmd_drop', ['l']);
+        $this->registerCommand('ng',         '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl', 'on']);
+        $this->registerCommand('newgame',    '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl', 'on']);
+        $this->registerCommand('undo',       '_cmd_undo');
+        $this->registerCommand('save',       '_cmd_save', ['on']);
+        $this->registerCommand('load',       '_cmd_load', ['on']);
+        $this->registerCommand('clearslots', '_cmd_clearslots', ['osl']);
+        $this->registerCommand('info',       '_cmd_info');
+        $this->registerCommand('status',     '_cmd_info');
+        $this->registerCommand('stats',      '_cmd_stats');
+        $this->registerCommand('s',          '_cmd_stats');
+        $this->registerCommand('stuff',      '_cmd_stuff');
+        $this->registerCommand('i',          '_cmd_stuff');
         // Stats commands
-        foreach ($this->getStats() as $s => $val) {
-            register_command($s, '_cmd_stat_adjust', ['os', 'nm']);
-            if (isset($val['alias'])) {
-                foreach ($val['alias'] as $a) {
-                    register_command($a, '_cmd_stat_adjust', ['os', 'nm']);
-                }
-            }
+        foreach ($this->getAllStatCommands() as $s) {
+            $this->registerCommand($s, '_cmd_stat_adjust', ['os', 'nm']);
         }
     }
 

@@ -3,6 +3,7 @@
 class gamebook_base {
     protected $player = null;
     protected $commandqueue = [];
+    protected $commands = [];
 
 
     public function __construct(&$player) {
@@ -52,7 +53,7 @@ class gamebook_base {
         $executions = 0;
         while (sizeof($commandqueue) > 0) {
             // Process the next command in the list
-            processcommand(array_shift($commandqueue), $this->player);
+            $this->processCommand(array_shift($commandqueue));
 
             // If stamina ever drops to less than 1, the player if dead
             // Stop processing any queued commands and tell the player they are dead
@@ -105,5 +106,145 @@ class gamebook_base {
 
 
     protected function registerCommands() {
+    }
+
+
+    protected function registerCommand($name, $function, $args = []) {
+        $this->commands[$name] = array(
+            'func' => $function,
+            'args' => $args
+        );
+    }
+
+
+    // Process command text and call command's function
+    protected function processCommand($command) {
+        $command = $this->preProcessesMagic($command);
+
+        // Split by whitespace
+        // $cmd[0] is the command
+        $cmd = preg_split('/\s+/', trim($command));
+        $cmd[0] = trim(strtolower($cmd[0]));
+
+        // Special case for quick page lookup
+        if (is_numeric($cmd[0])) {
+            $cmd[1] = $cmd[0];
+            $cmd[0] = 'page';
+            $this->_cmd_page($cmd);
+            return;
+        }
+
+        // look for a command function to call
+        if (array_key_exists($cmd[0], $this->commands)) {
+            $cmd = $this->advancedCommandSplit($command, $this->commands[$cmd[0]]['args']);
+            if (!$cmd) {
+                sendqmsg("Sorry, I didn't understand that command!", ":interrobang:");
+            } else {
+                call_user_func_array([$this, $this->commands[$cmd[0]]['func']], array($cmd));
+            }
+        }
+    }
+
+
+    protected function advancedCommandSplit($command, $def) {
+        $regex = "/^\\s*(\\S+)";
+        foreach ($def as $d) {
+            switch ($d) {
+            case 'l':  //whole line
+                $regex .= "\s+(.+)";
+                break;
+            case 'ol':  //optional whole line
+                $regex .= "(\s+.+)?";
+                break;
+            case 'oms':  //optional multi string (hard, doesn't match numbers)
+                $regex .= "(\s+(?![0-9]+).+?)?";
+                break;
+            case 'ms':  //multi string (hard, doesn't match numbers)
+                $regex .= "\s+((?![0-9]+).+?)";
+                break;
+            case 'osl':  //optional string (loose, matches numbers)
+                $regex .= "(\s+[^\s]+)?";
+                break;
+            case 'os':  //optional string (hard, doesn't match numbers)
+                $regex .= "(\s+(?![0-9]+)[^\s]+)?";
+                break;
+            case 's':  //string (loose, matches numbers)
+                $regex .= "\s+([^\s]+)";
+                break;
+            case 'on':  //optional number
+                $regex .= "(\s+[0-9]+)?";
+                break;
+            case 'n':  //number
+                $regex .= "\s+([0-9]+)";
+                break;
+            case 'onm':  //optional number modifier
+                $regex .= "(\s+[+\-][0-9]+)?";
+                break;
+            case 'nm':  //number modifier
+                $regex .= "\s+([+\-]?[0-9]+)";
+                break;
+            default:  //misc
+                $regex .= $d;
+                break;
+            }
+        }
+        $regex .= '\s*$/i';
+        $matches = array();
+
+        if (!preg_match($regex, $command, $matches)) {
+            return false;
+        }
+
+        array_shift($matches);
+        $matches = array_map('trim', $matches);
+        $matches = array_pad($matches, sizeof($def)+1, null);
+        //print_r($matches);
+        return $matches;
+    }
+
+
+    private function preProcessesMagic($command) {
+        // magic to allow semi-colons
+        $command = str_replace("{sc}", ";", $command);
+
+        // magic to substitute dice rolls
+        $command = preg_replace_callback(
+            '/{([1-9][0-9]?)d([1-9][0-9]{0,2})?([+|\-][1-9][0-9]{0,2})?}/',
+            function ($matches) {
+                $roll = 0;
+                if (!isset($matches[2]) || !$matches[2]) {
+                    $matches[2] = 6;
+                }
+                foreach (range(1, $matches[1]) as $i) {
+                    $roll += rand(1, $matches[2]);
+                }
+                if (isset($matches[3])) {
+                    $roll += $matches[3];
+                }
+                return $roll;
+            },
+            $command
+        );
+
+        // magic to substitute player vars
+        // build substitute array
+        $sa = array();
+        recursive_flatten_player($this->player, $sa);
+        // perform substitution
+        $command = preg_replace_callback(
+            '/{(.+?)}/',
+            function ($matches) use ($sa) {
+                if (array_key_exists($matches[1], $sa)) {
+                    if (is_bool($sa[$matches[1]])) {
+                        return $sa[$matches[1]]?'yes':'no';
+                    }
+                    return $sa[$matches[1]];
+                }
+                return $matches[0];
+            },
+            $command
+        );
+
+        return $command;
     }
 }

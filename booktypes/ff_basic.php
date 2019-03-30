@@ -171,26 +171,26 @@ class book_ff_basic extends book_character {
 
     protected function registerCommands() {
         parent::registerCommands();
-        register_command('eat',         '_cmd_eat');
-        register_command('pay',         '_cmd_pay', ['n']);
-        register_command('spend',       '_cmd_pay', ['n']);
-        register_command('buy',         '_cmd_buy', ['ms', 'on']);
-        register_command('luckyescape', '_cmd_luckyescape');
-        register_command('le',          '_cmd_luckyescape');
-        register_command('shield',      '_cmd_shield', ['os']);
-        register_command('test',        '_cmd_test', ['s', 'onm', 'on', 'on']);
-        register_command('fight',       '_cmd_fight', ['oms', 'n', 'n', 'osl']);
-        register_command('critfight',   '_cmd_critfight', ['oms', 'n', 'os', 'on']);
-        register_command('bonusfight',  '_cmd_bonusfight', ['oms', 'n', 'n', 'n', 'on']);
-        register_command('vs',          '_cmd_vs', ['ms', 'n', 'n', 'ms', 'n', 'n']);
-        register_command('fighttwo',    '_cmd_fighttwo', ['ms', 'n', 'n', 'oms', 'on', 'on']);
-        register_command('fightbackup', '_cmd_fightbackup', ['oms', 'n', 'n', 'oms', 'n']);
-        register_command('gun',         '_cmd_gun', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
-        register_command('attack',      '_cmd_attack', ['n', 'on']);
-        register_command('a',           '_cmd_attack', ['n', 'on']);
-        register_command('dead',        '_cmd_dead');
-        register_command('π',           '_cmd_easteregg');
-        register_command(':pie:',       '_cmd_easteregg');
+        $this->registerCommand('eat',         '_cmd_eat');
+        $this->registerCommand('pay',         '_cmd_pay', ['n']);
+        $this->registerCommand('spend',       '_cmd_pay', ['n']);
+        $this->registerCommand('buy',         '_cmd_buy', ['ms', 'on']);
+        $this->registerCommand('luckyescape', '_cmd_luckyescape');
+        $this->registerCommand('le',          '_cmd_luckyescape');
+        $this->registerCommand('shield',      '_cmd_shield', ['os']);
+        $this->registerCommand('test',        '_cmd_test', ['s', 'onm', 'on', 'on']);
+        $this->registerCommand('fight',       '_cmd_fight', ['oms', 'n', 'n', 'osl']);
+        $this->registerCommand('critfight',   '_cmd_critfight', ['oms', 'n', 'os', 'on']);
+        $this->registerCommand('bonusfight',  '_cmd_bonusfight', ['oms', 'n', 'n', 'n', 'on']);
+        $this->registerCommand('vs',          '_cmd_vs', ['ms', 'n', 'n', 'ms', 'n', 'n']);
+        $this->registerCommand('fighttwo',    '_cmd_fighttwo', ['ms', 'n', 'n', 'oms', 'on', 'on']);
+        $this->registerCommand('fightbackup', '_cmd_fightbackup', ['oms', 'n', 'n', 'oms', 'n']);
+        $this->registerCommand('gun',         '_cmd_gun', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
+        $this->registerCommand('attack',      '_cmd_attack', ['n', 'on']);
+        $this->registerCommand('a',           '_cmd_attack', ['n', 'on']);
+        $this->registerCommand('dead',        '_cmd_dead');
+        $this->registerCommand('π',           '_cmd_easteregg');
+        $this->registerCommand(':pie:',       '_cmd_easteregg');
     }
 
 

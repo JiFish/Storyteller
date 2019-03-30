@@ -24,20 +24,20 @@ class book_none extends gamebook_base {
 
 
     protected function registerCommands() {
-        register_command('look',       '_cmd_look');
-        register_command('page',       '_cmd_page', ['n', 'os']);
-        register_command('background', '_cmd_background');
-        register_command('roll',       '_cmd_roll', ['on']);
-        register_command('help',       '_cmd_help');
-        register_command('?',          '_cmd_help');
-        register_command('echo',       '_cmd_echo', ['l']);
-        register_command('randpage',   '_cmd_randpage', ['n', 'on', 'on', 'on', 'on', 'on', 'on', 'on']);
-        register_command('debugset',   '_cmd_debugset', ['s', 'l']);
-        register_command('silentset',  '_cmd_debugset', ['s', 'l']);
-        register_command('debuglist',  '_cmd_debuglist');
-        register_command('macro',      '_cmd_macro', ['n']);
-        register_command('m',          '_cmd_macro', ['n']);
-        register_command('map',        '_cmd_map');
+        $this->registerCommand('look',       '_cmd_look');
+        $this->registerCommand('page',       '_cmd_page', ['n', 'os']);
+        $this->registerCommand('background', '_cmd_background');
+        $this->registerCommand('roll',       '_cmd_roll', ['on']);
+        $this->registerCommand('help',       '_cmd_help');
+        $this->registerCommand('?',          '_cmd_help');
+        $this->registerCommand('echo',       '_cmd_echo', ['l']);
+        $this->registerCommand('randpage',   '_cmd_randpage', ['n', 'on', 'on', 'on', 'on', 'on', 'on', 'on']);
+        $this->registerCommand('debugset',   '_cmd_debugset', ['s', 'l']);
+        $this->registerCommand('silentset',  '_cmd_debugset', ['s', 'l']);
+        $this->registerCommand('debuglist',  '_cmd_debuglist');
+        $this->registerCommand('macro',      '_cmd_macro', ['n']);
+        $this->registerCommand('m',          '_cmd_macro', ['n']);
+        $this->registerCommand('map',        '_cmd_map');
     }
 
 

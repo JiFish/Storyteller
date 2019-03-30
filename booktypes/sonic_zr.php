@@ -67,7 +67,7 @@ class book_sonic_zr extends book_sonic {
 
     protected function registerCommands() {
         parent::registerCommands();
-        register_command('tails', '_cmd_tails', ['s', 'ol']);
+        $this->registerCommand('tails', '_cmd_tails', ['s', 'ol']);
     }
 
 
@@ -83,31 +83,29 @@ class book_sonic_zr extends book_sonic {
 
     //// Special case, order various tails to do commands
     public function _cmd_tails($cmd) {
-        global $commandslist, $commandsargs;
-        $player = &$this->player;
-
         $order = strtolower($cmd[1]);
-        if (array_key_exists($order, $commandsargs)) {
-            $cmd = advanced_command_split(trim($order.' '.$cmd[2]), $commandsargs[$order]);
-        } else {
-            $cmd = false;
-        }
-        if (!$cmd) {
-            sendqmsg("Sorry, I didn't understand that command!", ":interrobang:");
+        $args = $cmd[2];
+
+        // Check command is a valid order for tails
+        $valid_orders = $this->getAllStatCommands();
+        $valid_orders[] = 'hit';
+        $valid_orders[] = 'fight';
+        $valid_orders[] = 'test';
+        if (!in_array($order, $valid_orders)) {
+            sendqmsg("Can't ask tails to $order", ":interrobang:");
             return;
         }
 
         // Set the player to tails
         $mainplayer = &$this->player;
         $this->player = &$this->player['tails'];
-        call_user_func_array([$this, $commandslist[$cmd[0]]], array($cmd));
+        $this->processCommand($order.' '.$args);
+        if ($this->isDead()) {
+            sendqmsg("*Tails is dead!* :skull:", ':dead:');
+        }
+
         // Set the player back
         $this->player = &$mainplayer;
-
-        if ($player['tails']['stam'] < 1) {
-            $out = "*Tails is dead!* :skull:\n";
-            sendqmsg($out, ':dead:');
-        }
     }
 
 

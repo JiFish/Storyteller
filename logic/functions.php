@@ -3,81 +3,10 @@
 /// ----------------------------------------------------------------------------
 /// Functions
 
-// Process command text and call command's function
-function processcommand($command, &$player) {
-    global $commandslist, $commandsargs, $gamebook;
-
-    $command = pre_processes_magic($command, $player);
-
-    // Split by whitespace
-    // $cmd[0] is the command
-    $cmd = preg_split('/\s+/', trim($command));
-    $cmd[0] = trim(strtolower($cmd[0]));
-
-    // Special case for quick page lookup
-    if (is_numeric($cmd[0])) {
-        $cmd[1] = $cmd[0];
-        $cmd[0] = 'page';
-        $gamebook->_cmd_page($cmd);
-        return;
-    }
-
-    // look for a command function to call
-    if (array_key_exists($cmd[0], $commandslist)) {
-        $cmd = advanced_command_split($command, $commandsargs[$cmd[0]]);
-        if (!$cmd) {
-            sendqmsg("Sorry, I didn't understand that command!", ":interrobang:");
-        } else {
-            call_user_func_array([$gamebook, $commandslist[$cmd[0]]], array($cmd));
-        }
-    }
-}
 
 
-function pre_processes_magic($command, &$player) {
-    // magic to allow semi-colons
-    $command = str_replace("{sc}", ";", $command);
 
-    // magic to substitute dice rolls
-    $command = preg_replace_callback(
-        '/{([1-9][0-9]?)d([1-9][0-9]{0,2})?([+|\-][1-9][0-9]{0,2})?}/',
-        function ($matches) {
-            $roll = 0;
-            if (!isset($matches[2]) || !$matches[2]) {
-                $matches[2] = 6;
-            }
-            foreach (range(1, $matches[1]) as $i) {
-                $roll += rand(1, $matches[2]);
-            }
-            if (isset($matches[3])) {
-                $roll += $matches[3];
-            }
-            return $roll;
-        },
-        $command
-    );
 
-    // magic to substitute player vars
-    // build substitute array
-    $sa = array();
-    recursive_flatten_player($player, $sa);
-    // perform substitution
-    $command = preg_replace_callback(
-        '/{(.+?)}/',
-        function ($matches) use ($sa) {
-            if (array_key_exists($matches[1], $sa)) {
-                if (is_bool($sa[$matches[1]])) {
-                    return $sa[$matches[1]]?'yes':'no';
-                }
-                return $sa[$matches[1]];
-            }
-            return $matches[0];
-        },
-        $command
-    );
-
-    return $command;
-}
 
 
 function recursive_flatten_player(&$player, &$return, $keychain="") {
@@ -93,74 +22,7 @@ function recursive_flatten_player(&$player, &$return, $keychain="") {
 }
 
 
-function advanced_command_split($command, $def) {
-    $regex = "/^\\s*(\\S+)";
-    foreach ($def as $d) {
-        switch ($d) {
-        case 'l':  //whole line
-            $regex .= "\s+(.+)";
-            break;
-        case 'ol':  //optional whole line
-            $regex .= "(\s+.+)?";
-            break;
-        case 'oms':  //optional multi string (hard, doesn't match numbers)
-            $regex .= "(\s+(?![0-9]+).+?)?";
-            break;
-        case 'ms':  //multi string (hard, doesn't match numbers)
-            $regex .= "\s+((?![0-9]+).+?)";
-            break;
-        case 'osl':  //optional string (loose, matches numbers)
-            $regex .= "(\s+[^\s]+)?";
-            break;
-        case 'os':  //optional string (hard, doesn't match numbers)
-            $regex .= "(\s+(?![0-9]+)[^\s]+)?";
-            break;
-        case 's':  //string (loose, matches numbers)
-            $regex .= "\s+([^\s]+)";
-            break;
-        case 'on':  //optional number
-            $regex .= "(\s+[0-9]+)?";
-            break;
-        case 'n':  //number
-            $regex .= "\s+([0-9]+)";
-            break;
-        case 'onm':  //optional number modifier
-            $regex .= "(\s+[+\-][0-9]+)?";
-            break;
-        case 'nm':  //number modifier
-            $regex .= "\s+([+\-]?[0-9]+)";
-            break;
-        default:  //misc
-            $regex .= $d;
-            break;
-        }
-    }
-    $regex .= '\s*$/i';
-    $matches = array();
 
-    if (!preg_match($regex, $command, $matches)) {
-        return false;
-    }
-
-    array_shift($matches);
-    $matches = array_map('trim', $matches);
-    $matches = array_pad($matches, sizeof($def)+1, null);
-    //print_r($matches);
-    return $matches;
-}
-
-
-/// register new command
-function register_command($name, $function, $args = []) {
-    global $commandslist, $commandsargs;
-
-    if (!is_array($commandslist)) {
-        $commandslist = array();
-    }
-
-    $commandslist[$name] = $function;
-    $commandsargs[$name] = $args;
-}
 
 
 // Figure out what rules we are running

@@ -211,14 +211,14 @@ class book_ff_sst extends book_ff_basic {
 
     protected function registerCommands() {
         parent::registerCommands();
-        register_command('phaser',     '_cmd_gun', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
-        register_command('shipbattle', '_cmd_shipbattle', ['oms', 'n', 'n']);
-        register_command('recruit',    '_cmd_recruit', ['s', 'os', 'on', 'on', 'os', 'os']);
-        register_command('beam',       '_cmd_beam', ['(\sup|\sdown)', 'os', 'os', 'os', 'os', 'os']);
-        register_command('everyone',   '_cmd_everyone', ['l']);
-        register_command('awayteam',   '_cmd_everyone', ['l']);
+        $this->registerCommand('phaser',     '_cmd_gun', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
+        $this->registerCommand('shipbattle', '_cmd_shipbattle', ['oms', 'n', 'n']);
+        $this->registerCommand('recruit',    '_cmd_recruit', ['s', 'os', 'on', 'on', 'os', 'os']);
+        $this->registerCommand('beam',       '_cmd_beam', ['(\sup|\sdown)', 'os', 'os', 'os', 'os', 'os']);
+        $this->registerCommand('everyone',   '_cmd_everyone', ['l']);
+        $this->registerCommand('awayteam',   '_cmd_everyone', ['l']);
         foreach (['no1', 'science', 'medic', 'engineer', 'security', 'guard'] as $pos) {
-            register_command($pos, '_cmd_order', ['s', 'ol']);
+            $this->registerCommand($pos, '_cmd_order', ['s', 'ol']);
         }
     }
 
@@ -316,41 +316,36 @@ class book_ff_sst extends book_ff_basic {
 
     //// Special case, order various crew to do commands
     public function _cmd_order($cmd) {
-        global $commandslist, $commandsargs;
-
         $officer = strtolower($cmd[0]);
         $crew = &$this->player['crew'][$officer];
         $order = strtolower($cmd[1]);
-        $valid_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup',
-            'skill', 'stam', 'stamina', 'test', 'dead'];
-        $combat_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup'];
+        $args = $cmd[2];
 
+        // Check command is a valid order
+        $valid_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup',
+                         'skill', 'stam', 'stamina', 'test', 'dead'];
+        $combat_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup'];
         if (!in_array($order, $valid_orders)) {
             sendqmsg('Cannot order crew to '.$order, ':interrobang:');
             return;
         }
-        if (array_key_exists($order, $commandsargs)) {
-            $cmd = advanced_command_split(trim($order.' '.$cmd[2]), $commandsargs[$order]);
-        } else {
-            sendqmsg("Sorry, I didn't understand that command!", ":interrobang:");
-            return;
-        }
+
         // Apply combat penalty
         if ($crew['combatpenalty'] && in_array($order, $combat_orders)) {
             $crew['temp']['skill'] += -2;
         }
 
-        // Set the player to tails
+        // Set the player to crew member
         $mainplayer = &$this->player;
         $this->player = &$crew;
-        call_user_func_array([$this, $commandslist[$cmd[0]]], array($cmd));
+        $this->processCommand($order.' '.$args);
         // Set the player back
         $this->player = &$mainplayer;
 
         if ($crew['stam'] < 1) {
             $out = "*".$crew['name']." is dead!* :skull:\n";
             $newskill = max(1, $crew['max']['skill']-2);
-            $crew = $this>rollCrew($officer, $crew['combatpenalty']);
+            $crew = $this->rollCrew($officer, $crew['combatpenalty']);
             $crew['max']['skill'] = $newskill;
             $crew['skill'] = $newskill;
             $crew['replacement'] = true;
