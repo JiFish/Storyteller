@@ -323,7 +323,7 @@ class book_ff_sst extends book_ff_basic {
 
         // Check command is a valid order
         $valid_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup',
-                         'skill', 'stam', 'stamina', 'test', 'dead'];
+            'skill', 'stam', 'stamina', 'test', 'dead'];
         $combat_orders = ['fight', 'phaser', 'gun', 'critfight', 'bonusfight', 'fighttwo', 'fightbackup'];
         if (!in_array($order, $valid_orders)) {
             sendqmsg('Cannot order crew to '.$order, ':interrobang:');

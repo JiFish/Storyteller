@@ -11,8 +11,8 @@ class gamebook_base {
         $this->registerCommands();
         $this->loadPlayer();
     }
-    
-    
+
+
     // Load the player array from a serialized array
     // If we can't find the file, generate a new character
     protected function loadPlayer($file = 'save.txt') {
@@ -22,9 +22,9 @@ class gamebook_base {
             $this->player = unserialize(file_get_contents($file));
         }
     }
-    
-    
-     // Serialize and save player array
+
+
+    // Serialize and save player array
     public function savePlayer($file="save.txt") {
         file_put_contents($file, serialize($this->player));
     }
@@ -45,7 +45,7 @@ class gamebook_base {
 
         $this->commandqueue = $commandqueue;
         $commandqueue = &$this->commandqueue;
-        
+
         // Filter commands using the disabled list. Do this here so macros and $autorun
         // can still use disabled commands
         $this->filterCommandList();
@@ -247,4 +247,6 @@ class gamebook_base {
 
         return $command;
     }
+
+
 }

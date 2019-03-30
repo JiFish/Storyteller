@@ -172,7 +172,7 @@ class book_ff_magic extends book_ff_basic {
             // Deal with the spell based on type
             if (isset($s['func'])) {
                 if ($s['target']) {
-                    call_user_func([$this, $s['func']],($cmd[2]?$cmd[2]:'Opponent'), $cmd[3], $cmd[4]);
+                    call_user_func([$this, $s['func']], ($cmd[2]?$cmd[2]:'Opponent'), $cmd[3], $cmd[4]);
                 } else {
                     call_user_func([$this, $s['func']]);
                 }

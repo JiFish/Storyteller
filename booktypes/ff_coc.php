@@ -102,7 +102,7 @@ class book_ff_coc extends book_ff_magic {
     }
 
 
-    protected function _spell_creaturecopy ($name, $skill, $stam) {
+    protected function _spell_creaturecopy($name, $skill, $stam) {
         sendqmsg("> A duplicate of the $name appears!", ':fireworks:');
         $this->addCommand("vs $name Duplicate $skill $stam $name $skill $stam");
     }
