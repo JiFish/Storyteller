@@ -43,9 +43,57 @@ class book_none extends gamebook_base {
 
     //// !look
     public function _cmd_look($cmd) {
-        require "book.php";
-        $story = format_story($this->player['lastpage'], $book[$this->player['lastpage']], $this->player);
+        $story = $this->getFormatedStory($this->player['lastpage']);
         sendqmsg($story);
+    }
+
+
+    protected function getFormatedStory($page) {
+        require "book.php";
+
+        if (!array_key_exists($page, $book)) {
+            return "$page: PAGE NOT FOUND";
+        }
+
+        // Book specific specials
+        $story = $this->storyModify($book[$page]);
+
+        // Look for choices in the text and give them bold formatting
+        $story = preg_replace('/\(?turn(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $story);
+        $story = preg_replace('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', '*${0}*', $story);
+
+        // Wrapping and formatting
+        $story = str_replace("\n", "\n\n", $story);
+        $story = wordwrap($story, 100);
+        $story = explode("\n", $story);
+        for ($l = 0; $l < sizeof($story); $l++) {
+            if (trim($story[$l]) == "") {
+                $story[$l] = "> ";
+            } else {
+                // Prevent code blocks from linebreaking
+                if (substr_count($story[$l], '`') % 2 != 0) {
+                    if (array_key_exists($l+1, $story)) {
+                        $story[$l+1] = $story[$l].' '.$story[$l+1];
+                        $story[$l] = '';
+                        continue;
+                    }
+                }
+
+                // Deal with bold blocks across lines
+                if (substr_count($story[$l], '*') % 2 != 0) {
+                    $story[$l] .= '*';
+                    if (array_key_exists($l+1, $story)) {
+                        $story[$l+1] = "*".$story[$l+1];
+                    }
+                }
+
+                // Italic and quote
+                $story[$l] = "> _".$story[$l].'_';
+            }
+        }
+        $story = "> — *$page* —\n".implode("\n", $story);
+
+        return $story;
     }
 
 
@@ -58,49 +106,43 @@ class book_none extends gamebook_base {
         $page = $cmd[1];
         $backup = (isset($cmd[2])?strtolower($cmd[2])!='nobackup':true);
 
-        require "book.php";
-
-        if (array_key_exists($page, $book)) {
-            // Save a backup of the player for undo
-            if ($backup) {
-                $this->savePlayer('save_backup.txt');
-            }
-
-            $player['lastpage'] = $page;
-            $story = $book[$page];
-
-            // Exclude pages using 'if ', 'you may' or 'otherwise'
-            // This isn't perfect, but will prevent many false matches
-            if (stripos($story, "if ") === false && stripos($story, "you may ") === false
-                && stripos($story, "otherwise") === false) {
-                // Attempt to find pages that give you only one choice
-                // Find pages with only one turn to and add that page to the command list
-                preg_match_all('/turn to (section )?([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
-                if (sizeof($matches) == 1) {
-                    $this->addCommand("page ".$matches[0][2]." nobackup");
-                }
-                // Attempt to find pages that end the story, kill the player if found
-                elseif (sizeof($matches) < 1 &&
-                    preg_match('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', $story, $matches)) {
-                    $player['stam'] = 0;
-                }
-            }
-
-            // Autorun
-            if (isset($autorun)) {
-                if (array_key_exists($page, $autorun)) {
-                    $cmdlist = explode(";", $autorun[$page]);
-                    for ($k = count($cmdlist)-1; $k >= 0; $k--) {
-                        $this->addCommand($cmdlist[$k]);
-                    }
-                }
-            }
-
-            $story = format_story($player['lastpage'], $story, $player);
-        } else {
-            sendqmsg("*$page: PAGE NOT FOUND*", ":interrobang:");
-            return;
+        // Save a backup of the player for undo
+        if ($backup) {
+            $this->savePlayer('save_backup.txt');
         }
+
+        $player['lastpage'] = $page;
+        require "book.php";
+        $story = $book[$page];
+
+        // Exclude pages using 'if ', 'you may' or 'otherwise'
+        // This isn't perfect, but will prevent many false matches
+        if (stripos($story, "if ") === false && stripos($story, "you may ") === false
+            && stripos($story, "otherwise") === false) {
+            // Attempt to find pages that give you only one choice
+            // Find pages with only one turn to and add that page to the command list
+            preg_match_all('/turn to (section )?([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
+            if (sizeof($matches) == 1) {
+                $this->addCommand("page ".$matches[0][2]." nobackup");
+            }
+            // Attempt to find pages that end the story, kill the player if found
+            elseif (sizeof($matches) < 1 &&
+                preg_match('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', $story, $matches)) {
+                $player['stam'] = 0;
+            }
+        }
+
+        // Autorun
+        if (isset($autorun)) {
+            if (array_key_exists($page, $autorun)) {
+                $cmdlist = explode(";", $autorun[$page]);
+                for ($k = count($cmdlist)-1; $k >= 0; $k--) {
+                    $this->addCommand($cmdlist[$k]);
+                }
+            }
+        }
+
+        $story = $this->getFormatedStory($player['lastpage']);
 
         if (IMAGES_SUBDIR && file_exists('images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR.$player['lastpage'].'.jpg')) {
             sendimgmsg($story, 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/'.IMAGES_SUBDIR.'/'.$player['lastpage'].'.jpg');
@@ -112,8 +154,7 @@ class book_none extends gamebook_base {
 
     //// !background
     public function _cmd_background($cmd) {
-        require "book.php";
-        $story = format_story(0, $book[0], $this->player);
+        $story = getFormatedStory(0);
         senddirmsg($story);
     }
 

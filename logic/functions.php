@@ -190,51 +190,6 @@ function diceemoji($r) {
 /// ----------------------------------------------------------------------------
 /// Send message to slack functions
 
-function format_story($page, $text) {
-    require "book.php";
-
-    // Book specific specials
-    global $gamebook;
-    $story = $gamebook->storyModify($text);
-
-    // Look for choices in the text and give them bold formatting
-    $story = preg_replace('/\(?turn(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $story);
-    $story = preg_replace('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', '*${0}*', $story);
-
-    // Wrapping and formatting
-    $story = str_replace("\n", "\n\n", $story);
-    $story = wordwrap($story, 100);
-    $story = explode("\n", $story);
-    for ($l = 0; $l < sizeof($story); $l++) {
-        if (trim($story[$l]) == "") {
-            $story[$l] = "> ";
-        } else {
-            // Prevent code blocks from linebreaking
-            if (substr_count($story[$l], '`') % 2 != 0) {
-                if (array_key_exists($l+1, $story)) {
-                    $story[$l+1] = $story[$l].' '.$story[$l+1];
-                    $story[$l] = '';
-                    continue;
-                }
-            }
-
-            // Deal with bold blocks across lines
-            if (substr_count($story[$l], '*') % 2 != 0) {
-                $story[$l] .= '*';
-                if (array_key_exists($l+1, $story)) {
-                    $story[$l+1] = "*".$story[$l+1];
-                }
-            }
-
-            // Italic and quote
-            $story[$l] = "> _".$story[$l].'_';
-        }
-    }
-    $story = "> — *$page* —\n".implode("\n", $story);
-
-    return $story;
-}
-
 
 function make_seed() {
     list($usec, $sec) = explode(' ', microtime());
