@@ -8,8 +8,8 @@ class book_ff_dotd extends book_ff_basic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective, $seed);
+    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+        $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective);
         // Starting Equipment
         $p['stuff'] = array('Sword (+0)', 'Leather Armor');
         $p['prov'] = 3;

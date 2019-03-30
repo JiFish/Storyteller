@@ -45,7 +45,7 @@ Character Information
     !info or !status Show character stats and inventory.
     !stats or !s Show character stats only.
     !stuff or !i Show character inventory.
-    !newgame [name] [gender] [emoji] [race] [adjective] [seed] or !ng Rolls a new character and resets the game. Optionally customise the new character. Use ? to randomise a field. A numeric [seed] may be given in case you want to generate the same character again and again.
+    !newgame [name] [gender] [emoji] [race] [adjective] or !ng Rolls a new character and resets the game. Optionally customise the new character. Use ? to randomise a field.
     !undo When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
 
 Some fun character ideas:

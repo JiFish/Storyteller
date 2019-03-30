@@ -54,12 +54,11 @@ class book_character extends book_none {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
+    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = array('lastpage' => 1,
             'stuff' => [],
             'creationdice' => [],
-            'temp' => [],
-            'seed' => $seed);
+            'temp' => []);
         // Roll/Set stats!
         roll_stats($p, $this->getStats());
         // Character Fluff - Gender, name, race etc.
@@ -159,8 +158,8 @@ class book_character extends book_none {
         $this->registerCommand('drop',       '_cmd_drop', ['l']);
         $this->registerCommand('lose',       '_cmd_drop', ['l']);
         $this->registerCommand('use',        '_cmd_drop', ['l']);
-        $this->registerCommand('ng',         '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl', 'on']);
-        $this->registerCommand('newgame',    '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl', 'on']);
+        $this->registerCommand('ng',         '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl']);
+        $this->registerCommand('newgame',    '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl']);
         $this->registerCommand('undo',       '_cmd_undo');
         $this->registerCommand('save',       '_cmd_save', ['on']);
         $this->registerCommand('load',       '_cmd_load', ['on']);
@@ -182,7 +181,7 @@ class book_character extends book_none {
     function _cmd_newgame($cmd) {
         $player = &$this->player;
         $cmd = array_pad($cmd, 7, '?');
-        $player = $this->rollCharacter($cmd[1], $cmd[2], $cmd[3], $cmd[4], $cmd[5], $cmd[6]);
+        $player = $this->rollCharacter($cmd[1], $cmd[2], $cmd[3], $cmd[4], $cmd[5]);
 
         $icon = $player['emoji'];
         $attach = $this->getCharcterSheetAttachments();

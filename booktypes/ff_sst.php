@@ -16,8 +16,8 @@ class book_ff_sst extends book_ff_basic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
+    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         if (!$race || $race == '?') {
             if ($p['race'] == 'Elf') {
                 $p['race'] = 'Vulcan';

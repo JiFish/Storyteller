@@ -21,8 +21,8 @@ class book_ff_sob extends book_ff_basic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective, $seed);
+    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+        $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective);
         $p['race'] = 'Pirate';
         $shipnames = file('resources/ship_names.txt');
         $p['shipname'] = trim($shipnames[array_rand($shipnames)]);

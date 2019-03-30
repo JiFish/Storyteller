@@ -8,8 +8,8 @@ class book_ff_bvp extends book_ff_basic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
+    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // All stats start at 1
         $p['creationdice'] = array();
         $p['stam'] = $p['max']['stam'] = 1;

@@ -34,8 +34,8 @@ class book_ff_loz extends book_ff_magic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?', $seed = '?') {
-        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective, $seed);
+    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+        $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Starting Equipment
         $p['stuff'] = array(
             'Knife (+0, -1 dmg)',
