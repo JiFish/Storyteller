@@ -124,10 +124,8 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'object',
             'target' => false,
             'desc' => 'This spell creates an extra provision. Add 1 to your provisions. This spell cannot be cast during combat.',
-            'func' => function() {
-                sendqmsg('> A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appears from nowhere.', ':fireworks:');
-                addcommand('prov +1');
-            }
+            'reply' => 'A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appears from nowhere.',
+            'addcmd' => 'prov +1'
         );
 
         $spells[] = array(
@@ -136,10 +134,8 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'object',
             'target' => false,
             'desc' => 'This spell creates extra provisions. Add 2 to your provisions. This spell cannot be cast during combat.',
-            'func' => function() {
-                sendqmsg('> A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' and a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appear from nowhere.', ':fireworks:');
-                addcommand('prov +2');
-            }
+            'reply' => 'A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' and a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appear from nowhere.',
+            'addcmd' => 'prov +2'
         );
 
         $spells[] = array(
@@ -148,10 +144,8 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'object',
             'target' => false,
             'desc' => 'This spell creates extra provisions. Add 3 to your provisions. This spell cannot be cast during combat.',
-            'func' => function() {
-                sendqmsg('> A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].', a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' and a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appear from nowhere.', ':fireworks:');
-                addcommand('prov +3');
-            }
+            'reply' => 'A '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].', a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' and a '.['sandwich', 'hunk of cheese', 'meat shank', 'baked potato'][mt_rand(0, 3)].' appear from nowhere.',
+            'addcmd' => 'prov +3'
         );
 
         $spells[] = array(
@@ -177,10 +171,8 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'self',
             'target' => false,
             'desc' => 'This spell increases your current luck score by 1 point. You current luck score cannot exceed it\'s Initial value. This spell cannot be cast during combat.',
-            'func' => function() {
-                sendqmsg('> _Felicitus Populi!_', ':fireworks:');
-                addcommand('luck +1');
-            }
+            'reply' => '_Felicitus Populi!_',
+            'addcmd' => 'luck +1'
         );
 
         $spells[] = array(
@@ -198,10 +190,8 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'self',
             'target' => false,
             'desc' => 'This spell enables you to react and move faster, adding 1 to your current skill for a short time. It can be cast just before combat begins (not during one!) to aid your fighting, or just just before you have to Test your Skill for some reason. The spell expires as soon as one combat has finished, or after you have Tested your Skill.',
-            'func' => function() {
-                sendqmsg('> _You feel quicker._', ':fireworks:');
-                addcommand('skill temp +1');
-            }
+            'reply' => '_You feel quicker._',
+            'addcmd' => 'skill temp +1'
         );
 
         $spells[] = array(
@@ -210,14 +200,7 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell can be cast immediately before any combat begins but not during one. For the first three Attack Rounds of the combat, you may roll dice twice when working out your Attack Strength and take the higher total rolled.',
-            'func' => function(&$player, $name, $skill, $stam) {
-                $out = run_fight(['player' => &$player,
-                        'monstername' => $name,
-                        'monsterskill' => $skill,
-                        'monsterstam' => $stam,
-                        'fasthands' => true]);
-                sendqmsg($out, ":crossed_swords:");
-            }
+            'func' => '_spell_fast_hands'
         );
 
         $spells[] = array(
@@ -226,10 +209,7 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell can be used in any attack round instead of a weapon attack. If you have the higher Attack Strength, your adversary\'s body is shrouded in flames and he loses 5 Stamina points. If you have the lower attack strength, your spell is ruined and the creature hits you.',
-            'func' => function(&$player, $name, $skill, $stam) {
-                $out = run_single_attack($player, $name, $skill, $stam, 2, 5);
-                sendqmsg($out, ':fireworks:');
-            }
+            'func' => '_spell_fireball'
         );
 
 
@@ -239,10 +219,7 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'self',
             'target' => false,
             'desc' => 'Once this spell is cast, the next spell which is cast at you by an enemy will not effect you. The Magic screen only neutralizes one spell against you, however.',
-            'func' => function() {
-                sendqmsg("> _Counter-spell!_", ':fireworks:');
-                addcommand('get note: Immune to the next spell');
-            }
+            'reply' => "_Counter-spell!_"
         );
 
         $spells[] = array(
@@ -251,14 +228,7 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell can be used in any attack round instead of a weapon attack. If you have the higher Attack Strength, this spell kills any creature with a skill score of 9 or less. If you have the lower attack strength, your spell is ruined and the creature hits you. This spell will not affect any Undead creature or Zagor, your nemesis!',
-            'func' => function(&$player, $name, $skill, $stam) {
-                if ($skill > 9) {
-                    sendqmsg("*$name is immune to this spell!*", ':interrobang:');
-                } else {
-                    $out = run_single_attack($player, $name, $skill, $stam, 2, 1000);
-                    sendqmsg($out, ':fireworks:');
-                }
-            }
+            'func' => '_spell_death'
         );
 
         $spells[] = array(
@@ -267,10 +237,7 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'combat',
             'target' => true,
             'desc' => 'This spell can be used in any attack round instead of a weapon attack. If you have the higher Attack Strength, your opponent is struck by a ball of white-hot electricity and loses 7 Stamina points. If you have the lower attack strength, your spell is ruined and the creature hits you.',
-            'func' => function(&$player, $name, $skill, $stam) {
-                $out = run_single_attack($player, $name, $skill, $stam, 2, 7);
-                sendqmsg($out, ':fireworks:');
-            }
+            'func' => '_spell_thunderbolt'
         );
 
         $spells[] = array(
@@ -288,10 +255,8 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'object',
             'target' => false,
             'desc' => 'This spell summons a Golden Talisman from the hidden treasures of the dungeon. You may only cast two steal spells during the adventure. (This includes castings of Steal Dagger.) You do not gain any Luck for acquiring Talismans this way.',
-            'func' => function(&$player, $name, $skill, $stam) {
-                sendqmsg('> A Golden Talisman appears from nowhere.', ':fireworks:');
-                addcommand('talismans +1');
-            }
+            'reply' => 'A Golden Talisman appears from nowhere.',
+            'addcmd' => 'talismans +1'
         );
 
         $spells[] = array(
@@ -300,12 +265,42 @@ class book_ff_loz extends book_ff_magic {
             'type' => 'object',
             'target' => false,
             'desc' => 'This spell summons a Silver Dagger from the hidden treasures of the dungeon. You may only cast two steal spells during the adventure. (This includes castings of Steal Talisman.) You do not gain any Luck for acquiring Daggers this way.',
-            'func' => function(&$player, $name, $skill, $stam) {
-                sendqmsg('> A Silver Dagger appears from nowhere.', ':fireworks:');
-                addcommand('daggers +1');
-            }
+            'reply' => 'A Silver Dagger appears from nowhere.',
+            'addcmd' => 'daggers +1'
         );
         return $spells;
+    }
+
+
+    protected function _spell_fast_hands($name, $skill, $stam) {
+        $out = run_fight(['player' => &$this->player,
+                'monstername' => $name,
+                'monsterskill' => $skill,
+                'monsterstam' => $stam,
+                'fasthands' => true]);
+        sendqmsg($out, ":crossed_swords:");
+    }
+
+
+    protected function _spell_fireball($name, $skill, $stam) {
+        $out = run_single_attack($this->player, $name, $skill, $stam, 2, 5);
+        sendqmsg($out, ':fireworks:');
+    }
+
+
+    protected function _spell_death($name, $skill, $stam) {
+        if ($skill > 9) {
+            sendqmsg("*$name is immune to this spell!*", ':interrobang:');
+        } else {
+            $out = run_single_attack($this->player, $name, $skill, $stam, 2, 1000);
+            sendqmsg($out, ':fireworks:');
+        }
+    }
+
+
+    protected function _spell_thunderbolt($name, $skill, $stam) {
+        $out = run_single_attack($player, $name, $skill, $stam, 2, 7);
+        sendqmsg($out, ':fireworks:');
     }
 
 

@@ -23,11 +23,8 @@ class book_ff_coc extends book_ff_magic {
             'cost' => 1,
             'type' => 'combat',
             'target' => true,
-            'desc' => 'This spell will allow you to conjure up an exact duplicate of any creature you are fighting. The duplicate will have the same skill and stamina scores, and the same powers, as its orginal. But the duplicate will be under the control of your will and you may, for example, instruct it to attack the orginal creature and then sit back and watch the battle!',
-            'func' => function(&$player, $name, $skill, $stam) {
-                sendqmsg("> A duplicate of the $name appears!", ':fireworks:');
-                addcommand("vs $name Duplicate $skill $stam $name $skill $stam");
-            }
+            'desc' => 'This spell will allow you to conjure up an exact duplicate of any creature you are fighting. The duplicate will have the same skill and stamina scores, and the same powers, as its original. But the duplicate will be under the control of your will and you may, for example, instruct it to attack the original creature and then sit back and watch the battle!',
+            'func' => '_spell_creaturecopy'
         );
 
         $spells[] = array(
@@ -102,6 +99,12 @@ class book_ff_coc extends book_ff_magic {
             'reply' => "You cast the weakness spell..."
         );
         return $spells;
+    }
+
+
+    protected function _spell_creaturecopy ($name, $skill, $stam) {
+        sendqmsg("> A duplicate of the $name appears!", ':fireworks:');
+        $this->addCommand("vs $name Duplicate $skill $stam $name $skill $stam");
     }
 
 

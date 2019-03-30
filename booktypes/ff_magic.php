@@ -45,10 +45,8 @@ class book_ff_magic extends book_ff_basic {
             'type' => 'self',
             'target' => false,
             'desc' => "This spell will restore your Luck score by half of it's maximum value. This spell is special in that it may be cast at any time during your adventure, except in a battle. You need not wait for a choice to appear on the page.",
-            'func' => function($player) {
-                sendqmsg('> You cast the luck spell...', ':fireworks:');
-                addcommand('luck +'.ceil($player['max']['luck']/2));
-            }
+            'reply' => 'You cast the luck spell...',
+            'addcmd' => ($this->player?'luck +'.ceil($this->player['max']['luck']/2):'')
         );
 
         $spells[] = array(
@@ -57,10 +55,8 @@ class book_ff_magic extends book_ff_basic {
             'type' => 'self',
             'target' => false,
             'desc' => "This spell will restore your Skill score by half of it's maximum value. This spell is special in that it may be cast at any time during your adventure, except in a battle. You need not wait for a choice to appear on the page.",
-            'func' => function($player) {
-                sendqmsg('> You cast the skill spell...', ':fireworks:');
-                addcommand('skill +'.ceil($player['max']['skill']/2));
-            }
+            'reply' => 'You cast the skill spell...',
+            'addcmd' => ($this->player?'skill +'.ceil($this->player['max']['skill']/2):'')
         );
 
         $spells[] = array(
@@ -69,20 +65,18 @@ class book_ff_magic extends book_ff_basic {
             'type' => 'self',
             'target' => false,
             'desc' => "This spell will restore your Stamina score by half of it's maximum value. This spell is special in that it may be cast at any time during your adventure, except in a battle. You need not wait for a choice to appear on the page.",
-            'func' => function($player) {
-                sendqmsg('> You cast the stamina spell...', ':fireworks:');
-                addcommand('stamina +'.ceil($player['max']['stam']/2));
-            }
+            'reply' => 'You cast the stamina spell...',
+            'addcmd' => ($this->player?'stam +'.ceil($this->player['max']['stam']/2):'')
         );
 
         return $spells;
     }
 
 
-    public function registerCommands() {
+    protected function registerCommands() {
         parent::registerCommands();
         register_command('spellbook', '_cmd_spellbook', ['osl']);
-        $spellsregex .= "\s+(";
+        $spellsregex = "\s+(";
         foreach ($this->getSpells() as $s) {
             $spellsregex .= preg_quote($s['name']).'|';
         }
@@ -171,13 +165,19 @@ class book_ff_magic extends book_ff_basic {
             if ($s['cost'] > 0) {
                 $player['magic'] -= $s['cost'];
             }
-            // Deal with the spell based on type
-            if ($s['target']) {
-                $s['func']($player, ($cmd[2]?$cmd[2]:'Opponent'), $cmd[3], $cmd[4]);
-            } elseif (isset($s['reply'])) {
+            // Send reply if given
+            if (isset($s['reply'])) {
                 sendqmsg("> ".$s['reply'], ':fireworks:');
-            } else {
-                $s['func']($player);
+            }
+            // Deal with the spell based on type
+            if (isset($s['func'])) {
+                if ($s['target']) {
+                    call_user_func([$this, $s['func']],($cmd[2]?$cmd[2]:'Opponent'), $cmd[3], $cmd[4]);
+                } else {
+                    call_user_func([$this, $s['func']]);
+                }
+            } elseif (isset($s['addcmd'])) {
+                $this->addCommand($s['addcmd']);
             }
         }
     }

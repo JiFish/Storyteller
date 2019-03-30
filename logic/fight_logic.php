@@ -48,9 +48,6 @@ function run_fight($input) {
     $youare = ucfirst($referrers['youare']);
     $your = ucfirst($referrers['your']);
 
-    // Prevent restore
-    backup_remove();
-
     // Apply temp bonuses, if any
     apply_temp_stats($player);
 

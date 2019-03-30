@@ -169,7 +169,7 @@ class book_ff_basic extends book_character {
     }
 
 
-    public function registerCommands() {
+    protected function registerCommands() {
         parent::registerCommands();
         register_command('eat',         '_cmd_eat');
         register_command('pay',         '_cmd_pay', ['n']);
@@ -202,23 +202,23 @@ class book_ff_basic extends book_character {
         // "x Gold"
         preg_match_all('/^([0-9]+) gold/i', $item, $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
-            addcommand("gold +".$matches[0][1]);
+            $this->addCommand("gold +".$matches[0][1]);
             return;
         }
         // "provision"
         if (strtolower($item) == "provision") {
-            addcommand("prov +1");
+            $this->addCommand("prov +1");
             return;
         }
         // "x provisions"
         preg_match_all('/^([0-9]+) provisions/i', $item, $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
-            addcommand("prov +".$matches[0][1]);
+            $this->addCommand("prov +".$matches[0][1]);
             return;
         }
         // "shield"
         if (strtolower($item) == "shield") {
-            addcommand("shield on");
+            $this->addCommand("shield on");
             return;
         }
         parent::_cmd_get($cmd);
@@ -234,23 +234,23 @@ class book_ff_basic extends book_character {
         // "x Gold"
         preg_match_all('/^([0-9]+) gold/i', $drop, $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
-            addcommand("gold -".$matches[0][1]);
+            $this->addCommand("gold -".$matches[0][1]);
             return;
         }
         // "provision"
         if ($drop == "provision") {
-            addcommand("prov -1");
+            $this->addCommand("prov -1");
             return;
         }
         // "x provisions"
         preg_match_all('/^([0-9]+) provisions/i', $drop, $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
-            addcommand("prov -".$matches[0][1]);
+            $this->addCommand("prov -".$matches[0][1]);
             return;
         }
         // "shield"
         if ($drop == "shield") {
-            addcommand("shield off");
+            $this->addCommand("shield off");
             return;
         }
         parent::_cmd_drop($cmd);
@@ -291,7 +291,7 @@ class book_ff_basic extends book_character {
         } else if ($this->player['gold'] < $cmd[1]) {
             sendqmsg("* You don't have ".$cmd[1]." gold! *", ':interrobang');
         } else {
-            addcommand("gold -".$cmd[1]);
+            $this->addCommand("gold -".$cmd[1]);
         }
     }
 
@@ -365,8 +365,6 @@ class book_ff_basic extends book_character {
     //// !test <luck/skill/stam> (run a skill test)
     public function _cmd_test($cmd) {
         $player = &$this->player;
-        // Prevent restore
-        backup_remove();
 
         $stats = $this->getStats();
         $stat = get_stat_from_alias(strtolower($cmd[1]), $stats);
@@ -432,7 +430,7 @@ class book_ff_basic extends book_character {
             }
             // Show follow up page
             if (isset($success_page)) {
-                addcommand($success_page);
+                $this->addCommand($success_page);
             }
         }
         else {
@@ -453,7 +451,7 @@ class book_ff_basic extends book_character {
             }
             // Show follow up page
             if (isset($fail_page)) {
-                addcommand($fail_page);
+                $this->addCommand($fail_page);
             }
         }
 
@@ -560,7 +558,7 @@ class book_ff_basic extends book_character {
                 'monster2name' => $m2,
                 'monster2skill' => $mskill2]);
         if ($this->player['stam'] > 0) {
-            addcommand("fight $m2 $mskill2 $mstam2");
+            $this->addCommand("fight $m2 $mskill2 $mstam2");
         }
         sendqmsg($out, ":crossed_swords:");
     }
@@ -623,7 +621,7 @@ class book_ff_basic extends book_character {
 
         $cmdlist = explode(";", $fullcmd);
         for ($k = count($cmdlist)-1; $k >= 0; $k--) {
-            addcommand($cmdlist[$k]);
+            $this->addCommand($cmdlist[$k]);
         }
     }
 

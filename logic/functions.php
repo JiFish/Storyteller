@@ -169,25 +169,10 @@ function getbook() {
 }
 
 
-// Load the player array from a serialized array
-// If we can't find the file, generate a new character
-function load($file = 'save.txt') {
-    $save = file_get_contents($file);
-    if (!$save) {
-        global $gamebook;
-        $p = $gamebook->newCharacter();
-    } else {
-        $p = unserialize($save);
-    }
-
-    return $p;
-}
 
 
-// Serialize and save player array
-function save(&$p, $file="save.txt") {
-    file_put_contents($file, serialize($p));
-}
+
+
 
 
 // Convert number to html entity of dice emoji
@@ -202,13 +187,6 @@ function diceemoji($r) {
 }
 
 
-// Adds a new command to the command list
-function addcommand($cmd) {
-    global $commandlist;
-    return array_unshift($commandlist, $cmd);
-}
-
-
 /// ----------------------------------------------------------------------------
 /// Send message to slack functions
 
@@ -217,7 +195,6 @@ function format_story($page, $text) {
 
     // Book specific specials
     global $gamebook;
-    echo $gamebook->getId();
     $story = $gamebook->storyModify($text);
 
     // Look for choices in the text and give them bold formatting
@@ -284,29 +261,6 @@ function unapply_temp_stats(&$player) {
 }
 
 
-function backup_player(&$p) {
-    save($p, 'save_backup.txt');
-}
-
-
-function backup_remove() {
-    if (file_exists('save_backup.txt')) {
-        unlink('save_backup.txt');
-    }
-}
-
-
-function restore_player(&$p) {
-    if (file_exists('save_backup.txt')) {
-        unlink('save.txt');
-        copy('save_backup.txt', 'save.txt');
-        $p = load();
-        return true;
-    }
-    return false;
-}
-
-
 function basic_num_to_word($num) {
     switch ($num) {
     case 0:
@@ -333,29 +287,6 @@ function basic_num_to_word($num) {
         return 'Ten';
     default:
         return $num;
-    }
-}
-
-
-// Filter an array of commands by a disabled list and remove entries
-// that are on the disabled list
-function filter_command_list(&$disabledcommands, &$commandlist) {
-    if (isset($disabledcommands) && is_array($disabledcommands)) {
-        foreach ($commandlist as $key => $cmd) {
-            // Determine end of command word.
-            // Either the 1st space of the end of the string
-            $cmdend = stripos($cmd, ' ');
-            if ($cmdend === false) {
-                $cmdend = strlen($cmd);
-            }
-            foreach ($disabledcommands as $dc) {
-                // Look for match
-                if (strtolower(substr($cmd, 0, $cmdend)) == strtolower($dc)) {
-                    unset($commandlist[$key]);
-                    break;
-                }
-            }
-        }
     }
 }
 

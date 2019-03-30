@@ -1,5 +1,7 @@
 <?php
 
+$limittime = false;
+
 // Send a direct message to a user or channel on slack
 function senddirmsg($message, $user = false) {
     if (!$user) {

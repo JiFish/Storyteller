@@ -113,11 +113,8 @@ class book_ff_ss extends book_ff_magic {
             'type' => 'evil',
             'target' => false,
             'desc' => "This spell is a very powerful spell, and not to be used lightly. When you cast a Curse, you immediately roll one dice and lose that many stamina points. However, something terrible - there is no telling what - will immediately befall your enemy, too.",
-            'func' => function() {
-                $dice = rand(1, 6);
-                sendqmsg('> You cast curse and pay the price... '.diceemoji($dice), ':fireworks:');
-                addcommand("stam -$dice");
-            }
+            'reply' => 'You cast curse and pay the price...',
+            'addcmd' => 'stam -{1d6}'
         );
         return $spells;
     }

@@ -126,7 +126,7 @@ class book_sonic extends book_character {
     }
 
 
-    public function registerCommands() {
+    protected function registerCommands() {
         parent::registerCommands();
         register_command('test',    '_cmd_test', ['s', 'n', 'on', 'on']);
         register_command('ng',      '_cmd_newgame', ['on', 'on', 'on', 'on', 'on', 'on']);
@@ -233,7 +233,7 @@ class book_sonic extends book_character {
             }
             // Show follow up page
             if (isset($success_page)) {
-                addcommand($success_page);
+                $this->addCommand($success_page);
             }
         }
         else {
@@ -244,7 +244,7 @@ class book_sonic extends book_character {
             }
             // Show follow up page
             if (isset($fail_page)) {
-                addcommand($fail_page);
+                $this->addCommand($fail_page);
             }
         }
 

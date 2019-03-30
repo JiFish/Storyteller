@@ -1,14 +1,8 @@
 <?php
 
-class book_none {
-    protected $player = null;
+require_once 'gamebook_base.php';
 
-
-    public function __construct(&$player) {
-        $this->player = &$player;
-    }
-
-
+class book_none extends gamebook_base {
     public function getId() {
         return 'none';
     }
@@ -29,7 +23,7 @@ class book_none {
     }
 
 
-    public function registerCommands() {
+    protected function registerCommands() {
         register_command('look',       '_cmd_look');
         register_command('page',       '_cmd_page', ['n', 'os']);
         register_command('background', '_cmd_background');
@@ -43,7 +37,6 @@ class book_none {
         register_command('debuglist',  '_cmd_debuglist');
         register_command('macro',      '_cmd_macro', ['n']);
         register_command('m',          '_cmd_macro', ['n']);
-        register_command('undo',       '_cmd_undo');
         register_command('map',        '_cmd_map');
     }
 
@@ -51,7 +44,7 @@ class book_none {
     //// !look
     public function _cmd_look($cmd) {
         require "book.php";
-        $story = format_story($player['lastpage'], $book[$player['lastpage']], $player);
+        $story = format_story($this->player['lastpage'], $book[$this->player['lastpage']], $this->player);
         sendqmsg($story);
     }
 
@@ -63,14 +56,14 @@ class book_none {
             return;
         }
         $page = $cmd[1];
-        $backup = (isset($cmd[2])?strtolower($cmd[2])!='nobackup':false);
+        $backup = (isset($cmd[2])?strtolower($cmd[2])!='nobackup':true);
 
         require "book.php";
 
         if (array_key_exists($page, $book)) {
             // Save a backup of the player for undo
             if ($backup) {
-                backup_player($player);
+                $this->savePlayer('save_backup.txt');
             }
 
             $player['lastpage'] = $page;
@@ -84,7 +77,7 @@ class book_none {
                 // Find pages with only one turn to and add that page to the command list
                 preg_match_all('/turn to (section )?([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
                 if (sizeof($matches) == 1) {
-                    addcommand("page ".$matches[0][2]." nobackup");
+                    $this->addCommand("page ".$matches[0][2]." nobackup");
                 }
                 // Attempt to find pages that end the story, kill the player if found
                 elseif (sizeof($matches) < 1 &&
@@ -98,7 +91,7 @@ class book_none {
                 if (array_key_exists($page, $autorun)) {
                     $cmdlist = explode(";", $autorun[$page]);
                     for ($k = count($cmdlist)-1; $k >= 0; $k--) {
-                        addcommand($cmdlist[$k]);
+                        $this->addCommand($cmdlist[$k]);
                     }
                 }
             }
@@ -251,9 +244,6 @@ class book_none {
 
     //// !randpage <page 1> [page 2] [page 3] [...]
     public function _cmd_randpage($cmd) {
-        // Prevent restore
-        backup_remove();
-
         $pagelist = array();
         foreach ($cmd as $c) {
             if (is_numeric($c)) {
@@ -277,7 +267,7 @@ class book_none {
         }
 
         sendqmsg("Rolled $de", ":game_die:");
-        addcommand("page ".$pagelist[$choice]." nobackup");
+        $this->addCommand("page ".$pagelist[$choice]." nobackup");
     }
 
 
@@ -336,7 +326,7 @@ class book_none {
 
         $cmdlist = explode(";", $fullcmd);
         for ($k = count($cmdlist)-1; $k >= 0; $k--) {
-            addcommand($cmdlist[$k]);
+            $this->addCommand($cmdlist[$k]);
         }
     }
 

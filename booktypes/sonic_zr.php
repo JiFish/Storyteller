@@ -65,7 +65,7 @@ class book_sonic_zr extends book_sonic {
     }
 
 
-    public function registerCommands() {
+    protected function registerCommands() {
         parent::registerCommands();
         register_command('tails', '_cmd_tails', ['s', 'ol']);
     }

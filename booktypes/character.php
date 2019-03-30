@@ -118,7 +118,7 @@ class book_character extends book_none {
     }
 
 
-    public function registerCommands() {
+    protected function registerCommands() {
         parent::registerCommands();
         register_command('get',        '_cmd_get', ['l']);
         register_command('take',       '_cmd_get', ['l']);
@@ -227,6 +227,7 @@ class book_character extends book_none {
     //// Various statistic adjustment commands
     public function _cmd_stat_adjust($cmd) {
         $player = &$this->player;
+        $stats = $this->getStats();
         // Referrers
         if (isset($player['referrers'])) {
             $your = $player['referrers']['your'].' ';
@@ -320,16 +321,26 @@ class book_character extends book_none {
 
     //// !undo - restore to the previous save
     public function _cmd_undo($cmd) {
-        $player = &$this->player;
-        if ($player['stam'] > 0) {
+        if (!$this->isDead()) {
             sendqmsg("*You can only undo when dead.*", ':interrobang:');
             return;
-        } else if (restore_player($player)) {
+        } else if ($this->restorePlayer()) {
             sendqmsg("*...or maybe this happened...*", ':rewind:');
-            addcommand("look");
+            $this->addCommand("look");
         } else {
             sendqmsg("*There are some things that cannot be undone...*", ':skull:');
         }
+    }
+
+
+    protected function restorePlayer() {
+        if (file_exists('save_backup.txt')) {
+            unlink('save.txt');
+            copy('save_backup.txt', 'save.txt');
+            $this->loadPlayer();
+            return true;
+        }
+        return false;
     }
 
 
@@ -340,7 +351,7 @@ class book_character extends book_none {
             sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
             return;
         }
-        save($this->player, "save_$slot.txt");
+        $this->savePlayer("save_$slot.txt");
         sendqmsg("*Game saved in slot $slot*", ':floppy_disk:');
     }
 
@@ -357,10 +368,10 @@ class book_character extends book_none {
             sendqmsg("*No save found in slot $slot*", ':interrobang:');
             return;
         }
-        $player = load("save_$slot.txt");
+        $this->loadPlayer("save_$slot.txt");
         sendqmsg("*Loaded game in slot $slot*", $player['emoji']);
-        addcommand("look");
-        addcommand("info");
+        $this->addCommand("look");
+        $this->addCommand("info");
     }
 
 

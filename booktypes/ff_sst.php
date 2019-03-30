@@ -209,7 +209,7 @@ class book_ff_sst extends book_ff_basic {
     }
 
 
-    public function registerCommands() {
+    protected function registerCommands() {
         parent::registerCommands();
         register_command('phaser',     '_cmd_gun', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
         register_command('shipbattle', '_cmd_shipbattle', ['oms', 'n', 'n']);
@@ -364,10 +364,10 @@ class book_ff_sst extends book_ff_basic {
 
     //// Special case, order WHOLE crew, or away team, to do command
     public function _cmd_everyone($cmd) {
-        addcommand($cmd[1]);
+        $this->addCommand($cmd[1]);
         foreach ($this->player['crew'] as $key => $val) {
             if ($cmd[0] != 'awayteam' || $val['awayteam']) {
-                addcommand($key.' '.$cmd[1]);
+                $this->addCommand($key.' '.$cmd[1]);
             }
         }
     }
