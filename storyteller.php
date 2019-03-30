@@ -12,7 +12,7 @@ if ($_POST['token'] != SLACK_TOKEN) {
 }
 
 // Gamebook Object
-require_once 'booktypes/'.getbook().'.php';
+require_once 'logic/gamebooks/'.getbook().'.php';
 $bookclass = 'Book_'.getbook();
 $gamebook = new $bookclass($player);
 
