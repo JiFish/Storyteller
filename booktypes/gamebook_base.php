@@ -126,14 +126,6 @@ class gamebook_base {
         $cmd = preg_split('/\s+/', trim($command));
         $cmd[0] = trim(strtolower($cmd[0]));
 
-        // Special case for quick page lookup
-        if (is_numeric($cmd[0])) {
-            $cmd[1] = $cmd[0];
-            $cmd[0] = 'page';
-            $this->_cmd_page($cmd);
-            return;
-        }
-
         // look for a command function to call
         if (array_key_exists($cmd[0], $this->commands)) {
             $cmd = $this->advancedCommandSplit($command, $this->commands[$cmd[0]]['args']);

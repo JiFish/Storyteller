@@ -41,6 +41,14 @@ class book_none extends gamebook_base {
     }
 
 
+    // Look for numeric commands and treat them as a special case
+    protected function processCommand($command) {
+        if (is_numeric(trim($command))) {
+            $command = "page $command";
+        }
+        parent::processCommand($command);
+    }
+
     //// !look
     public function _cmd_look($cmd) {
         $story = $this->getFormatedStory($this->player['lastpage']);
