@@ -367,7 +367,7 @@ class book_ff_basic extends book_character {
         $player = &$this->player;
 
         $stats = $this->getStats();
-        $stat = get_stat_from_alias(strtolower($cmd[1]), $stats);
+        $stat = $this->getStatFromAlias(strtolower($cmd[1]), $stats);
         $sinfo = &$stats[$stat];
         $dicemod = ($cmd[2]?(int)$cmd[2]:0);
         // Setup outcome pages to read if provided

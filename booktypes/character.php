@@ -15,7 +15,7 @@ class book_character extends book_none {
     }
 
 
-    public function getAllStatCommands() {
+    protected function getAllStatCommands() {
         $statcmds = [];
         foreach ($this->getStats() as $s => $val) {
             $statcmds[] = $s;
@@ -26,6 +26,26 @@ class book_character extends book_none {
             }
         }
         return $statcmds;
+    }
+
+
+    protected function getStatFromAlias($alias) {
+        foreach ($this->getStats() as $s => $val) {
+            if ($s == $input) {
+                $thisstat = $s;
+                break;
+            }
+            if (isset($val['alias'])) {
+                foreach ($val['alias'] as $a) {
+                    if ($a == $input) {
+                        $thisstat = $s;
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        return $thisstat;
     }
 
 
@@ -250,7 +270,7 @@ class book_character extends book_none {
         // $statname is what we will send back to slack
         // $val is the adjustment or new value
         // $icons contains icons to send
-        $thisstat = get_stat_from_alias(strtolower($cmd[0]), $this->getStats());
+        $thisstat = $this->getStatFromAlias(strtolower($cmd[0]), $this->getStats());
         $statname = $stats[$thisstat]['friendly'];
         if (strtolower($cmd[1]) == "max") {
             $icons = [':arrow_up:', ':arrow_down:'];

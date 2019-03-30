@@ -107,22 +107,3 @@ function basic_num_to_word($num) {
     }
 }
 
-
-function get_stat_from_alias($input, $stats) {
-    foreach ($stats as $s => $val) {
-        if ($s == $input) {
-            $thisstat = $s;
-            break;
-        }
-        if (isset($val['alias'])) {
-            foreach ($val['alias'] as $a) {
-                if ($a == $input) {
-                    $thisstat = $s;
-                    break;
-                }
-            }
-        }
-    }
-
-    return $thisstat;
-}
