@@ -111,8 +111,7 @@ class book_sonic extends book_character {
     public function _cmd_stat_adjust($cmd) {
         $player = &$this->player;
         // Get the current value
-        global $stats, $statalias;
-        $thisstat = $statalias[strtolower($cmd[0])];
+        $thisstat = get_stat_from_alias(strtolower($cmd[0]), $this->getStats());
         $before = $player[$thisstat];
 
         parent::_cmd_stat_adjust($cmd, $player);
