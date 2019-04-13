@@ -49,6 +49,12 @@ class book_character extends book_none {
     }
 
 
+    protected function getCharacterString() {
+        $p = &$this->player;
+        return "*".$p['name']."* the ".$p['adjective']." _(".$p['gender']." ".$p['race'].")_";
+    }
+
+
     public function newCharacter() {
         return $this->rollCharacter();
     }
@@ -187,7 +193,7 @@ class book_character extends book_none {
         $attach = $this->getCharcterSheetAttachments();
         $attach[] = $this->getStuffAttachment();
 
-        sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n*".$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
+        sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n*".$this->getCharacterString(), $attach, $icon);
     }
 
 
@@ -424,7 +430,7 @@ class book_character extends book_none {
         $attach = $this->getCharcterSheetAttachments();
         $attach[] = $this->getStuffAttachment();
 
-        sendmsg('*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
+        sendmsg($this->getCharacterString(), $attach, $icon);
     }
 
 
@@ -434,7 +440,7 @@ class book_character extends book_none {
         $icon = ($this->isDead()?":skull:":$player['emoji']);
         $attach = $this->getCharcterSheetAttachments();
 
-        sendmsg('*'.$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_", $attach, $icon);
+        sendmsg($this->getCharacterString(), $attach, $icon);
     }
 
 
