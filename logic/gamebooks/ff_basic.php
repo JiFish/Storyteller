@@ -60,6 +60,7 @@ class book_ff_basic extends book_character {
                 'alias' => ['weaponbonus', 'weapon'],
                 'icons' => ':dagger_knife:',
                 'display' => 'bonus_value',
+                'allownegative' => true,
             ],
             'gold' => [
                 'friendly' => 'Gold',

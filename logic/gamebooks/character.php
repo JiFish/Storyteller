@@ -277,6 +277,13 @@ class book_character extends book_none {
         // $icons contains icons to send
         $thisstat = $this->getStatFromAlias(strtolower($cmd[0]), $this->getStats());
         $statname = $stats[$thisstat]['friendly'];
+        // Allow negative for temp values, others have a min 0 unless allownegative set
+        if ($cmd[1] == 'temp' || !isset($stats[$thisstat]['allownegative']) || !$stats[$thisstat]['allownegative']) {
+            $allownegative = false;
+        } else {
+            $allownegative = true;
+        }
+
         if (strtolower($cmd[1]) == "max") {
             $icons = [':arrow_up:', ':arrow_down:'];
         } elseif (isset($stats[$thisstat]['icons'])) {
@@ -315,8 +322,7 @@ class book_character extends book_none {
         } else if ($val[0] == "-") {
             $val = substr($val, 1);
             $statref -= (int)$val;
-            // Allow negative weapon bonuses and temp values, but others have a min 0.
-            if ($statref < 0 && $thisstat != 'weapon' && $cmd[1] != 'temp') {
+            if ($statref < 0 && !$allownegative) {
                 $statref = 0;
             }
             $msg = "*Subtracted $val from $your$statname, now $statref.*";
