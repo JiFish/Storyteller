@@ -43,7 +43,7 @@ First you must create an incoming and outgoing webhook. In Slack, go to **Admini
 By default Storyteller ships with a very short and simple sample book. It isn't very fun, so you'll likely want to replace it. You have 3 options.
 
 #### Option 1: Download pre-prepared book
-Importing from an official source is painful (see the next section.) So I am reluctantly providing a link to some books that have been pre-prepared for use. Download the file and replace the contents of `book.php` with it.
+Importing from an official source is painful since many are not available in an eBook format. So I am reluctantly providing a link to some books that have been pre-prepared for use. Download the file and replace the contents of `book.php` with it.
 
 Pre-Prepared book.php:
 - [Warlock of Firetop Mountain](https://pastebin.com/raw/vWWTeMFj)
@@ -54,10 +54,10 @@ Pre-Prepared book.php:
 These links will be removed hastily if anyone ever objects. Don't be a jerk. If use them, make sure you own the books. [Amazon link](http://www.amazon.com/s?url=search-alias%3Daps&field-keywords=fighting+fantasy)
 
 #### Option 2: Import a book you own
-Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook format. If they were, I'd provide a script to automate extraction. Since they aren't your only option is to scan, OCR and input the text yourself from a paper book. If you're mad enough to attempt this, see `book.php` for an example. Use can use the `bookconvert.php` script in the *extras* directory to help you convert raw text to this format. e.g. `php bookconvert.php mybook.txt > book.php`
+Unless you are lucky enough to find the book you want in an eBook format, your only option is to scan and OCR the text yourself from a paper book. One you've converted the book to raw text, you can use can use the `bookconvert.php` script in the *extras* directory to help you convert raw text to the correct format. e.g. `php bookconvert.php mybook.txt > book.php`. See `book.php` for an example book.
 
 #### Option 3: Write your own adventure
-Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
+Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. Choose a set of supported rules you like and come up with your own adventure. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
 
 ### 3. Set the booktype / adjust config.php
 Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules. You can look up the correct book type in `book_support.html` found in the *extras* directory.
@@ -92,7 +92,7 @@ If you come up with a creative input method, please consider submitting it back 
 - `!help` to see some basic commands. Or see commands.md or commands.html for the full list
 - If the book asks you to do something there isn't a command for, you can always roll dice with `!roll` and apply any effects manually.
 - `!use` doesn't do anything on it's own. You must still apply the item's effects manually. e.g. `!use Potion of Skill;!skill 99`
-- If the book asks you to do something after a certain number of rounds in a fight, you can make the fight end early by putting the number of rounds end the end of the command. e.g. To stop after 3 rounds: `!fight Squirrel 5 5 3`
+- If a fighting fantasy book asks you to do something after a certain number of rounds in a fight, you can make the fight end early by putting the number of rounds end the end of the command. e.g. To stop after 3 rounds: `!fight Squirrel 5 5 3`
 
 ## Technical Information
 **Do you accept bug reports?**
@@ -103,14 +103,14 @@ Yes. Particularly security issues should be reported. Please provide a test case
 
 Sure. You can also post them on the issues page. No promises though.
 
+**Will you support other books?**
+
+I'd like to. Please make requests on the issues page.
+
 **What about pull requests / patches etc.?**
 
 Gladly.
 
-**Where's the object-orientation?**
+**What about a proper bot that isn't state-based / support for other chat software?**
 
-There isn't any. This was pretty much a single use script that I've genericised just enough that it can be installed elsewhere. I've tried to clean the code up enough to allow easy hackablity, but drastic expansions will likely require a refactor.
-
-**What about support for other chat software?**
-
-This would be nice. But the code would need a refactor.
+I'd like to do this, but I'm not sure how to best achieve this with PHP. This is why the discord outgoing hook bot is written in python.
