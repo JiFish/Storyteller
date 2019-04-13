@@ -193,7 +193,7 @@ class book_character extends book_none {
         $attach = $this->getCharcterSheetAttachments();
         $attach[] = $this->getStuffAttachment();
 
-        sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n*".$this->getCharacterString(), $attach, $icon);
+        sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n".$this->getCharacterString(), $attach, $icon);
     }
 
 
