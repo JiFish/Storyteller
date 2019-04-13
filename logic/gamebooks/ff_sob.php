@@ -145,7 +145,7 @@ class book_ff_sob extends book_ff_basic {
             'shield' => false,
             'temp' => []
         );
-        $out = run_fight(['player' => &$bp,
+        $out = $this->runFight(['player' => &$bp,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'monsterstam' => $cmd[3],

@@ -273,7 +273,7 @@ class book_ff_loz extends book_ff_magic {
 
 
     protected function _spell_fast_hands($name, $skill, $stam) {
-        $out = run_fight(['player' => &$this->player,
+        $out = $this->runFight(['player' => &$this->player,
                 'monstername' => $name,
                 'monsterskill' => $skill,
                 'monsterstam' => $stam,
@@ -283,7 +283,7 @@ class book_ff_loz extends book_ff_magic {
 
 
     protected function _spell_fireball($name, $skill, $stam) {
-        $out = run_single_attack($this->player, $name, $skill, $stam, 2, 5);
+        $out = $this->runSingleAttack($this->player, $name, $skill, $stam, 2, 5);
         sendqmsg($out, ':fireworks:');
     }
 
@@ -292,14 +292,14 @@ class book_ff_loz extends book_ff_magic {
         if ($skill > 9) {
             sendqmsg("*$name is immune to this spell!*", ':interrobang:');
         } else {
-            $out = run_single_attack($this->player, $name, $skill, $stam, 2, 1000);
+            $out = $this->runSingleAttack($this->player, $name, $skill, $stam, 2, 1000);
             sendqmsg($out, ':fireworks:');
         }
     }
 
 
     protected function _spell_thunderbolt($name, $skill, $stam) {
-        $out = run_single_attack($player, $name, $skill, $stam, 2, 7);
+        $out = $this->runSingleAttack($player, $name, $skill, $stam, 2, 7);
         sendqmsg($out, ':fireworks:');
     }
 

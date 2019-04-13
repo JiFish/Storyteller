@@ -225,7 +225,7 @@ class book_ff_sst extends book_ff_basic {
 
     //// !shipbattle [name] <skill> <stamina> (run ship battle logic)
     public function _cmd_shipbattle($cmd) {
-        $out = run_ship_battle(['player' => &$this->player,
+        $out = $this->runShipBattle(['player' => &$this->player,
                 'oppname' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'oppweapons' => $cmd[2],
                 'oppshields' => $cmd[3],
@@ -365,6 +365,95 @@ class book_ff_sst extends book_ff_basic {
                 $this->addCommand($key.' '.$cmd[1]);
             }
         }
+    }
+
+
+    protected function runShipBattle($input) {
+        // Inputs
+        if (!isset($input['player'])) return false;
+        if (!isset($input['oppname'])) return false;
+        if (!isset($input['oppweapons'])) return false;
+        if (!isset($input['oppshields'])) return false;
+        $player = &$input['player'];
+        $m = $input['oppname'];
+        $mweapons = &$input['oppweapons'];
+        $mshields = &$input['oppshields'];
+        $maxrounds = (isset($input['maxrounds'])? $input['maxrounds']: 50);
+
+        // Apply temp bonuses, if any
+        apply_temp_stats($player);
+
+        // Fight loop
+        $out = "";
+        $round = 0;
+        while (true) {
+            $round++;
+            // Player
+            // Roll to hit
+            $roll = rand(1, 6); $roll2 = rand(1, 6);
+            $emoji = diceemoji($roll).diceemoji($roll2);
+            if ($roll+$roll2 < $player['weapons']) {
+                // Roll for damage
+                $roll = rand(1, 6); $roll2 = rand(1, 6);
+                $hemoji = diceemoji($roll).diceemoji($roll2);
+                if ($roll+$roll2 == 12) {
+                    $out .= "_Your ship made a critical hit!_ ($emoji vs ".$player['weapons']." - $hemoji)\n";
+                    $mshields -= 6;
+                } else if (($roll+$roll2) > $mshields) {
+                    $out .= "_Your ship hit with a glancing blow._ ($emoji vs ".$player['weapons']." - $hemoji vs $mshields)\n";
+                    $mshields -= 2;
+                } else {
+                    $out .= "_Your ship made a good hit._ ($emoji vs ".$player['weapons']." - $hemoji vs $mshields)\n";
+                    $mshields -= 4;
+                }
+            } else {
+                $out .= "_Your weapon fire misses._ ($emoji vs ".$player['weapons'].")\n";
+            }
+            // Check Opp is dead
+            if ($mshields < 0) {
+                $out .= "*$m were destroyed.*\n";
+                $out .= "_(Your remaining shields: ".$player['shields'].")_";
+                break;
+            }
+            // Monster
+            // Roll to hit
+            $roll = rand(1, 6); $roll2 = rand(1, 6);
+            $emoji = diceemoji($roll).diceemoji($roll2);
+            if ($roll+$roll2 < $mweapons) {
+                // Roll for damage
+                $roll = rand(1, 6); $roll2 = rand(1, 6);
+                $hemoji = diceemoji($roll).diceemoji($roll2);
+                if ($roll+$roll2 == 12) {
+                    $out .= "_$m made a critical hit!_ ($emoji vs $mweapons - $hemoji)\n";
+                    $player['shields'] -= 6;
+                } else if (($roll+$roll2) > $player['shields']) {
+                    $out .= "_$m hit you with a glancing blow._ ($emoji vs $mweapons - $hemoji vs ".$player['shields'].")\n";
+                    $player['shields'] -= 2;
+                } else {
+                    $out .= "_$m made a good hit against you._ ($emoji vs $mweapons - $hemoji vs ".$player['shields'].")\n";
+                    $player['shields'] -= 4;
+                }
+            } else {
+                $out .= "_$m's weapon fire misses._ ($emoji vs $mweapons)\n";
+            }
+            // Check Opp is dead
+            if ($player['shields'] < 0) {
+                $out .= "*Your ship has been destroyed!*\n";
+                $player['stam'] = 0;
+                break;
+            }
+
+            if ($round == $maxrounds) {
+                $out .= "_*Combat stopped after $round rounds.*_\n";
+                $out .= "_($m's remaining shields: $mshields. Your remaining shields: ".$player['shields'].")_";
+                break;
+            }
+        }
+
+        // Remove temp bonuses, if any and clear temp bonus array
+        unapply_temp_stats($player);
+
+        return $out;
     }
 
 

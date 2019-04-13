@@ -462,7 +462,7 @@ class book_ff_basic extends book_character {
 
     //// !fight [name] <skill> <stamina> [maxrounds] (run fight logic)
     public function _cmd_fight($cmd) {
-        $out = run_fight(['player' => &$this->player,
+        $out = $this->runFight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'monsterstam' => $cmd[3],
@@ -484,7 +484,7 @@ class book_ff_basic extends book_character {
         }
 
         $out = "_*You".($critsfor == 'both'?' both':'')." have to hit critical strikes!* ($critchance in 6 chance)_\n";
-        $out = run_fight(['player' => &$this->player,
+        $out = $this->runFight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'critsfor' => $critsfor,
@@ -495,7 +495,7 @@ class book_ff_basic extends book_character {
 
     //// !bonusfight [name] <skill> <stamina> <bonusdamage> [bonusdmgchance] (run bonus attack fight logic)
     public function _cmd_bonusfight($cmd) {
-        $out = run_fight(['player' => &$this->player,
+        $out = $this->runFight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'monsterstam' => $cmd[3],
@@ -518,7 +518,7 @@ class book_ff_basic extends book_character {
             'shield' => false,
             'temp' => []
         );
-        $out = run_fight(['player' => &$vsplayer,
+        $out = $this->runFight(['player' => &$vsplayer,
                 'monstername' => $cmd[4],
                 'monsterskill' => $cmd[5],
                 'monsterstam' => $cmd[6]
@@ -551,7 +551,7 @@ class book_ff_basic extends book_character {
             $m2 = "Second ".$m2;
         }
 
-        $out = run_fight(['player' => &$this->player,
+        $out = $this->runFight(['player' => &$this->player,
                 'monstername' => $m,
                 'monsterskill' => $mskill,
                 'monsterstam' => $mstam,
@@ -575,7 +575,7 @@ class book_ff_basic extends book_character {
         $backupname = ($cmd[4]?$cmd[4]:'The backup');
         $backupskill = $cmd[5];
 
-        $out = run_fight(['player' => &$this->player,
+        $out = $this->runFight(['player' => &$this->player,
                 'monstername' => $m,
                 'monsterskill' => $mskill,
                 'monsterstam' => $mstam,
@@ -588,7 +588,7 @@ class book_ff_basic extends book_character {
     //// !attack <skill>
     public function _cmd_attack($cmd) {
         $dmg = ($cmd[2]?$cmd[2]:0);
-        $out = run_single_attack($this->player, 'Opponent', $cmd[1], 999, $dmg, 0);
+        $out = $this->runSingleAttack($this->player, 'Opponent', $cmd[1], 999, $dmg, 0);
 
         sendqmsg($out, ":crossed_swords:");
     }
@@ -602,7 +602,7 @@ class book_ff_basic extends book_character {
 
     //// !phaser/gun [-/+modifier] [stun/kill] [name] <skill> [stun/kill] [maxrounds] (run phaser fight logic)
     public function _cmd_gun($cmd) {
-        $out = run_phaser_fight(['player' => &$this->player,
+        $out = $this->runGunFight(['player' => &$this->player,
                 'modifier' => ($cmd[1]?$cmd[1]:0),
                 'stunkill' => ($cmd[2]?$cmd[2]:'stun'),
                 'monstername' => ($cmd[3]?$cmd[3]:"Opponent"),
@@ -623,6 +623,361 @@ class book_ff_basic extends book_character {
         for ($k = count($cmdlist)-1; $k >= 0; $k--) {
             $this->addCommand($cmdlist[$k]);
         }
+    }
+
+
+    protected function runFight($input) {
+        // Inputs
+        if (!isset($input['player'])) return false;
+        if (!isset($input['monstername'])) return false;
+        if (!isset($input['monsterskill'])) return false;
+        $player = &$input['player'];
+        $m = $input['monstername'];
+        $mskill = &$input['monsterskill'];
+        $mstam =          (isset($input['monsterstam'])?   $input['monsterstam']:    999);
+        $maxrounds =      (isset($input['maxrounds'])?     $input['maxrounds']:      50);
+        $critsfor =       (isset($input['critsfor'])?      $input['critsfor']:       'nobody');
+        $critchance =     (isset($input['critchance'])?    $input['critchance']:     2);
+        $m2 =             (isset($input['monster2name'])?  $input['monster2name']:   null);
+        $mskill2 =        (isset($input['monster2skill'])? $input['monster2skill']:  null);
+        $backupname =     (isset($input['backupname'])?    $input['backupname']:   null);
+        $backupskill =    (isset($input['backupskill'])?   $input['backupskill']:  null);
+        $bonusdmg =       (isset($input['bonusdmg'])?      $input['bonusdmg']:       0);
+        $bonusdmgchance = (isset($input['bonusdmgchance'])?$input['bonusdmgchance']: 3);
+        $fasthands =      (isset($input['fasthands'])?     $input['fasthands']:      false);
+        $healthstatname = (isset($input['healthstatname'])?$input['healthstatname']: 'stamina');
+        $gamebook = getbook();
+
+        // Special case for Starship Traveller Macommonian
+        if ($gamebook == 'ff_sst' && $player['race'] == 'Macommonian') {
+            $fasthands = true;
+        }
+
+        // Special case for rebel planet: players ALWAYS have critchance 1/6
+        if ($gamebook = 'ff_rp') {
+            if ($critsfor == 'them') {
+                $crtisfor = 'both';
+            } elseif ($critsfor != 'both') {
+                $crtisfor = 'me';
+            }
+            $critchance = 1;
+        }
+
+        // Referrers
+        if (isset($player['referrers'])) {
+            $referrers = $player['referrers'];
+        } else {
+            $referrers = ['you' => 'you', 'youare' => 'you are', 'your' => 'your'];
+        }
+        $you = ucfirst($referrers['you']);
+        $youlc = $referrers['you'];
+        $youare = ucfirst($referrers['youare']);
+        $your = ucfirst($referrers['your']);
+
+        // Apply temp bonuses, if any
+        apply_temp_stats($player);
+
+        // Process maxrounds special cases
+        $stop_when_hit_you = false;
+        $stop_when_hit_them = false;
+        if (strtolower($maxrounds) == 'hitme') {
+            $stop_when_hit_you = true;
+        } elseif (strtolower($maxrounds) == 'hitthem') {
+            $stop_when_hit_them = true;
+        } elseif (strtolower($maxrounds) == 'hitany') {
+            $stop_when_hit_you = true;
+            $stop_when_hit_them = true;
+        }
+        if (!is_numeric($maxrounds)) {
+            $maxrounds = 50;
+        }
+
+        $out = "";
+        $round = 0;
+        while ($player['stam'] > 0 && $mstam > 0) {
+            $round++;
+            $mroll = rand(1, 6); $mroll2 = rand(1, 6);
+            $proll = rand(1, 6); $proll2 = rand(1, 6);
+            $memoji = diceemoji($mroll).diceemoji($mroll2);
+            $pemoji = diceemoji($proll).diceemoji($proll2);
+
+            $mattack = $mskill+$mroll+$mroll2;
+            $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
+
+            // Special case for Creature of Havok instant kills
+            if ($gamebook == 'ff_coh' && $proll == $proll2) {
+                $out .= "_*Instant Kill*_ $pemoji\n";
+                $mstam = 0;
+                break;
+            }
+
+            // Fast hands gives 1 extra dice, drop lowest for attack power
+            if ($fasthands) {
+                $fhroll  = rand(1, 6);
+                $fhroll2 = rand(1, 6);
+                if ($fhroll+$fhroll2 > $proll+$proll2) {
+                    $pattack = $player['skill']+$player['weapon']+$fhroll;
+                    $pemoji = "~".$pemoji."~ / ".diceemoji($fhroll).diceemoji($fhroll2);
+                } else {
+                    $pemoji .= " / ~".diceemoji($fhroll).diceemoji($fhroll2)."~";
+                }
+                if ($round >= 3 && !($gamebook == 'ff_sst' && $player['race'] == 'Macommonian')) {
+                    $fasthands = false;
+                }
+            }
+
+            if ($critsfor != 'nobody') {
+                $croll = rand(1, 6);
+                $cemoji = diceemoji($croll);
+            }
+
+            if ($pattack > $mattack) {
+                $out .= "_$you hit $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)";
+                if ($critsfor == 'both' || $critsfor == 'me') {
+                    if ($croll > 6-$critchance) {
+                        $out .= " *and it was a critical strike!* (_ $cemoji _)_\n";
+                        $mstam = 0;
+                        break;
+                    }
+                    else {
+                        $out .= " but failed to get a critical strike._ (_ $cemoji _)";
+                    }
+                }
+                $out .= "_\n";
+                $mstam -= 2;
+                if ($stop_when_hit_them) { break; }
+            }
+            else if ($pattack < $mattack) {
+                $out .= "_$m hits $youlc! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)";
+                if ($critsfor == 'both') {
+                    if ($croll > 6-$critchance) {
+                        $out .= " *and it was a critical strike!* (_ $cemoji _)_\n";
+                        $player['stam'] = 0;
+                        break;
+                    } else {
+                        $out .= " but failed to get a critical strike. (_ $cemoji _)";
+                    }
+                }
+                if ($player['shield'] && rand(1, 6) == 6) {
+                    $out .= " :shield: $your shield reduces the damage by 1! (_ ".diceemoji(6)." _) ";
+                    $player['stam'] += 1;
+                }
+                $out .= "_\n";
+                $player['stam'] -= 2;
+                if ($stop_when_hit_you) { break; }
+            }
+            else {
+                $out .= "_$you and $m avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+            }
+
+            // Monster 2 attack
+            if ($m2) {
+                $mroll = rand(1, 6); $mroll2 = rand(1, 6);
+                $proll = rand(1, 6); $proll2 = rand(1, 6);
+                $mattack = $mskill2+$mroll+$mroll2;
+                $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
+
+                $memoji = diceemoji($mroll).diceemoji($mroll2);
+                $pemoji = diceemoji($proll).diceemoji($proll2);
+
+                if ($pattack > $mattack) {
+                    $out .= "_$you block $m2's attack. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                }
+                else if ($pattack < $mattack) {
+                    $out .= "_$m2 hit  $youlc! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                    $player['stam'] -= 2;
+                    if ($stop_when_hit_you) { break; }
+                }
+                else {
+                    $out .= "_$m2's attack fails to hit $youlc. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                }
+            }
+
+            //  Your backup attack
+            if ($backupname) {
+                $mroll = rand(1, 6); $mroll2 = rand(1, 6);
+                $proll = rand(1, 6); $proll2 = rand(1, 6);
+                $mattack = $mskill+$mroll+$mroll2;
+                $pattack = $backupskill+$proll+$proll2;
+
+                $memoji = diceemoji($mroll).diceemoji($mroll2);
+                $pemoji = diceemoji($proll).diceemoji($proll2);
+
+                if ($pattack > $mattack) {
+                    $out .= "_$backupname hits $m! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                    $mstam -= 2;
+                    if ($stop_when_hit_them) { break; }
+                }
+                else if ($pattack < $mattack) {
+                    $out .= "_$m blocks the attack of $backupname! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                }
+                else {
+                    $out .= "_$backupname's attack fails to hit $m. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+                }
+            }
+
+            // Bonus damage
+            if ($bonusdmg && $mstam > 0) {
+                $bdroll = rand(1, 6);
+                if ($bdroll > 6-$bonusdmgchance) {
+                    $bdemoji = ($bonusdmgchance < 6?'(_ '.diceemoji($bdroll).' _)':'');
+                    $out .= "_$m hits $youlc with ".$bonusdmg." bonus damage! $bdemoji _\n";
+                    $player['stam'] -= $bonusdmg;
+                }
+            }
+
+            //stave off death
+            if ($player['stam'] == 0 && $player['luck'] > 0) {
+                // roll 2d6
+                $d1 = rand(1, 6);
+                $d2 = rand(1, 6);
+                $e1 = diceemoji($d1);
+                $e2 = diceemoji($d2);
+                $out .= "_Testing luck to stave off death... ";
+                if ($d1+$d2 <= $player['luck']) {
+                    $out .= " $youare lucky!_ :four_leaf_clover: ( $e1 $e2 )\n";
+                    $player['stam'] += 1;
+                } else {
+                    $out .= " $youare unlucky!_ :lightning: ( $e1 $e2 )\n";
+                    $player['stam'] -= 1;
+                }
+                $player['luck']--;
+            }
+
+            if ($round == $maxrounds) {
+                break;
+            }
+        }
+
+        if ($player['stam'] < 1) {
+            $out .= "_*$m defeated $youlc!*_\n";
+        } elseif ($mstam < 1) {
+            $out .= "_*$you defeated $m!*_\n";
+            $out .= "_($your remaining $healthstatname: ".$player['stam'].")_";
+        } else {
+            if ($round > 1) {
+                $out .= "_*Combat stopped after $round rounds.*_\n";
+            }
+            $out .= "_($m's remaining $healthstatname: $mstam. $your remaining $healthstatname: ".$player['stam'].")_";
+        }
+
+        // Remove temp bonuses, if any and clear temp bonus array
+        unapply_temp_stats($player);
+
+        return $out;
+    }
+
+
+    protected function runSingleAttack(&$player, $mname, $mskill, $mstam, $mdamage = 2, $pdamage = 2) {
+        // Apply temp bonuses, if any
+        apply_temp_stats($player);
+
+        $mroll = rand(1, 6); $mroll2 = rand(1, 6);
+        $proll = rand(1, 6); $proll2 = rand(1, 6);
+        $mattack = $mskill+$mroll+$mroll2;
+        $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
+
+        $memoji = diceemoji($mroll).diceemoji($mroll2);
+        $pemoji = diceemoji($proll).diceemoji($proll2);
+
+        if ($pattack > $mattack) {
+            $out = "_You hit $mname. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+            if ($pdamage > 0) {
+                $mstam -= $pdamage;
+                if ($mstam > 0) {
+                    $out .= "_($mname's remaining stamina: $mstam)_";
+                } else {
+                    $out .= "_*You have defeated $mname!*_\n";
+                }
+            }
+        }
+        else if ($pattack < $mattack) {
+            $out = "_$mname hits you! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+            if ($mdamage > 0) {
+                $player['stam'] -= $mdamage;
+                if ($player['stam'] > 0) {
+                    $out .= "_(Your remaining stamina: ".$player['stam'].")_";
+                } else {
+                    $out .= "_*$mname has defeated you!*_\n";
+                }
+            }
+        }
+        else {
+            $out = "_You avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
+        }
+
+        // Remove temp bonuses, if any and clear temp bonus array
+        unapply_temp_stats($player);
+
+        return $out;
+    }
+
+
+    protected function runGunFight($input) {
+        // Inputs
+        if (!isset($input['player'])) return false;
+        if (!isset($input['monstername'])) return false;
+        if (!isset($input['monsterskill'])) return false;
+        $player = &$input['player'];
+        $m = $input['monstername'];
+        $mskill = &$input['monsterskill'];
+        $maxrounds = (isset($input['maxrounds'])? $input['maxrounds']:             50);
+        $modifier  = (isset($input['modifier'])?  $input['modifier']:              0);
+        $stunkill  = (isset($input['stunkill'])?  strtolower($input['stunkill']):  'stun').'ed';
+        $mstunkill = (isset($input['mstunkill'])? strtolower($input['mstunkill']): 'kill').'ed';
+
+        // Referrers
+        if (isset($player['referrers'])) {
+            $referrers = $player['referrers'];
+        } else {
+            $referrers = ['you' => 'you', 'youare' => 'you are', 'your' => 'your'];
+        }
+        $you = ucfirst($referrers['you']);
+        $your = ucfirst($referrers['your']);
+        $youare = ucfirst($referrers['youare']);
+
+        // Apply temp bonuses, if any
+        apply_temp_stats($player);
+
+        // Fight loop
+        $out = "";
+        $round = 0;
+        while (true) {
+            $round++;
+            // Player
+            $roll = rand(1, 6); $roll2 = rand(1, 6);
+            $emoji = diceemoji($roll).diceemoji($roll2).($modifier?sprintf("%+d", $modifier):'');
+            if (($roll+$roll2+$modifier) >= $player['skill']) {
+                $out .= "_$your shot missed!_ ($emoji vs ".$player['skill'].")\n";
+            } else {
+                $out .= "_$your shot hit!_ ($emoji vs ".$player['skill'].")\n";
+                $out .= "_*$you $stunkill $m!*_";
+                break;
+            }
+            // Monster
+            $roll = rand(1, 6); $roll2 = rand(1, 6);
+            $emoji = diceemoji($roll).diceemoji($roll2);
+            if (($roll+$roll2) >= $mskill) {
+                $out .= "_$m's shot missed!_ ($emoji vs $mskill)\n";
+            } else {
+                $out .= "_$m's shot hit!_ ($emoji vs $mskill)\n";
+                $out .= "_*$youare $mstunkill!*_";
+                if ($mstunkill == 'killed') {
+                    $player['stam'] = 0;
+                }
+                break;
+            }
+
+            if ($round == $maxrounds) {
+                $out .= "_*Combat stopped after $round rounds.*_\n";
+                break;
+            }
+        }
+
+        // Remove temp bonuses, if any and clear temp bonus array
+        unapply_temp_stats($player);
+
+        return $out;
     }
 
 

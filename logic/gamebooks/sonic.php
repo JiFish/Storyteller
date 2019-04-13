@@ -277,8 +277,55 @@ class book_sonic extends book_character {
             return;
         }
 
-        $out = run_sonic_fight($player, $player[$stat], $cmd[2], $cmd[3], $cmd[4]);
+        $out = $this->runSonicFight($player, $player[$stat], $cmd[2], $cmd[3], $cmd[4]);
         sendqmsg($out, ":crossed_swords:");
+    }
+
+
+    protected function runSonicFight(&$player, $skill, $mod, $monster, $mskill) {
+        $mod = ($mod?(int)$mod:0);
+        $monster = ($monster?$monster:'Badnik');
+        $out = '';
+
+        while (1) {
+            // Sonic hit
+            $roll = rand(1, 6);
+            if ($mod == 0) {
+                $teststr = diceemoji($roll)."+$skill vs $mskill";
+            } else {
+                $teststr = diceemoji($roll)."+$skill ".sprintf("%+d", $mod)." vs $mskill";
+            }
+            if ($roll+$skill+$mod >= $mskill) {
+                $out .= "_*".$player['name']." has defeated the $monster!*_ ($teststr)\n";
+                break;
+            } else {
+                $out .= "_".$player['name']." missed the $monster._ ($teststr)\n";
+            }
+
+            // Monster hit
+            $roll = rand(1, 6);
+            $teststr = diceemoji($roll)."+$mskill vs 10";
+            if ($roll+$mskill >= 10) {
+                $out .= "_$monster has hit ".$player['name']."!_ ($teststr)\n";
+                if ($player['rings'] > 0) {
+                    $out .= "_*".$player['name']." lost all ".($player['gender']=='Male'?'his':'her')." rings!*_\n";
+                    $player['rings'] = 0;
+                } else {
+                    $out .= "_*".$player['name']." lost a life!*_\n";
+                    $player['lives']--;
+                    if ($player['lives'] > 0) {
+                        $out .= "Sonic Lives: ".str_repeat(html_entity_decode('&#x1f994;').' ', $player['lives']);
+                    } else {
+                        $out .= "*GAME OVER*";
+                    }
+                    break;
+                }
+            } else {
+                $out .= "_$monster missed ".$player['name']."._ ($teststr)\n";
+            }
+        }
+
+        return $out;
     }
 
 
