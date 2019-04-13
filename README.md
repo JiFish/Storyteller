@@ -1,5 +1,5 @@
 # Storyteller
-## A Slack / Discord* Bot for playing Gamebooks (v2.0)
+## A Slack / Discord* Bot for playing GameBooks (v2.0)
 
 ## Introduction
 Storyteller is a bot for use with Slack which helps a group of people play through a gamebook co-operatively. It was designed for _Fighting Fantasy_, but can now play a number of different gamebook types. It should work with any choose-your-own adventure book.
@@ -16,7 +16,7 @@ Anything without a character sheet is supported, this includes the Choose Your O
 
 The following Fighting Fantasy books currently work very well: Battleblade Warrior, Black Vein Prophecy, Bloodbones, Caverns of the Snow Witch, The Citadel of Chaos, City of Thieves, Creature of Havoc, Crypt of the Sorcerer, Deathmoor, Deathtrap Dungeon, Demons of the Deep, Eye of the Dragon, The Forest of Doom, House of Hell, Island of the Lizard King, Legend of Zagor, Masks of Mayhem, Portal of Evil, Rebel Planet, Return to Firetop Mountain, Scorpion Swamp, Seas of Blood, Starship Traveller, Stealer of Souls, Talisman of Death, Temple of Terror, Trial of Champions, The Warlock of Firetop Mountain. Most other can still be played.
 
-The Sonic The Hedgehog Gamebooks are also supported.
+The Sonic The Hedgehog Gamebooks are also supported as are The Narnia Solo Games books.
 
 ## Set-Up
 Download and unzip. Place on a webserver running PHP. PHP7 is recommended.
