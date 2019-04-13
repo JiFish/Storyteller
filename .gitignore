@@ -1,5 +1,6 @@
 # ignore the save
 save.txt
+save_*.txt
 save_backup.txt
 
 # ignore images
