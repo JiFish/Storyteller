@@ -31,13 +31,13 @@ class book_character extends book_none {
 
     protected function getStatFromAlias($alias) {
         foreach ($this->getStats() as $s => $val) {
-            if ($s == $input) {
+            if ($s == $alias) {
                 $thisstat = $s;
                 break;
             }
             if (isset($val['alias'])) {
                 foreach ($val['alias'] as $a) {
-                    if ($a == $input) {
+                    if ($a == $alias) {
                         $thisstat = $s;
                         break 2;
                     }
