@@ -5,3 +5,6 @@ save_backup.txt
 # ignore images
 images/*
 !images/jofm
+
+# ignore phptidy files
+*.phptidy*
