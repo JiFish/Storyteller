@@ -2,13 +2,6 @@
 
 /// ----------------------------------------------------------------------------
 /// Functions
-
-
-
-
-
-
-
 function recursive_flatten_player(&$player, &$return, $keychain="") {
     foreach ($player as $key => $val) {
         if ($key == 'creationdice' || $key == 'stuff') { // skip these
@@ -22,19 +15,10 @@ function recursive_flatten_player(&$player, &$return, $keychain="") {
 }
 
 
-
-
-
 // Figure out what rules we are running
 function getbook() {
     return BOOK_TYPE;
 }
-
-
-
-
-
-
 
 
 // Convert number to html entity of dice emoji
@@ -51,8 +35,6 @@ function diceemoji($r) {
 
 /// ----------------------------------------------------------------------------
 /// Send message to slack functions
-
-
 function apply_temp_stats(&$player) {
     foreach ($player['temp'] as $k => $v) {
         if (array_key_exists($k, $player)) {
@@ -100,4 +82,3 @@ function basic_num_to_word($num) {
         return $num;
     }
 }
-
