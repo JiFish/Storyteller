@@ -1,242 +1,242 @@
-The Achilles
-The Adelphi
-The Aephas
-The Agamemnon
-The Ahwahnee
-The Ajax
-The Akagi
-The Al-Batani
-The Amalthea
-The Antares
-The Appalachia
-The Archer
-The Archon
-The Arcos
-The Aries
-The Armstrong
-The Atlas
-The Aventine
-The Banting
-The Berkeley
-The Berlin
-The Bonchune
-The Bonestell
-The Bozeman
-The Bradbury
-The Brittain
-The Budapest
-The Buran
-The Cairo
-The Callisto
-The Capitoline
-The Carolina
-The Centaur
-The Challenger
-The Charleston
-The Charon
-The Clement
-The Concorde
-The Constantinople
-The Constellation
-The Constitution
-The Copernicus
-The Cortez
-The Crazy Horse
-The Crockett
-The Curie
-The Curry
-The da Vinci
-The Dakota
-The Dallas
-The Dauntless
-The Defiant
-The Demeter
-The Denver
-The Destiny
-The Devore
-The Discovery
-The Drake
-The Eagle
-The Endeavour
-The Endurance
-The Enterprise
-The Equinox
-The Esquiline
-The Essex
-The Europa
-The Everett
-The Excalibur
-The Excelsior
-The Exeter
-The Explorer
-The Farragut
-The Fearless
-The Firebrand
-The Franklin
-The Galatea
-The Galaxy
-The Galen
-The Gallico
-The Gandhi
-The Ganymede
-The Geronimo
-The Gettysburg
-The Gibraltar
-The Glenn
-The Goddard
-The Gorkon
-The Grissom
-The Gryphon
-The Hamilton
-The Hathaway
-The Havana
-The Hawking
-The Helin
-The Hera
-The Hermes
-The Hispanola
-The Honshū
-The Hood
-The Horatio
-The Horizon
-The Hornet
-The Houston
-The Huang Zhong
-The Intrepid
-The Jenolan
-The Kearsarge
-The Kelvin
-The Kent
-The Kongo
-The Korolev
-The Krakatoa
-The Kyushu
-The LaGrange
-The Lakota
-The Lantree
-The LaSalle
-The Leeds
-The Lexington
-The Liberty
-The Lionheart
-The Loma Prieta
-The London
-The Lovell
-The Luna
-The Lynx
-The Magellan
-The Majestic
-The Malinche
-The Marco Polo
-The Maryland
-The Masao
-The Melbourne
-The Merian
-The Merrimack
-The Mesquite
-The Monitor
-The Musashi
-The Musgrave
-The Narbonne
-The Nash
-The Nautilus
-The Nebula
-The Nightingale
-The Nirvana
-The Nobel
-The Norway
-The Nova
-The Oberon
-The Oberth
-The Odyssey
-The Okinawa
-The Olympia
-The Olympic
-The Paris
-The Pastak
-The Pasteur
-The Pathfinder
-The Pegasus
-The Phoenix
-The Pilgrim
-The Planck
-The Portland
-The Potemkin
-The President
-The Princeton
-The Prokofiev
-The Prometheus
-The Proxima
-The Quirinal
-The Rabin
-The Raman
-The Ranger
-The Raven
-The Relativity
-The Reliant
-The Renaissance
-The Renegade
-The Republic
-The Repulse
-The Rhea
-The Rigel
-The Robinson
-The Rutledge
-The Saber
-The Sagittarius
-The Saladin
-The Sarajevo
-The Saratoga
-The Sentinel
-The Sequoia
-The Shenzhou
-The ShirKahr
-The Sitak
-The Sovereign
-The Soyuz
-The Springfield
-The Stargazer
-The Steamrunner
-The Summit
-The Surak
-The Sutherland
-The Sydney
-The T'Kumbra
-The Tempest
-The Theophrastus
-The Thunderchild
-The Tiananmen
-The Titan
-The Tolstoy
-The Tombaugh
-The Traveller
-The Trial
-The Trident
-The Trinculo
-The Tripoli
-The Triton
-The Twilight
-The Ulysses
-The Valdemar
-The Valiant
-The Valley Forge
-The Vengeance
-The Venture
-The Veracruz
-The Vesta
-The Victory
-The Voyager
-The Warspite
-The Wellington
-The Wells
-The Yamaguchi
-The Yamato
-The Yeager
-The Yellowstone
-The Yorkshire
-The Yorktown
-The Yosemite
-The Zander
-The Zapata
-The Zhukov
-The Zodiac
+Achilles
+Adelphi
+Aephas
+Agamemnon
+Ahwahnee
+Ajax
+Akagi
+Al-Batani
+Amalthea
+Antares
+Appalachia
+Archer
+Archon
+Arcos
+Aries
+Armstrong
+Atlas
+Aventine
+Banting
+Berkeley
+Berlin
+Bonchune
+Bonestell
+Bozeman
+Bradbury
+Brittain
+Budapest
+Buran
+Cairo
+Callisto
+Capitoline
+Carolina
+Centaur
+Challenger
+Charleston
+Charon
+Clement
+Concorde
+Constantinople
+Constellation
+Constitution
+Copernicus
+Cortez
+Crazy Horse
+Crockett
+Curie
+Curry
+da Vinci
+Dakota
+Dallas
+Dauntless
+Defiant
+Demeter
+Denver
+Destiny
+Devore
+Discovery
+Drake
+Eagle
+Endeavour
+Endurance
+Enterprise
+Equinox
+Esquiline
+Essex
+Europa
+Everett
+Excalibur
+Excelsior
+Exeter
+Explorer
+Farragut
+Fearless
+Firebrand
+Franklin
+Galatea
+Galaxy
+Galen
+Gallico
+Gandhi
+Ganymede
+Geronimo
+Gettysburg
+Gibraltar
+Glenn
+Goddard
+Gorkon
+Grissom
+Gryphon
+Hamilton
+Hathaway
+Havana
+Hawking
+Helin
+Hera
+Hermes
+Hispanola
+Honshū
+Hood
+Horatio
+Horizon
+Hornet
+Houston
+Huang Zhong
+Intrepid
+Jenolan
+Kearsarge
+Kelvin
+Kent
+Kongo
+Korolev
+Krakatoa
+Kyushu
+LaGrange
+Lakota
+Lantree
+LaSalle
+Leeds
+Lexington
+Liberty
+Lionheart
+Loma Prieta
+London
+Lovell
+Luna
+Lynx
+Magellan
+Majestic
+Malinche
+Marco Polo
+Maryland
+Masao
+Melbourne
+Merian
+Merrimack
+Mesquite
+Monitor
+Musashi
+Musgrave
+Narbonne
+Nash
+Nautilus
+Nebula
+Nightingale
+Nirvana
+Nobel
+Norway
+Nova
+Oberon
+Oberth
+Odyssey
+Okinawa
+Olympia
+Olympic
+Paris
+Pastak
+Pasteur
+Pathfinder
+Pegasus
+Phoenix
+Pilgrim
+Planck
+Portland
+Potemkin
+President
+Princeton
+Prokofiev
+Prometheus
+Proxima
+Quirinal
+Rabin
+Raman
+Ranger
+Raven
+Relativity
+Reliant
+Renaissance
+Renegade
+Republic
+Repulse
+Rhea
+Rigel
+Robinson
+Rutledge
+Saber
+Sagittarius
+Saladin
+Sarajevo
+Saratoga
+Sentinel
+Sequoia
+Shenzhou
+ShirKahr
+Sitak
+Sovereign
+Soyuz
+Springfield
+Stargazer
+Steamrunner
+Summit
+Surak
+Sutherland
+Sydney
+T'Kumbra
+Tempest
+Theophrastus
+Thunderchild
+Tiananmen
+Titan
+Tolstoy
+Tombaugh
+Traveller
+Trial
+Trident
+Trinculo
+Tripoli
+Triton
+Twilight
+Ulysses
+Valdemar
+Valiant
+Valley Forge
+Vengeance
+Venture
+Veracruz
+Vesta
+Victory
+Voyager
+Warspite
+Wellington
+Wells
+Yamaguchi
+Yamato
+Yeager
+Yellowstone
+Yorkshire
+Yorktown
+Yosemite
+Zander
+Zapata
+Zhukov
+Zodiac

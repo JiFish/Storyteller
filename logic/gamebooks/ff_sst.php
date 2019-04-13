@@ -46,7 +46,7 @@ class book_ff_sst extends book_ff_basic {
         }
         // Ship name
         $names = file('resources/starship_names.txt');
-        $p['shipname'] = trim($names[array_rand($names)]);
+        $p['shipname'] = 'The '.trim($names[array_rand($names)]);
         // Crew
         $cl = ['no1', 'science', 'medic', 'engineer', 'security', 'guard'];
         $races = array('Human', 'Human', 'Human', 'Human', 'Human', 'Vulcan', 'Andorian', 'Caitian', 'Droid');
