@@ -1,14 +1,22 @@
 # Storyteller
-## A Slack / Discord* Bot for playing Fighting Fantasy Gamebooks (v1.3)
+## A Slack / Discord* Bot for playing Gamebooks (v2.0)
 
 ## Introduction
-Storyteller is a bot for use with Slack which helps a group of people play through a Fighting Fantasy gamebook co-operatively. It was designed for _Warlock on Firetop Mountain_, and has been optimised for a few other books. It should work OK with any choose-your-own adventure book.
+Storyteller is a bot for use with Slack which helps a group of people play through a gamebook co-operatively. It was designed for _Fighting Fantasy_, but can now play a number of different gamebook types. It should work with any choose-your-own adventure book.
 
 Storyteller adds commands to read the story, manage your character and roll dice for fights and other challenges. It will assist you in playing the game but does not strictly enforce rules - replicating the experience of playing with a real book and dice.
 
 Storyteller is programmed in PHP, requires no database and is state-based. This means it can be installed on an ordinary web-server, without the need to setup a complicated chat-bot.
 
 * Discord is also supported, with some caveats, see *Using Discord* below.
+
+## Book Support
+
+Anything without a character sheet is supported, this includes the Choose Your Own Adventure books.
+
+The following Fighting Fantasy books currently work very well: Battleblade Warrior, Black Vein Prophecy, Bloodbones, Caverns of the Snow Witch, The Citadel of Chaos, City of Thieves, Creature of Havoc, Crypt of the Sorcerer, Deathmoor, Deathtrap Dungeon, Demons of the Deep, Eye of the Dragon, The Forest of Doom, House of Hell, Island of the Lizard King, Legend of Zagor, Masks of Mayhem, Portal of Evil, Rebel Planet, Return to Firetop Mountain, Scorpion Swamp, Seas of Blood, Starship Traveller, Stealer of Souls, Talisman of Death, Temple of Terror, Trial of Champions, The Warlock of Firetop Mountain. Most other can still be played.
+
+The Sonic The Hedgehog Gamebooks are also supported.
 
 ## Set-Up
 Download and unzip. Place on a webserver running PHP. PHP7 is recommended.
@@ -52,11 +60,9 @@ Unfortunately, the _Fighting Fantasy_ books can no longer be bought in an eBook 
 Storyteller doesn't have to play the official books. Perhaps one of the best ways to get a story in to the bot is to write your own. So long as you are compatible with the _Fighting Fantasy_ ruleset, this will work. If anyone does do this, please consider submitting your story back here. I'd love to include longer stories with this distribution.
 
 ### 3. Set the booktype / adjust config.php
-Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules. You can look up the correct book type for the Fighting Fantasy book you are playing in `book_support.html` found in the *extras* directory.
+Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are playing. This controls which stats are available, the character sheet and ensures character generation matches the book's rules. You can look up the correct book type in `book_support.html` found in the *extras* directory.
 
-If in doubt set `BOOK_TYPE` to `none`. This will generate a minimal character that can be used for most stories.
-
-The following books currently work very well: Battleblade Warrior; Black Vein Prophecy; Caverns of the Snow Witch; City of Thieves; Creature of Havoc; Crypt of the Sorcerer; Deathmoor; Deathtrap Dungeon; Demons of the Deep; Eye of the Dragon; The Forest of Doom; House of Hell; Island of the Lizard King; Legend of Zagor; Masks of Mayhem; Portal of Evil; Return to Firetop Mountain; Seas of Blood; Starship Traveller; Stealer of Souls; Talisman of Death; Temple of Terror; Trial of Champions; The Warlock of Firetop Mountain.
+Use `none` for books with no character sheet.
 
 You may wish to adjust other settings in config.php at this point. You might like to remove `save` and `load` from the disabled commands list. This will allow players to use save-points. Alternatively, you could add the `undo` command to this list if you want to prevent players from undoing their mistakes.
 
