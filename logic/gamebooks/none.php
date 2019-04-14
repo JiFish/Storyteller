@@ -297,8 +297,11 @@ class book_none extends gamebook_base {
 
     //// !map - Sends a map image if map.jpg exists in images dir
     protected function _cmd_map($cmd) {
-        if (file_exists('images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR.'map.jpg')) {
+        $imgdir = 'images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR;
+        if (file_exists($imgdir.'map.jpg')) {
             sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.jpg');
+        } elseif (file_exists($imgdir.'map.png')) {
+            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.png');
         } else {
             sendqmsg("*No map found!*", ':interrobang:');
         }
