@@ -4,9 +4,7 @@
 /// Functions
 function recursive_flatten_player(&$player, &$return, $keychain="") {
     foreach ($player as $key => $val) {
-        if ($key == 'creationdice' || $key == 'stuff') { // skip these
-            continue;
-        } elseif (is_array($val)) {
+        if (is_array($val)) {
             recursive_flatten_player($player[$key], $return, $keychain.$key.'_');
         } else {
             $return[$keychain.$key] = &$player[$key];
