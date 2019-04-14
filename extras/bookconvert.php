@@ -1,33 +1,41 @@
 <?php
 
-if (!isset($argv[1])) {
-    die("Usage: bookconvert.php [book.txt]");
-}
-
-if (!file_exists($argv[1])) {
-    die ("File not found.");
-}
-
-$book = array();
-$input = file($argv[1]);
-$page = "";
-$expected_num = 1;
-
-foreach ($input as $line) {
-    $line = trim($line);
-    if ($line == "") { continue; }
-    if (is_numeric($line)) {
-        if ($line != $expected_num) {
-            die("Unexpected page number. Expected $expected_num, got $line");
-        }
-        $book[] = trim($page);
-        $page = "";
-        $expected_num++;
-        continue;
+// If we were called directly
+if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {
+    if (!isset($argv[1])) {
+        die("Usage: bookconvert.php [book.txt]");
     }
-    $page .= $line . "\n";
-}
-$book[] = trim($page);
 
-echo "<?php\n\n";
-echo '$book = '.var_export($book, 1).";";
+    if (!file_exists($argv[1])) {
+        die ("File not found.");
+    }
+
+    $book = convert_text(file_get_contents($argv[1]));
+
+    echo "<?php\n\n";
+    echo '$book = '.var_export($book, 1).";";
+}
+
+// Outputs assoc array
+function convert_text($text) {
+    $text = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $text);
+    $text = preg_split('/\r\n|\r|\n/', $text);
+    $page = "";
+    $expected_num = 1;
+    foreach ($text as $line) {
+        $line = trim($line);
+        if ($line == "") { continue; }
+        if (ctype_digit($line)) {
+            if ($line != $expected_num) {
+                die("Unexpected page number. Expected $expected_num, got $line");
+            }
+            $book[] = trim($page);
+            $page = "";
+            $expected_num++;
+            continue;
+        }
+        $page .= $line . "\n";
+    }
+    $book[] = trim($page);
+    return $book;
+}
