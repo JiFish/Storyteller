@@ -8,7 +8,7 @@ class book_sonic_mcm extends book_sonic {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = parent::getStats();
         $stats['egghits'] = [
             'friendly' => 'Egg-O-Matic Hits',
@@ -19,7 +19,7 @@ class book_sonic_mcm extends book_sonic {
     }
 
 
-    public function rollSonicCharacter($statarray = null) {
+    protected function rollSonicCharacter($statarray = null) {
         $p = parent::rollSonicCharacter($statarray);
         $p['stuff'] = array('Red Trainers', 'Sega Game Gear', 'Botman Cartridge');
         return $p;

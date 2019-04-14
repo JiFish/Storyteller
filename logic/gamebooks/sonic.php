@@ -13,7 +13,7 @@ class book_sonic extends book_character {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = array(
             'lives' => [
                 'friendly' => 'Lives',
@@ -50,7 +50,7 @@ class book_sonic extends book_character {
     }
 
 
-    public function rollSonicCharacter($statarray = null) {
+    protected function rollSonicCharacter($statarray = null) {
         $p['creationdice'] = [];
         $p['name'] = 'Sonic';
         $p['adjective'] = 'Hedgehog';
@@ -76,7 +76,7 @@ class book_sonic extends book_character {
     }
 
 
-    function getCharcterSheetAttachments() {
+    protected function getCharcterSheetAttachments() {
         $player = &$this->player;
         $attachments[0]['color'] = $player['colourhex'];
         $attachments[0]['fields'] = [
@@ -108,7 +108,7 @@ class book_sonic extends book_character {
 
 
     //// Gain a life after collecting 100 rings
-    public function _cmd_stat_adjust($cmd) {
+    protected function _cmd_stat_adjust($cmd) {
         $player = &$this->player;
         // Get the current value
         $thisstat = $this->getStatFromAlias(strtolower($cmd[0]), $this->getStats());
@@ -136,7 +136,7 @@ class book_sonic extends book_character {
 
 
     //// !help (send sonic help) OVERRIDE
-    function _cmd_help($cmd) {
+    protected function _cmd_help($cmd) {
         $help = file_get_contents('resources/sonic_help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
@@ -145,7 +145,7 @@ class book_sonic extends book_character {
 
 
     //// !newgame (roll new character) OVERRIDE
-    function _cmd_newgame($cmd) {
+    protected function _cmd_newgame($cmd) {
         $player = &$this->player;
         // Check stats
         $stats = array_slice($cmd, 1);
@@ -169,7 +169,7 @@ class book_sonic extends book_character {
 
 
     //// !test <stat> <target> SONIC VERSION
-    function _cmd_test($cmd) {
+    protected function _cmd_test($cmd) {
         $player = &$this->player;
         // Apply temp bonuses, if any
         apply_temp_stats($player);
@@ -253,7 +253,7 @@ class book_sonic extends book_character {
 
 
     //// !hit - took damage
-    public function _cmd_hit($cmd) {
+    protected function _cmd_hit($cmd) {
         $player = &$this->player;
         if ($player['rings'] > 0) {
             $player['rings'] = 0;
@@ -266,7 +266,7 @@ class book_sonic extends book_character {
 
 
     //// !fight [stat] <+/-mod> <name> [skill] (run fight logic)
-    public function _cmd_fight($cmd) {
+    protected function _cmd_fight($cmd) {
         $player = &$this->player;
         $stat = $cmd[1];
         if ($stat == 'strength') $stat = 'str';

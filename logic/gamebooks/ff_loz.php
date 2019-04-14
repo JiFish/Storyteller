@@ -8,7 +8,7 @@ class book_ff_loz extends book_ff_magic {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = parent::getStats();
         $stats['talismans'] = [
             'friendly' => 'Talismans',
@@ -34,7 +34,7 @@ class book_ff_loz extends book_ff_magic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Starting Equipment
         $p['stuff'] = array(
@@ -305,7 +305,7 @@ class book_ff_loz extends book_ff_magic {
 
 
     //// !test <luck/skill/stam> (run a skill test) OVERRIDE
-    public function _cmd_test($cmd) {
+    protected function _cmd_test($cmd) {
         $player = &$this->player;
         if (strtolower($cmd[1] == 'spot')) {
             $player['spot'] = $player['skill'] + ($player['adjective'] == 'Wizard'?2:0);

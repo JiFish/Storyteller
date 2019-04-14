@@ -35,7 +35,7 @@ class gamebook_base {
     }
 
 
-    public function newCharacter() {
+    protected function newCharacter() {
         return [];
     }
 

@@ -13,14 +13,14 @@ class book_ff_basic extends book_character {
     }
 
 
-    public function storyModify($story) {
+    protected function storyModify($story) {
         $story = parent::storyModify($story);
         $story = preg_replace('/((Add|Subject|Deduct|Regain|Gain|Lose) )?([1-9] (points? )?from your (SKILL|LUCK|STAMINA)|([1-9] )?(SKILL|LUCK|STAMINA) points?|your (SKILL|LUCK|STAMINA))/', '*${0}*', $story);
         return $story;
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = array(
             'skill' => [
                 'friendly' => 'Skill',
@@ -72,7 +72,7 @@ class book_ff_basic extends book_character {
     }
 
 
-    public function rollHumanCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollHumanCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Add shield flag
         $p['shield'] = false;
@@ -80,7 +80,7 @@ class book_ff_basic extends book_character {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Add shield flag
         $p['shield'] = false;
@@ -196,7 +196,7 @@ class book_ff_basic extends book_character {
 
 
     //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_get($cmd) {
+    protected function _cmd_get($cmd) {
         $item = $cmd[1];
         // Attempt to catch cases where people get or take gold or provisions
         // and turn them in to stat adjustments
@@ -227,7 +227,7 @@ class book_ff_basic extends book_character {
 
 
     //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_drop($cmd) {
+    protected function _cmd_drop($cmd) {
         $drop = strtolower($cmd[1]);
         // TODO: This is code repetition
         // Attempt to catch cases where people get or take gold or provisions
@@ -259,7 +259,7 @@ class book_ff_basic extends book_character {
 
 
     //// !help (send basic help)
-    public function _cmd_help($cmd) {
+    protected function _cmd_help($cmd) {
         $help = file_get_contents('resources/help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
@@ -269,7 +269,7 @@ class book_ff_basic extends book_character {
 
 
     //// !eat
-    public function _cmd_eat($cmd) {
+    protected function _cmd_eat($cmd) {
         $player = &$this->player;
         if ($player['prov'] < 1) {
             sendqmsg("*No food to eat!*", ':interrobang:');
@@ -286,7 +286,7 @@ class book_ff_basic extends book_character {
 
 
     //// !pay (alias for losing gold)
-    public function _cmd_pay($cmd) {
+    protected function _cmd_pay($cmd) {
         if (!is_numeric($cmd[1])) {
             return;
         } else if ($this->player['gold'] < $cmd[1]) {
@@ -298,7 +298,7 @@ class book_ff_basic extends book_character {
 
 
     //// !buy (alias for get & losing gold)
-    public function _cmd_buy($cmd) {
+    protected function _cmd_buy($cmd) {
         $player = &$this->player;
         if ($cmd[2]) {
             $cost = $cmd[2];
@@ -320,7 +320,7 @@ class book_ff_basic extends book_character {
 
 
     //// !luckyescape (roll for running away)
-    public function _cmd_luckyescape($cmd) {
+    protected function _cmd_luckyescape($cmd) {
         $player = &$this->player;
         $d1 = rand(1, 6);
         $d2 = rand(1, 6);
@@ -350,7 +350,7 @@ class book_ff_basic extends book_character {
 
 
     //// !shield [on/off] - Toggle shield
-    public function _cmd_shield($cmd) {
+    protected function _cmd_shield($cmd) {
         $player = &$this->player;
         $state = strtolower($cmd[1]);
         if ($state != 'on' && $state != 'off') {
@@ -364,7 +364,7 @@ class book_ff_basic extends book_character {
 
 
     //// !test <luck/skill/stam> (run a skill test)
-    public function _cmd_test($cmd) {
+    protected function _cmd_test($cmd) {
         $player = &$this->player;
 
         $stats = $this->getStats();
@@ -462,7 +462,7 @@ class book_ff_basic extends book_character {
 
 
     //// !fight [name] <skill> <stamina> [maxrounds] (run fight logic)
-    public function _cmd_fight($cmd) {
+    protected function _cmd_fight($cmd) {
         $out = $this->runFight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
@@ -474,7 +474,7 @@ class book_ff_basic extends book_character {
 
 
     //// !critfight [name] <skill> [who] [critchance] (run crit fight logic)
-    public function _cmd_critfight($cmd) {
+    protected function _cmd_critfight($cmd) {
         $critsfor = ($cmd[3]?$cmd[3]:'me');
         $critchance = ($cmd[4]?$cmd[4]:2);
         if (!in_array($critsfor, ['both', 'me'])) {
@@ -495,7 +495,7 @@ class book_ff_basic extends book_character {
 
 
     //// !bonusfight [name] <skill> <stamina> <bonusdamage> [bonusdmgchance] (run bonus attack fight logic)
-    public function _cmd_bonusfight($cmd) {
+    protected function _cmd_bonusfight($cmd) {
         $out = $this->runFight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
@@ -508,7 +508,7 @@ class book_ff_basic extends book_character {
 
 
     //// !vs <name 1> <skill 1> <stamina 1> <name 2> <skill 2> <stamina 2>
-    public function _cmd_vs($cmd) {
+    protected function _cmd_vs($cmd) {
         $vsplayer = array(
             'name' => $cmd[1],
             'referrers' => ['you' => $cmd[1], 'youare' => $cmd[1].' is', 'your' => $cmd[1]."'s"],
@@ -529,7 +529,7 @@ class book_ff_basic extends book_character {
 
 
     //// !fighttwo <name 1> <skill 1> <stamina 1> [<name 2> <skill 2> <stamina 2>]
-    public function _cmd_fighttwo($cmd) {
+    protected function _cmd_fighttwo($cmd) {
         // Set monster 1
         $m = $cmd[1];
         $mskill = $cmd[2];
@@ -566,7 +566,7 @@ class book_ff_basic extends book_character {
 
 
     //// !fightbackup [name 1] <skill 1> <stamina 1> [backup's name] <backup's skill>
-    public function _cmd_fightbackup($cmd) {
+    protected function _cmd_fightbackup($cmd) {
         // Set monster
         $m = ($cmd[1]?$cmd[1]:'Opponent');
         $mskill = $cmd[2];
@@ -587,7 +587,7 @@ class book_ff_basic extends book_character {
 
 
     //// !attack <skill>
-    public function _cmd_attack($cmd) {
+    protected function _cmd_attack($cmd) {
         $dmg = ($cmd[2]?$cmd[2]:0);
         $out = $this->runSingleAttack($this->player, 'Opponent', $cmd[1], 999, $dmg, 0);
 
@@ -596,13 +596,13 @@ class book_ff_basic extends book_character {
 
 
     //// !dead - Kill your character.
-    public function _cmd_dead($cmd) {
+    protected function _cmd_dead($cmd) {
         $this->player['stam'] = 0;
     }
 
 
     //// !phaser/gun [-/+modifier] [stun/kill] [name] <skill> [stun/kill] [maxrounds] (run phaser fight logic)
-    public function _cmd_gun($cmd) {
+    protected function _cmd_gun($cmd) {
         $out = $this->runGunFight(['player' => &$this->player,
                 'modifier' => ($cmd[1]?$cmd[1]:0),
                 'stunkill' => ($cmd[2]?$cmd[2]:'stun'),
@@ -616,7 +616,7 @@ class book_ff_basic extends book_character {
 
 
     //// !π - Easter egg
-    public function _cmd_easteregg($cmd) {
+    protected function _cmd_easteregg($cmd) {
         $eggs = file('resources/easter_eggs.txt');
         $fullcmd = trim($eggs[array_rand($eggs)]);
 

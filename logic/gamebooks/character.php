@@ -10,7 +10,7 @@ class book_character extends book_none {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         return [];
     }
 
@@ -55,12 +55,12 @@ class book_character extends book_none {
     }
 
 
-    public function newCharacter() {
+    protected function newCharacter() {
         return $this->rollCharacter();
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = array('lastpage' => 1,
             'stuff' => [],
             'creationdice' => [],
@@ -184,7 +184,7 @@ class book_character extends book_none {
 
 
     //// !newgame (roll new character)
-    function _cmd_newgame($cmd) {
+    protected function _cmd_newgame($cmd) {
         $player = &$this->player;
         $cmd = array_pad($cmd, 7, '?');
         $player = $this->rollCharacter($cmd[1], $cmd[2], $cmd[3], $cmd[4], $cmd[5]);
@@ -198,7 +198,7 @@ class book_character extends book_none {
 
 
     //// !get / !take (add item to inventory/stuff list)
-    public function _cmd_get($cmd) {
+    protected function _cmd_get($cmd) {
         $player = &$this->player;
         $item = $cmd[1];
 
@@ -215,7 +215,7 @@ class book_character extends book_none {
 
 
     //// !drop / !lose / !use
-    public function _cmd_drop($cmd) {
+    protected function _cmd_drop($cmd) {
         $player = &$this->player;
         $drop = strtolower($cmd[1]);
 
@@ -259,7 +259,7 @@ class book_character extends book_none {
 
 
     //// Various statistic adjustment commands
-    public function _cmd_stat_adjust($cmd) {
+    protected function _cmd_stat_adjust($cmd) {
         $player = &$this->player;
         $stats = $this->getStats();
         // Referrers
@@ -351,7 +351,7 @@ class book_character extends book_none {
 
 
     //// !help (send basic help)
-    public function _cmd_help($cmd) {
+    protected function _cmd_help($cmd) {
         $help = file_get_contents('resources/help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
@@ -360,7 +360,7 @@ class book_character extends book_none {
 
 
     //// !undo - restore to the previous save
-    public function _cmd_undo($cmd) {
+    protected function _cmd_undo($cmd) {
         if (!$this->isDead()) {
             sendqmsg("*You can only undo when dead.*", ':interrobang:');
             return;
@@ -385,7 +385,7 @@ class book_character extends book_none {
 
 
     //// !save - save copy of player
-    public function _cmd_save($cmd) {
+    protected function _cmd_save($cmd) {
         $slot = ($cmd[1]?$cmd[1]:0);
         if ($slot < 0 || $slot > 10) {
             sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
@@ -397,7 +397,7 @@ class book_character extends book_none {
 
 
     //// !load - save copy of player
-    public function _cmd_load($cmd) {
+    protected function _cmd_load($cmd) {
         $player = &$this->player;
         $slot = ($cmd[1]?$cmd[1]:0);
         if ($slot < 0 || $slot > 10) {
@@ -416,7 +416,7 @@ class book_character extends book_none {
 
 
     //// !load - save copy of player
-    public function _cmd_clearslots($cmd) {
+    protected function _cmd_clearslots($cmd) {
         $slot = ($cmd[1]?$cmd[1]:0);
         if (strtolower($cmd[1]) != 'confirm') {
             sendqmsg("*Use `!clearslots confirm` to confirm clear of all save slots.*", ':interrobang:');
@@ -430,7 +430,7 @@ class book_character extends book_none {
 
 
     //// !info / !status (send character sheet and inventory)
-    public function _cmd_info($cmd) {
+    protected function _cmd_info($cmd) {
         $player = &$this->player;
         $icon = ($this->isDead()?":skull:":$player['emoji']);
         $attach = $this->getCharcterSheetAttachments();
@@ -441,7 +441,7 @@ class book_character extends book_none {
 
 
     //// !stats / !s (send character sheet)
-    public function _cmd_stats($cmd) {
+    protected function _cmd_stats($cmd) {
         $player = &$this->player;
         $icon = ($this->isDead()?":skull:":$player['emoji']);
         $attach = $this->getCharcterSheetAttachments();
@@ -451,7 +451,7 @@ class book_character extends book_none {
 
 
     //// !stuff / !i (send inventory)
-    public function _cmd_stuff($cmd) {
+    protected function _cmd_stuff($cmd) {
         sendmsg("", [$this->getStuffAttachment()], $this->player['emoji']);
     }
 

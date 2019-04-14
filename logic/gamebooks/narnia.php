@@ -13,7 +13,7 @@ class book_narnia extends book_character {
         return "*".$p['name']."* the ".$p['adjective']." _(".($p['gender']=='Male'?'Son of Adam':'Daughter of Eve').")_";
     }
 
-    public function getStats() {
+    protected function getStats() {
         $stats = array(
             'fight' => [
                 'friendly' => 'Fighting Skill',
@@ -50,7 +50,7 @@ class book_narnia extends book_character {
     }
 
 
-    public function rollNarniaCharacter($name = '?', $gender = '?', $statarray = null) {
+    protected function rollNarniaCharacter($name = '?', $gender = '?', $statarray = null) {
         $p = parent::rollCharacter($name, $gender);
         $skintone = array(':skin-tone-2:', ':skin-tone-3:', ':skin-tone-4:', ':skin-tone-5:', ':skin-tone-2:');
         if ($p['gender'] == 'Male') {
@@ -85,7 +85,7 @@ class book_narnia extends book_character {
     }
 
 
-    function getCharcterSheetAttachments() {
+    protected function getCharcterSheetAttachments() {
         $player = &$this->player;
         $attachments[0]['color'] = $player['colourhex'];
         $attachments[0]['fields'] = [
@@ -122,7 +122,7 @@ class book_narnia extends book_character {
 
 
     //// !help (send narnia help) OVERRIDE
-    function _cmd_help($cmd) {
+    protected function _cmd_help($cmd) {
         $help = file_get_contents('resources/narnia_help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
@@ -131,7 +131,7 @@ class book_narnia extends book_character {
 
 
     //// !newgame (roll new character) OVERRIDE
-    function _cmd_newgame($cmd) {
+    protected function _cmd_newgame($cmd) {
         $player = &$this->player;
         // Check stats
         $name = $cmd[1];
@@ -166,7 +166,7 @@ class book_narnia extends book_character {
 
 
     //// !test <stat> <target> NARNIA VERSION
-    function _cmd_test($cmd) {
+    protected function _cmd_test($cmd) {
         $player = &$this->player;
         // Apply temp bonuses, if any
         apply_temp_stats($player);

@@ -14,14 +14,14 @@ class book_ff_sob extends book_ff_basic {
     }
 
 
-    public function storyModify($story) {
+    protected function storyModify($story) {
         $story = parent::storyModify($story);
         $story = str_ireplace('The Banshee', $this->player['shipname'], $story);
         return $story;
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective);
         $p['race'] = 'Pirate';
         $shipnames = file('resources/ship_names.txt');
@@ -39,7 +39,7 @@ class book_ff_sob extends book_ff_basic {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = parent::getStats();
         $stats['str'] = [
             'friendly' => 'Crew Strength',
@@ -132,7 +132,7 @@ class book_ff_sob extends book_ff_basic {
 
 
     //// !battle [name] <skill> <stamina> [maxrounds] (run battle logic)
-    public function _cmd_battle($cmd) {
+    protected function _cmd_battle($cmd) {
         $player = &$this->player;
         // Construct battle player
         $bp = array(

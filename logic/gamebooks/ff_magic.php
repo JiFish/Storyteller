@@ -8,7 +8,7 @@ class book_ff_magic extends book_ff_basic {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = parent::getStats();
         $stats['magic'] = [
             'friendly' => 'Magic',
@@ -86,7 +86,7 @@ class book_ff_magic extends book_ff_basic {
 
 
     //// !spellbook - read spellbook
-    public function _cmd_spellbook($cmd) {
+    protected function _cmd_spellbook($cmd) {
         $spells = $this->getSpells();
 
         $typeslist = array();
@@ -146,7 +146,7 @@ class book_ff_magic extends book_ff_basic {
 
 
     //// !echo - simply repeat the input text
-    public function _cmd_cast($cmd) {
+    protected function _cmd_cast($cmd) {
         $player = &$this->player;
         $spells = $this->getSpells();
 

@@ -13,12 +13,12 @@ class book_none extends gamebook_base {
     }
 
 
-    public function storyModify($story) {
+    protected function storyModify($story) {
         return $story;
     }
 
 
-    public function newCharacter() {
+    protected function newCharacter() {
         return array('lastpage' => 1);
     }
 
@@ -50,7 +50,7 @@ class book_none extends gamebook_base {
     }
 
     //// !look
-    public function _cmd_look($cmd) {
+    protected function _cmd_look($cmd) {
         $story = $this->getFormatedStory($this->player['lastpage']);
         sendqmsg($story);
     }
@@ -106,7 +106,7 @@ class book_none extends gamebook_base {
 
 
     //// !page <num> / !<num> (Read page from book)
-    public function _cmd_page($cmd) {
+    protected function _cmd_page($cmd) {
         $player = &$this->player;
         if (!is_numeric($cmd[1])) {
             return;
@@ -161,14 +161,14 @@ class book_none extends gamebook_base {
 
 
     //// !background
-    public function _cmd_background($cmd) {
+    protected function _cmd_background($cmd) {
         $story = getFormatedStory(0);
         senddirmsg($story);
     }
 
 
     //// !roll [x] (roll xd6)
-    public function _cmd_roll($cmd) {
+    protected function _cmd_roll($cmd) {
         $numdice = ($cmd[1]?$cmd[1]:1);
         $numdice = max(min($numdice, 100), 1);
         $out = "Result:";
@@ -188,7 +188,7 @@ class book_none extends gamebook_base {
 
 
     //// !help (send basic help)
-    public function _cmd_help($cmd) {
+    protected function _cmd_help($cmd) {
         $help = "Type `![page]` to turn to a page or section. e.g. `!42`";
         $help = str_replace("!", $_POST['trigger_word'], $help);
         sendqmsg($help);
@@ -196,7 +196,7 @@ class book_none extends gamebook_base {
 
 
     //// !echo - simply repeat the input text
-    public function _cmd_echo($cmd) {
+    protected function _cmd_echo($cmd) {
         if (!$cmd[1]) {
             return;
         }
@@ -207,7 +207,7 @@ class book_none extends gamebook_base {
 
 
     //// !randpage <page 1> [page 2] [page 3] [...]
-    public function _cmd_randpage($cmd) {
+    protected function _cmd_randpage($cmd) {
         $pagelist = array();
         foreach ($cmd as $c) {
             if (is_numeric($c)) {
@@ -236,7 +236,7 @@ class book_none extends gamebook_base {
 
 
     //// !debugset - Set any value
-    public function _cmd_debugset($cmd) {
+    protected function _cmd_debugset($cmd) {
         $key = $cmd[1];
         $val = $cmd[2];
         $silent = (strtolower($cmd[0]) == 'silentset');
@@ -263,7 +263,7 @@ class book_none extends gamebook_base {
 
 
     //// !debuglist - List all debug values
-    public function _cmd_debuglist($cmd) {
+    protected function _cmd_debuglist($cmd) {
         $sa = array();
         recursive_flatten_player($this->player, $sa);
         ksort($sa);
@@ -281,7 +281,7 @@ class book_none extends gamebook_base {
 
 
     //// !macro - Run macro from macro.txt
-    public function _cmd_macro($cmd) {
+    protected function _cmd_macro($cmd) {
         $macros = file('macros.txt');
         if ($cmd[1] < 1 || $cmd[1] > sizeof($macros)) {
             sendqmsg('Macro '.$cmd[1].' not found.', ':interrobang:');
@@ -296,7 +296,7 @@ class book_none extends gamebook_base {
 
 
     //// !map - Sends a map image if map.jpg exists in images dir
-    public function _cmd_map($cmd) {
+    protected function _cmd_map($cmd) {
         if (file_exists('images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR.'map.jpg')) {
             sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.jpg');
         } else {

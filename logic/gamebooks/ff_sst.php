@@ -8,7 +8,7 @@ class book_ff_sst extends book_ff_basic {
     }
 
 
-    public function storyModify($story) {
+    protected function storyModify($story) {
         $story = parent::storyModify($story);
         $story = str_ireplace('The Traveller', $this->player['shipname'], $story);
         $story = str_ireplace('Starship Traveller', 'Starship '.substr($this->player['shipname'], 4), $story);
@@ -16,7 +16,7 @@ class book_ff_sst extends book_ff_basic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         if (!$race || $race == '?') {
             if ($p['race'] == 'Elf') {
@@ -133,7 +133,7 @@ class book_ff_sst extends book_ff_basic {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = parent::getStats();
         $stats['weapons'] = [
             'friendly' => 'Ship Weapons',
@@ -224,7 +224,7 @@ class book_ff_sst extends book_ff_basic {
 
 
     //// !shipbattle [name] <skill> <stamina> (run ship battle logic)
-    public function _cmd_shipbattle($cmd) {
+    protected function _cmd_shipbattle($cmd) {
         $out = $this->runShipBattle(['player' => &$this->player,
                 'oppname' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'oppweapons' => $cmd[2],
@@ -235,7 +235,7 @@ class book_ff_sst extends book_ff_basic {
 
 
     //// Replace crew
-    public function _cmd_recruit($cmd) {
+    protected function _cmd_recruit($cmd) {
         $pos = $cmd[1];
 
         if (!array_key_exists($pos, $player['crew'])) {
@@ -268,7 +268,7 @@ class book_ff_sst extends book_ff_basic {
 
 
     //// !beam <up/down> [crew] [crew] [crew]
-    public function _cmd_beam($cmd) {
+    protected function _cmd_beam($cmd) {
         $player = &$this->player;
         $out = "";
         $crew = array();
@@ -315,7 +315,7 @@ class book_ff_sst extends book_ff_basic {
 
 
     //// Special case, order various crew to do commands
-    public function _cmd_order($cmd) {
+    protected function _cmd_order($cmd) {
         $officer = strtolower($cmd[0]);
         $crew = &$this->player['crew'][$officer];
         $order = strtolower($cmd[1]);
@@ -358,7 +358,7 @@ class book_ff_sst extends book_ff_basic {
 
 
     //// Special case, order WHOLE crew, or away team, to do command
-    public function _cmd_everyone($cmd) {
+    protected function _cmd_everyone($cmd) {
         $this->addCommand($cmd[1]);
         foreach ($this->player['crew'] as $key => $val) {
             if ($cmd[0] != 'awayteam' || $val['awayteam']) {

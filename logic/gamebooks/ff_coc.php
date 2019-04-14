@@ -8,7 +8,7 @@ class book_ff_coc extends book_ff_magic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Starting Equipment
         $p['stuff'] = array('Sword (+0)', 'Leather Armor', 'Lantern');

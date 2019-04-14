@@ -8,7 +8,7 @@ class book_sonic_zr extends book_sonic {
     }
 
 
-    public function rollSonicCharacter($statarray = null) {
+    protected function rollSonicCharacter($statarray = null) {
         $p = parent::rollSonicCharacter($statarray);
         $p['stuff'] = array('Red Trainers', 'White Gloves');
 
@@ -33,7 +33,7 @@ class book_sonic_zr extends book_sonic {
     }
 
 
-    function getCharcterSheetAttachments() {
+    protected function getCharcterSheetAttachments() {
         $player = &$this->player;
         $attachments = parent::getCharcterSheetAttachments();
         $attachments[1]['color'] = '#ff6600';
@@ -72,7 +72,7 @@ class book_sonic_zr extends book_sonic {
 
 
     //// !help (send sonic help) OVERRIDE
-    public function _cmd_help($cmd) {
+    protected function _cmd_help($cmd) {
         $help = file_get_contents('resources/sonic_help.txt');
         $help .= "`!tails [command]` Ask tails to do something. e.g. `!tails test agility 4`\n";
         // Replace "!" with whatever the trigger word is
@@ -82,7 +82,7 @@ class book_sonic_zr extends book_sonic {
 
 
     //// Special case, order various tails to do commands
-    public function _cmd_tails($cmd) {
+    protected function _cmd_tails($cmd) {
         $order = strtolower($cmd[1]);
         $args = $cmd[2];
 

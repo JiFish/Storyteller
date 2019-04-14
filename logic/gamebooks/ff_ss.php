@@ -8,7 +8,7 @@ class book_ff_ss extends book_ff_magic {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = parent::getStats();
         $stats['magic']['roll'] = 0;
         return $stats;
@@ -20,7 +20,7 @@ class book_ff_ss extends book_ff_magic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Starting Equipment
         $p['stuff'] = array('Sword (+0)', 'Chainmail Armor');

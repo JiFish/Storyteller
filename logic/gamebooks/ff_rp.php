@@ -8,7 +8,7 @@ class book_ff_rp extends book_ff_basic {
     }
 
 
-    public function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
+    protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective);
         // Starting Equipment
         $p['stuff'] = array('Laser Sword (+0)');
@@ -17,7 +17,7 @@ class book_ff_rp extends book_ff_basic {
     }
 
 
-    public function getStats() {
+    protected function getStats() {
         $stats = parent::getStats();
         $stats['gold']['friendly'] = 'Credits';
         $stats['gold']['alias'][] = 'credits';
