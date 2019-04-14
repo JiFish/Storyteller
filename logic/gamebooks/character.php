@@ -199,59 +199,38 @@ class book_character extends book_none {
 
     //// !get / !take (add item to inventory/stuff list)
     protected function _cmd_get($cmd) {
-        $player = &$this->player;
         $item = $cmd[1];
 
         // Prevent duplicate entries
-        if (array_search(strtolower($item), array_map('strtolower', $player['stuff'])) !== false) {
+        if (!smart_add_to_list($this->player['stuff'], $item)) {
             sendqmsg("*You already have '".$item."'. Try giving this item a different name.*", ':interrobang:');
             return;
         }
 
-        // Otherwise just append it to the stuff array
-        $player['stuff'][] = $item;
-        sendqmsg("*Got the ".$item."!*", ":school_satchel:");
+        sendqmsg("*Got the $item!*", ":school_satchel:");
     }
 
 
     //// !drop / !lose / !use
     protected function _cmd_drop($cmd) {
-        $player = &$this->player;
+        $verb = strtolower($cmd[0]);
         $drop = strtolower($cmd[1]);
+        $result = smart_remove_from_list($this->player['stuff'], $drop);
 
-        // lazy item search
-        $foundkey = null;
-        $foundlist = array();
-        foreach ($player['stuff'] as $k => $i) {
-            // An exact match always drops
-            if ($drop == strtolower($i)) {
-                $foundkey = $k;
-                $foundlist = array($i);
-                break;
-            }
-            // otherwise look for partial matches
-            elseif (strpos(strtolower($i), $drop) !== false) {
-                $foundkey = $k;
-                $foundlist[] = $i;
-            }
-        }
-
-        if (sizeof($foundlist) < 1) {
-            sendqmsg("*'".$drop."' didn't match anything in inventory. Can't ".strtolower($cmd[0]).".*", ':interrobang:');
-        } elseif (sizeof($foundlist) > 1) {
-            sendqmsg("*Which did you want to ".$cmd[0]."? ".implode(", ", $foundlist)."*", ':interrobang:');
+        if ($result === false) {
+            sendqmsg("*'$drop' didn't match anything in inventory. Can't $verb.*", ':interrobang:');
+        } elseif (is_array($result)) {
+            sendqmsg("*Which did you want to $verb? ".implode(", ", $result)."*", ':interrobang:');
         } else {
-            $i = $player['stuff'][$foundkey];
-            unset($player['stuff'][$foundkey]);
-            switch ($cmd[0]) {
+            switch ($verb) {
             case 'lose':
-                sendqmsg("*Lost the ".$i."!*");
+                sendqmsg("*Lost the $result!*");
                 break;
             case 'drop':
-                sendqmsg("*Dropped the ".$i."!*", ":put_litter_in_its_place:");
+                sendqmsg("*Dropped the $result!*", ":put_litter_in_its_place:");
                 break;
             case 'use':
-                sendqmsg("*Used the ".$i."!*");
+                sendqmsg("*Used the $result!*");
                 break;
             }
         }
