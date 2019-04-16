@@ -15,7 +15,8 @@ function recursive_flatten_player(&$player, &$return, $keychain="") {
 
 // Figure out what rules we are running
 function getbook() {
-    return BOOK_TYPE;
+    global $config;
+    return $config->book_rules;
 }
 
 

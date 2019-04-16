@@ -15,7 +15,10 @@ class gamebook_base {
 
     // Load the player array from a serialized array
     // If we can't find the file, generate a new character
-    protected function loadPlayer($file = 'save.txt') {
+    protected function loadPlayer($tag = false) {
+        global $config;
+
+        $file = 'saves/save_'.$config->book_id.($tag?'_'.$tag:'').'.txt';
         if (!file_exists($file)) {
             $this->player = $this->newCharacter();
         } else {
@@ -25,7 +28,10 @@ class gamebook_base {
 
 
     // Serialize and save player array
-    public function savePlayer($file="save.txt") {
+    public function savePlayer($tag = false) {
+        global $config;
+
+        $file = 'saves/save_'.$config->book_id.($tag?'_'.$tag:'').'.txt';
         file_put_contents($file, serialize($this->player));
     }
 
@@ -41,7 +47,7 @@ class gamebook_base {
 
 
     public function processCommandList($commandqueue) {
-        global $disabledcommands;
+        global $config;
 
         $this->commandqueue = $commandqueue;
         $commandqueue = &$this->commandqueue;
@@ -67,7 +73,7 @@ class gamebook_base {
             }
 
             // Stop processing the queue after MAX_EXECUTIONS
-            if ($executions++ > MAX_EXECUTIONS) {
+            if ($executions++ > $config->max_executions) {
                 break;
             }
         }
@@ -77,9 +83,9 @@ class gamebook_base {
     // Filter an array of commands by a disabled list and remove entries
     // that are on the disabled list
     protected function filterCommandList() {
-        global $disabledcommands;
+        global $config;
 
-        if (isset($disabledcommands) && is_array($disabledcommands)) {
+        if (sizeof($config->disabled_commands) > 0) {
             foreach ($this->commandqueue as $key => $cmd) {
                 // Determine end of command word.
                 // Either the 1st space of the end of the string
@@ -87,7 +93,7 @@ class gamebook_base {
                 if ($cmdend === false) {
                     $cmdend = strlen($cmd);
                 }
-                foreach ($disabledcommands as $dc) {
+                foreach ($config->disabled_commands as $dc) {
                     // Look for match
                     if (strtolower(substr($cmd, 0, $cmdend)) == strtolower($dc)) {
                         unset($this->commandqueue[$key]);

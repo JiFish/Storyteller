@@ -14,10 +14,10 @@ if (isset($argv[1])) {
     die("No command!");
 }
 
-require_once 'config.php';
+require_once 'logic/config.php';
 
 $_POST['trigger_word'] = '!';
-$_POST['token'] = SLACK_TOKEN;
+$_POST['token'] = $config->slack_token;
 
 require 'storyteller.php';
 echo "OK";

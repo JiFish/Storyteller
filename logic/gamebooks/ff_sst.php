@@ -155,6 +155,8 @@ class book_ff_sst extends book_ff_basic {
 
 
     protected function getCharcterSheetAttachments() {
+        global $config;
+
         $player = &$this->player;
         $attachments = parent::getCharcterSheetAttachments();
         // ship
@@ -190,7 +192,7 @@ class book_ff_sst extends book_ff_basic {
                 'value' => $cname,
                 'short' => true ]);
         // Discord QOL
-        if (DISCORD_MODE) {
+        if ($config->discord_mode) {
             $fields[] = ['title' => 'Skill (†: -2 in combat)',
                 'value' => $cskill,
                 'short' => true ];

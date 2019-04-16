@@ -78,10 +78,12 @@ class book_ff_sob extends book_ff_basic {
 
 
     protected function getCharcterSheetAttachments() {
+        global $config;
+
         $player = &$this->player;
         $attachments = parent::getCharcterSheetAttachments();
         // QOL for discord with 3 per row instead of two
-        if (DISCORD_MODE) {
+        if ($config->discord_mode) {
             $attachments[0]['fields'][0]['value'] .= '  (Weapon: '.sprintf("%+d", $player['weapon']).')';
             unset($attachments[0]['fields'][3]);
         }

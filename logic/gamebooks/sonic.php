@@ -77,6 +77,8 @@ class book_sonic extends book_character {
 
 
     protected function getCharcterSheetAttachments() {
+        global $config;
+
         $player = &$this->player;
         $attachments[0]['color'] = $player['colourhex'];
         $attachments[0]['fields'] = [
@@ -95,7 +97,7 @@ class book_sonic extends book_character {
         ];
 
         // Discord QOL
-        if (DISCORD_MODE) {
+        if ($config->discord_mode) {
             $attachments[0]['fields'][3]['value'] = null;
             $attachments[0]['fields'][] = [
                 'title' => 'Rings: '.$player['rings'],

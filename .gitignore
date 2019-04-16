@@ -1,7 +1,5 @@
-# ignore the save
-save.txt
-save_*.txt
-save_backup.txt
+# ignore bookid save
+current_bookid.txt
 
 # ignore images
 images/*

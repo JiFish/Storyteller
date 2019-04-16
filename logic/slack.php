@@ -29,8 +29,10 @@ function sendimgmsg($message, $imgurl, $icon = ':open_book:') {
 // Full whistles and bells send message to slack
 // Normally use one of the convenience functions above
 function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = false) {
+    global $config;
+
     // Split long messages for discord
-    if (DISCORD_MODE && strlen($message) > 1975) {
+    if ($config->discord_mode && strlen($message) > 1975) {
         $m = str_replace(' ', '¥', $message);
         $m = str_replace("\n", " ", $m);
         $m = wordwrap($m, 1950, "[BREAK]", true);
@@ -71,7 +73,7 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     if (function_exists('hook_alter_output')) {
         hook_alter_output($data);
     }
-    if (DISCORD_MODE) {
+    if ($config->discord_mode) {
         discordize($data);
     }
     $data_string = json_encode($data);

@@ -1,7 +1,9 @@
 <?php
 
 function dice() {
-    switch (CHARACTER_ROLLS) {
+    global $config;
+
+    switch ($config->character_rolls) {
     case 'normal':
         $r = rand(1, 6);
         break;

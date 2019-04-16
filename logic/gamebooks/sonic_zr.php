@@ -34,6 +34,8 @@ class book_sonic_zr extends book_sonic {
 
 
     protected function getCharcterSheetAttachments() {
+        global $config;
+
         $player = &$this->player;
         $attachments = parent::getCharcterSheetAttachments();
         $attachments[1]['color'] = '#ff6600';
@@ -53,7 +55,7 @@ class book_sonic_zr extends book_sonic {
         ];
 
         // Discord QOL
-        if (DISCORD_MODE) {
+        if ($config->discord_mode) {
             $attachments[1]['fields'][3]['value'] = null;
             $attachments[1]['fields'][] = [
                 'title' => 'Tails Rings: '.$player['tails']['rings'],

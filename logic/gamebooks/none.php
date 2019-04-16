@@ -38,6 +38,8 @@ class book_none extends gamebook_base {
         $this->registerCommand('macro',      '_cmd_macro', ['n']);
         $this->registerCommand('m',          '_cmd_macro', ['n']);
         $this->registerCommand('map',        '_cmd_map');
+        $this->registerCommand('book',       '_cmd_book', ['s']);
+        $this->registerCommand('library',    '_cmd_library');
     }
 
 
@@ -49,6 +51,7 @@ class book_none extends gamebook_base {
         parent::processCommand($command);
     }
 
+
     //// !look
     protected function _cmd_look($cmd) {
         $story = $this->getFormatedStory($this->player['lastpage']);
@@ -57,7 +60,8 @@ class book_none extends gamebook_base {
 
 
     protected function getFormatedStory($page) {
-        require "book.php";
+        global $config;
+        require $config->book_file;
 
         if (!array_key_exists($page, $book)) {
             return "$page: PAGE NOT FOUND";
@@ -107,7 +111,10 @@ class book_none extends gamebook_base {
 
     //// !page <num> / !<num> (Read page from book)
     protected function _cmd_page($cmd) {
+        global $config;
+
         $player = &$this->player;
+        $imgdir = $config->book_images_dir;
         if (!is_numeric($cmd[1])) {
             return;
         }
@@ -116,11 +123,11 @@ class book_none extends gamebook_base {
 
         // Save a backup of the player for undo
         if ($backup) {
-            $this->savePlayer('save_backup.txt');
+            $this->savePlayer('backup');
         }
 
         $player['lastpage'] = $page;
-        require "book.php";
+        require $config->book_file;;
         $story = $book[$page];
 
         // Exclude pages using 'if ', 'you may' or 'otherwise'
@@ -152,8 +159,8 @@ class book_none extends gamebook_base {
 
         $story = $this->getFormatedStory($player['lastpage']);
 
-        if (IMAGES_SUBDIR && file_exists('images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR.$player['lastpage'].'.jpg')) {
-            sendimgmsg($story, 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/'.IMAGES_SUBDIR.'/'.$player['lastpage'].'.jpg');
+        if ($imgdir && file_exists("images/$imgdir/".$player['lastpage'].'.jpg')) {
+            sendimgmsg($story, 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/'.$imgdir.'/'.$player['lastpage'].'.jpg');
         } else {
             sendqmsg($story);
         }
@@ -297,7 +304,9 @@ class book_none extends gamebook_base {
 
     //// !map - Sends a map image if map.jpg exists in images dir
     protected function _cmd_map($cmd) {
-        $imgdir = 'images'.DIRECTORY_SEPARATOR.IMAGES_SUBDIR.DIRECTORY_SEPARATOR;
+        global $config;
+
+        $imgdir = 'images/'.$config->book_images_dir.'/';
         if (file_exists($imgdir.'map.jpg')) {
             sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.jpg');
         } elseif (file_exists($imgdir.'map.png')) {
@@ -305,6 +314,42 @@ class book_none extends gamebook_base {
         } else {
             sendqmsg("*No map found!*", ':interrobang:');
         }
+    }
+
+
+    //// !book - Open another book
+    protected function _cmd_book($cmd) {
+        global $config;
+        $bookid = strtolower($cmd[1]);
+
+        if ($bookid == $config->book_id) {
+            sendqmsg("*".$config->book_name.": Already open!*", ':interrobang:');
+            return;
+        }
+        if (!array_key_exists($bookid, $config->books)) {
+            sendqmsg("*$bookid: Book not found!*", ':interrobang:');
+            return;
+        }
+
+        $config->changeBookSetting($bookid);
+        sendqmsg("*Opening ".$config->book_name."!*", ':interrobang:');
+    }
+
+
+    //// !library - List books
+    protected function _cmd_library($cmd) {
+        global $config;
+
+        $out = "*List of available books:*\n";
+        foreach ($config->books as $key => $b) {
+            $out .= "- ".$b['name'].' ';
+            if ($key == $config->book_id) {
+                $out .= "- _Currently open_\n";
+            } else {
+                $out .= "- `!book $key`\n";
+            }
+        }
+        sendqmsg($out, ':books:');
     }
 
 

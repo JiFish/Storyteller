@@ -49,7 +49,7 @@ First you must create an incoming and outgoing webhook. In Slack, go to
 - Set the channel to where you want the story to be told. You will probably
 want to dedicate a channel to the story.
 - Give the bot a good name. I suggest Storyteller or StorytellerBot.
-- **Make a note of the Webhook URL.** Open `config.php` and set `SLACK_HOOK` to
+- **Make a note of the Webhook URL.** Open `config.ini` and set `slack_hook` to
 this URL.
 
 #### Outgoing Webhook
@@ -59,7 +59,7 @@ this URL.
 - Set the trigger word. I suggest using `!` to keep things simple. The trigger
 word must be prefixed to every command.
 - Set the URL to where your installation will be located.
-- **Make a note of the Webhook Token.** Open `config.php` and set `SLACK_TOKEN`
+- **Make a note of the Webhook Token.** Open `config.ini` and set `slack_token`
 to this value.
 
 ### 2. Get the story
@@ -87,8 +87,8 @@ Unless you are lucky enough to find the book you want in an eBook format, your
 only option is to scan and OCR the text yourself from a paper book. One you've
 converted the book to raw text, you can use can use the `bookconvert.php`
 script in the *extras* directory to help you convert raw text to the correct
-format. e.g. `php bookconvert.php mybook.txt > book.php`. See `book.php` for an
-example book.
+format. e.g. `php bookconvert.php mybook.txt > mybook.php`. See `jofm.php` for
+an example book.
 
 #### Option 3: Write your own adventure
 Storyteller doesn't have to play the official books. Perhaps one of the best
@@ -97,13 +97,27 @@ supported rules you like and come up with your own adventure. If anyone does do
 this, please consider submitting your story back here. I'd love to include
 longer stories with this distribution.
 
-### 3. Set the booktype / adjust config.php
-Open `config.php` and set `BOOK_TYPE` to the correct value for the book you are
-playing. This controls which stats are available, the character sheet and
-ensures character generation matches the book's rules. You can look up the
-correct book type in `book_support.html` found in the *extras* directory.
+### 3. Add your book to config.ini
+Once you have your book php file, put it in the `books` directory. Next add a
+new section to `config.ini` for your book.
 
-Use `none` for books with no character sheet.
+- The section name will be used as the book id.
+- `name` is the full title of the book.
+- `file` is the php file from step 2.
+- `rules` is the ruleset to use for the book. This controls which stats are
+available, the character sheet and ensures character generation matches the
+book. You can look up the correct book type in `book_support.html` found in
+the *extras* directory. Use `none` for books with no character sheet.
+
+Here is an example section:
+```
+[wofm]
+name = "Warlock of Firetop Mountain"
+file = books/wofm.php
+rules = ff_wofm
+```
+
+Set `default_book` under `[general]` to your book id.
 
 You may wish to adjust other settings in config.php at this point. You might
 like to remove `save` and `load` from the disabled commands list. This will
@@ -144,7 +158,7 @@ here!
 - Don't forget to add `/slack` to the end of your discord incoming hook to make
 it slack compatible. It will look like
 `https://discordapp.com/api/webhooks/0123456789/YOURCODEHERE/slack`
-- Set `DISCORD_MODE` to true in `config.php`. This will ensure messages are
+- Set `discord_mode` to true in `config.ini`. This will ensure messages are
 formatted correctly for Discord.
 - Ensure `images/emoji_cache` is writeable. Discord does not support emoji
 avatars, so emoji PNGs are cached and sent instead. This will cause a short

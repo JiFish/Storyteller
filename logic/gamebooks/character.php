@@ -353,10 +353,12 @@ class book_character extends book_none {
 
 
     protected function restorePlayer() {
-        if (file_exists('save_backup.txt')) {
-            unlink('save.txt');
-            copy('save_backup.txt', 'save.txt');
-            $this->loadPlayer();
+        global $config;
+
+        $file = 'saves/save_'.$config->game_id.'_backup.txt';
+        if (file_exists($file)) {
+            $this->loadPlayer('backup');
+            $this->savePlayer();
             return true;
         }
         return false;
@@ -370,24 +372,27 @@ class book_character extends book_none {
             sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
             return;
         }
-        $this->savePlayer("save_$slot.txt");
+        $this->savePlayer($slot);
         sendqmsg("*Game saved in slot $slot*", ':floppy_disk:');
     }
 
 
     //// !load - save copy of player
     protected function _cmd_load($cmd) {
+        global $config;
+
         $player = &$this->player;
         $slot = ($cmd[1]?$cmd[1]:0);
+        $file = 'saves/save_'.$config->book_id.$slot.'.txt';
         if ($slot < 0 || $slot > 10) {
             sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
             return;
         }
-        if (!file_exists("save_$slot.txt")) {
+        if (!file_exists($file)) {
             sendqmsg("*No save found in slot $slot*", ':interrobang:');
             return;
         }
-        $this->loadPlayer("save_$slot.txt");
+        $this->loadPlayer($slot);
         sendqmsg("*Loaded game in slot $slot*", $player['emoji']);
         $this->addCommand("look");
         $this->addCommand("info");

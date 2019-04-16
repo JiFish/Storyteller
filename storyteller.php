@@ -1,11 +1,11 @@
 <?php
 
-require_once 'config.php';
+require_once 'logic/config.php';
 require_once 'logic/functions.php';
 require_once 'logic/slack.php';
 
 // Check the incoming data for the secret slack token
-if ($_POST['token'] != SLACK_TOKEN) {
+if ($_POST['token'] != $config->slack_token) {
     header('HTTP/1.0 403 Forbidden');
     die('Access Denied. Token does not match');
 }
