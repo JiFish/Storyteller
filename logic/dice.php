@@ -1,57 +1,33 @@
 <?php
 
-function dice() {
+function dice($min = 1, $max = 6) {
     global $config;
 
     switch ($config->character_rolls) {
     case 'normal':
-        $r = rand(1, 6);
+        $r = rand($min, $max);
         break;
-    case 'd5+1':
-        $r = rand(2, 6);
+    case 'reroll':
+        $r = rand($min+1, $max);
         break;
     case 'min3':
-        $r = max(3, rand(1, 6));
+        $r = max(3, $max);
         break;
     case 'min4':
-        $r = max(4, rand(1, 6));
+        $r = max(4, $max);
         break;
     case 'roll2':
-        $r = max(rand(1, 6), rand(1, 6));
+        $r = max(rand($min, $max), rand($min, $max));
         break;
     case 'roll3':
-        $r = max(rand(1, 6), rand(1, 6), rand(1, 6));
-        break;
-    case 'weighted':
-        $r = min(6, rand(1, 8));
+        $r = max(rand($min, $max), rand($min, $max), rand($min, $max));
         break;
     case 'average':
-        global $averageflip;
-        if (!isset($averageflip)) {
-            $averageflip = false;
-        }
-        $r = $averageflip?3:4;
-        $averageflip = !$averageflip;
+        $r = ceil(($max-$min)/2);
         break;
-    case 'all1':
-        $r = 1;
+    case 'max':
+        $r = $max;
         break;
-    case 'all2':
-        $r = 2;
-        break;
-    case 'all3':
-        $r = 3;
-        break;
-    case 'all4':
-        $r = 4;
-        break;
-    case 'all5':
-        $r = 5;
-        break;
-    case 'all6':
-        $r = 6;
-        break;
-    case 'all7':
     case 'heaven':
         $r = 7;
         break;
