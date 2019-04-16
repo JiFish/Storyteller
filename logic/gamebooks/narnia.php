@@ -13,6 +13,7 @@ class book_narnia extends book_character {
         return "*".$p['name']."* the ".$p['adjective']." _(".($p['gender']=='Male'?'Son of Adam':'Daughter of Eve').")_";
     }
 
+
     protected function getStats() {
         $stats = array(
             'fight' => [
@@ -42,7 +43,7 @@ class book_narnia extends book_character {
             ],
             'innerstrength' => [
                 'friendly' => 'Inner Strength',
-                'alias' => ['is', 'strength', 'str','inner strength'],
+                'alias' => ['is', 'strength', 'str', 'inner strength'],
                 'allownegative' => true,
             ],
         );
@@ -116,8 +117,8 @@ class book_narnia extends book_character {
     protected function registerCommands() {
         parent::registerCommands();
         $this->registerCommand('test',    '_cmd_test', ['ms']);
-        $this->registerCommand('ng',      '_cmd_newgame', ['os','os','on', 'on', 'on', 'on', 'on', 'on']);
-        $this->registerCommand('newgame', '_cmd_newgame', ['os','os','on', 'on', 'on', 'on', 'on', 'on']);
+        $this->registerCommand('ng',      '_cmd_newgame', ['os', 'os', 'on', 'on', 'on', 'on', 'on', 'on']);
+        $this->registerCommand('newgame', '_cmd_newgame', ['os', 'os', 'on', 'on', 'on', 'on', 'on', 'on']);
     }
 
 
