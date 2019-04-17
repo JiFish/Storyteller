@@ -257,7 +257,7 @@ class book_character extends book_none {
         $thisstat = $this->getStatFromAlias(strtolower($cmd[0]), $this->getStats());
         $statname = $stats[$thisstat]['friendly'];
         // Allow negative for temp values, others have a min 0 unless allownegative set
-        if ($cmd[1] == 'temp' || !isset($stats[$thisstat]['allownegative']) || !$stats[$thisstat]['allownegative']) {
+        if ($cmd[1] != 'temp' || !isset($stats[$thisstat]['allownegative']) || !$stats[$thisstat]['allownegative']) {
             $allownegative = false;
         } else {
             $allownegative = true;
