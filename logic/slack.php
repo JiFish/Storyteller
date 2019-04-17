@@ -57,7 +57,8 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
         $limittime = false;
     }
 
-    $data['text'] = $message;
+    // Ensure we have valid UTF-8 encoding
+    $data['text'] = mb_convert_encoding($message, 'UTF-8', "auto");
     if (is_array($attachments)) {
         $data['attachments'] = $attachments;
     }

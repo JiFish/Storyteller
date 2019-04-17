@@ -1,5 +1,7 @@
 <?php
 
+ini_set('mbstring.substitute_character', "none");
+
 // If we were called directly
 if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {
     if (!isset($argv[1])) {
@@ -18,7 +20,7 @@ if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {
 
 // Outputs assoc array
 function convert_text($text) {
-    $text = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $text);
+    $text = mb_convert_encoding($text, 'UTF-8', "auto");
     $text = preg_split('/\r\n|\r|\n/', $text);
     $page = "";
     $expected_num = 1;
