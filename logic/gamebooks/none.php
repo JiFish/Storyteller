@@ -306,11 +306,11 @@ class book_none extends gamebook_base {
     protected function _cmd_map($cmd) {
         global $config;
 
-        $imgdir = 'images/'.$config->book_images_dir.'/';
-        if (file_exists($imgdir.'map.jpg')) {
-            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.jpg');
-        } elseif (file_exists($imgdir.'map.png')) {
-            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/map.png');
+        $imgpath = "images/".$config->book_images_dir."/map";
+        if (file_exists($imgpath.'.jpg')) {
+            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath'.jpg');
+        } elseif (file_exists($imgpath.'.png')) {
+            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.png');
         } else {
             sendqmsg("*No map found!*", ':interrobang:');
         }
