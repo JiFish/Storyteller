@@ -126,7 +126,7 @@ class book_none extends gamebook_base {
         }
 
         $player['lastpage'] = $page;
-        require $config->book_file;;
+        require $config->book_file;
         $story = $book[$page];
 
         // Exclude pages using 'if ', 'you may' or 'otherwise'
