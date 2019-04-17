@@ -114,7 +114,6 @@ class book_none extends gamebook_base {
         global $config;
 
         $player = &$this->player;
-        $imgdir = $config->book_images_dir;
         if (!is_numeric($cmd[1])) {
             return;
         }
@@ -159,8 +158,11 @@ class book_none extends gamebook_base {
 
         $story = $this->getFormatedStory($player['lastpage']);
 
-        if ($imgdir && file_exists("images/$imgdir/".$player['lastpage'].'.jpg')) {
-            sendimgmsg($story, 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/'.$imgdir.'/'.$player['lastpage'].'.jpg');
+        $imgpath = "images/".$config->book_images_dir."/".$player['lastpage'];
+        if (file_exists($imgpath.'.jpg')) {
+            sendimgmsg($story, 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.jpg');
+        } elseif (file_exists($imgpath.'.png')) {
+            sendimgmsg($story, 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.png');
         } else {
             sendqmsg($story);
         }
