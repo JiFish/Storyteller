@@ -310,7 +310,7 @@ class book_none extends gamebook_base {
 
         $imgpath = "images/".$config->book_images_dir."/map";
         if (file_exists($imgpath.'.jpg')) {
-            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath'.jpg');
+            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.jpg');
         } elseif (file_exists($imgpath.'.png')) {
             sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.png');
         } else {
