@@ -200,13 +200,7 @@ class book_character extends book_none {
     //// !get / !take (add item to inventory/stuff list)
     protected function _cmd_get($cmd) {
         $item = $cmd[1];
-
-        // Prevent duplicate entries
-        if (!smart_add_to_list($this->player['stuff'], $item)) {
-            sendqmsg("*You already have '".$item."'. Try giving this item a different name.*", ':interrobang:');
-            return;
-        }
-
+        $this->player['stuff'][] = $item;
         sendqmsg("*Got the $item!*", ":school_satchel:");
     }
 

@@ -83,19 +83,6 @@ function basic_num_to_word($num) {
 }
 
 
-// Returns FALSE if the item is a match
-function smart_add_to_list(&$list, $item) {
-    // Prevent duplicate entries
-    if (array_search(strtolower($item), array_map('strtolower', $list)) !== false) {
-        return false;
-    }
-
-    // Otherwise just append it to the stuff array
-    $list[] = $item;
-    return true;
-}
-
-
 // Returns FALSE if the item doesn't exist
 // Returns an array if there are multiple matches
 // Returns a string with the removed item if successful
@@ -121,7 +108,7 @@ function smart_remove_from_list(&$list, $item) {
     // Failed to remove
     if (sizeof($foundlist) < 1) {
         return false;
-    } elseif (sizeof($foundlist) > 1) {
+    } elseif (sizeof($foundlist) > 1 && no_unique_item($foundlist)) {
         return $foundlist;
     }
 
@@ -129,4 +116,10 @@ function smart_remove_from_list(&$list, $item) {
     $removeditem = $list[$foundkey];
     unset($list[$foundkey]);
     return $removeditem;
+}
+
+function no_unique_item(&$testarray) {
+    $a = array_map('strtolower', $testarray);
+    $a = array_unique($a);
+    return (count($a) > 1);
 }
