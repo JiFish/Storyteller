@@ -328,8 +328,11 @@ class book_none extends gamebook_base {
             return;
         }
 
+        $this->savePlayer();
         $config->changeBookSetting($bookid);
         sendqmsg("*Opening ".$config->book_name."!*", ':interrobang:');
+        // Bit of a hack, we have to die() here so we don't run any commands under the wrong rules
+        die();
     }
 
 
