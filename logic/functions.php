@@ -108,22 +108,24 @@ function smart_remove_from_list(&$list, $item) {
     // Failed to remove
     if (sizeof($foundlist) < 1) {
         return false;
-    } elseif (sizeof($foundlist) > 1 && only_one_item($foundlist)) {
+    } elseif (sizeof($foundlist) > 1 && items_are_different($foundlist)) {
         return $foundlist;
     }
 
     // Successful remove
     $removeditem = $list[$foundkey];
     unset($list[$foundkey]);
+    // Re-index the array elements
+    $list = array_values($list);
     return $removeditem;
 }
 
-function only_one_item($testarray) {
-    $match = strtolower(current($a));
-    foreach ($a as $val) {
+function items_are_different($testarray) {
+    $match = strtolower(current($testarray));
+    foreach ($testarray as $val) {
         if ($match !== strtolower($val)) {
-            return false;
+            return true;
         }
     }
-    return true;
+    return false;
 }
