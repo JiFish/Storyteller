@@ -3,11 +3,6 @@
 require_once 'ff_basic.php';
 
 class book_ff_coh extends book_ff_basic {
-    public function getId() {
-        return 'ff_coh';
-    }
-
-
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Change fluff

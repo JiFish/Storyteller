@@ -3,11 +3,6 @@
 require_once 'ff_basic.php';
 
 class book_ff_bvp extends book_ff_basic {
-    public function getId() {
-        return 'ff_bvp';
-    }
-
-
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // All stats start at 1

@@ -3,11 +3,6 @@
 require_once 'sonic.php';
 
 class book_sonic_mcm extends book_sonic {
-    public function getId() {
-        return 'sonic_mcm';
-    }
-
-
     protected function getStats() {
         $stats = parent::getStats();
         $stats['egghits'] = [

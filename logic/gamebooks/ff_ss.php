@@ -3,11 +3,6 @@
 require_once 'ff_magic.php';
 
 class book_ff_ss extends book_ff_magic {
-    public function getId() {
-        return 'ff_ss';
-    }
-
-
     protected function getStats() {
         $stats = parent::getStats();
         $stats['magic']['roll'] = 0;

@@ -3,11 +3,6 @@
 require_once 'character.php';
 
 class book_sonic extends book_character {
-    public function getId() {
-        return 'sonic';
-    }
-
-
     public function isDead() {
         return $this->player['lives'] < 1;
     }

@@ -3,11 +3,6 @@
 require_once 'ff_basic.php';
 
 class book_ff_sst extends book_ff_basic {
-    public function getId() {
-        return 'ff_sst';
-    }
-
-
     protected function storyModify($story) {
         $story = parent::storyModify($story);
         $story = str_ireplace('The Traveller', $this->player['shipname'], $story);

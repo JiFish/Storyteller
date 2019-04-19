@@ -3,11 +3,6 @@
 require_once 'ff_basic.php';
 
 class book_ff_dotd extends book_ff_basic {
-    public function getId() {
-        return 'ff_dotd';
-    }
-
-
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollHumanCharacter($name, $gender, $emoji, $race, $adjective);
         // Starting Equipment

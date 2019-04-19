@@ -5,11 +5,6 @@ require_once 'logic/RandomColor.php';
 require_once 'logic/dice.php';
 
 class book_character extends book_none {
-    public function getId() {
-        return 'character';
-    }
-
-
     protected function getStats() {
         return [];
     }

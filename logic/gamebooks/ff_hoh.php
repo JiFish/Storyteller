@@ -3,11 +3,6 @@
 require_once 'ff_basic.php';
 
 class book_ff_hoh extends book_ff_basic {
-    public function getId() {
-        return 'ff_hoh';
-    }
-
-
     public function isDead() {
         $player = &$this->player;
         return ($player['stam'] < 1) || ($player['fear'] >= $player['max']['fear']);

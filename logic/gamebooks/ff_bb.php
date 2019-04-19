@@ -3,11 +3,6 @@
 require_once 'ff_basic.php';
 
 class book_ff_bb extends book_ff_basic {
-    public function getId() {
-        return 'ff_bb';
-    }
-
-
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         $p['stuff'] = array('Sword (+0)', 'Leather Armor', 'Lantern', 'Tinderbox');

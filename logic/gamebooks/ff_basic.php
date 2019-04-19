@@ -3,11 +3,6 @@
 require_once 'character.php';
 
 class book_ff_basic extends book_character {
-    public function getId() {
-        return 'ff_basic';
-    }
-
-
     public function isDead() {
         return $this->player['stam'] < 1;
     }

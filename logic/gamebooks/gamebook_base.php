@@ -36,11 +36,6 @@ class gamebook_base {
     }
 
 
-    public function getId() {
-        return null;
-    }
-
-
     protected function newCharacter() {
         return [];
     }

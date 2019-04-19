@@ -3,11 +3,6 @@
 require_once 'ff_magic.php';
 
 class book_ff_coc extends book_ff_magic {
-    public function getId() {
-        return 'ff_coc';
-    }
-
-
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Starting Equipment

@@ -3,11 +3,6 @@
 require_once 'character.php';
 
 class book_narnia extends book_character {
-    public function getId() {
-        return 'narnia';
-    }
-
-
     protected function getCharacterString() {
         $p = &$this->player;
         return "*".$p['name']."* the ".$p['adjective']." _(".($p['gender']=='Male'?'Son of Adam':'Daughter of Eve').")_";

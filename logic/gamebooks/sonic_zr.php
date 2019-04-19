@@ -3,11 +3,6 @@
 require_once 'sonic.php';
 
 class book_sonic_zr extends book_sonic {
-    public function getId() {
-        return 'sonic_zr';
-    }
-
-
     protected function rollSonicCharacter($statarray = null) {
         $p = parent::rollSonicCharacter($statarray);
         $p['stuff'] = array('Red Trainers', 'White Gloves');

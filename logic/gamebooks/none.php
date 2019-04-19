@@ -3,11 +3,6 @@
 require_once 'gamebook_base.php';
 
 class book_none extends gamebook_base {
-    public function getId() {
-        return 'none';
-    }
-
-
     public function isDead() {
         return false;
     }

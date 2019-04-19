@@ -3,11 +3,6 @@
 require_once 'ff_basic.php';
 
 class book_ff_sob extends book_ff_basic {
-    public function getId() {
-        return 'ff_sob';
-    }
-
-
     public function isDead() {
         $player = &$this->player;
         return ($player['stam'] < 1) || ($player['str'] < 1);
