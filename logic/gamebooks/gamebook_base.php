@@ -1,6 +1,6 @@
 <?php
 
-class gamebook_base {
+abstract class gamebook_base {
     protected $player = null;
     protected $commandqueue = [];
     protected $commands = [];
