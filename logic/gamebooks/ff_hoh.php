@@ -14,7 +14,7 @@ class book_ff_hoh extends book_ff_basic {
         $p['weapon'] = -3;
         // Set race
         if (!$race || $race == '?') {
-            $p['race'] = array('Cowardly', 'Ordinary', 'Sceptical', 'Open-Minded', 'Believer', 'Enlightened')[$p['creationdice'][4]-1];
+            $p['race'] = array('Cowardly', 'Ordinary', 'Sceptical', 'Open-Minded', 'Believer', 'Enlightened')[$p['fear']-7];
         }
         return $p;
     }

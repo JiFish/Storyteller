@@ -157,7 +157,7 @@ class book_narnia extends book_character {
         $attach = $this->getCharcterSheetAttachments();
         $attach[] = $this->getStuffAttachment();
 
-        sendmsg("_*NEW CHARACTER!*_ ".$extratext.implode(' ', array_map("diceemoji", $player['creationdice']))."\n".$this->getCharacterString(), $attach, $icon);
+        sendmsg("_*NEW CHARACTER!*_ ".$extratext."\n".$this->getCharacterString(), $attach, $icon);
     }
 
 

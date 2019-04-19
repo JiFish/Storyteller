@@ -46,11 +46,9 @@ class book_ff_sst extends book_ff_basic {
         $cl = ['no1', 'science', 'medic', 'engineer', 'security', 'guard'];
         $races = array('Human', 'Human', 'Human', 'Human', 'Human', 'Vulcan', 'Andorian', 'Caitian', 'Droid');
         foreach ($cl as $k => $c) {
-            $d1 = dice();
-            $d2 = dice();
-            $d3 = dice();
-            array_push($p['creationdice'], $d1, $d2, $d3);
-            $cm = $this->rollCrew($c, ($k > 0 && $k < 4), $races, [$d1, $d2, $d3]);
+            $crewroll = [dice(), dice(), dice()];
+            $p['creationdice'] .= ' '.implode(' ', array_map("diceemoji", $crewroll));
+            $cm = $this->rollCrew($c, ($k > 0 && $k < 4), $races, $crewroll);
             $p['crew'][$c] = $cm;
         }
         return $p;

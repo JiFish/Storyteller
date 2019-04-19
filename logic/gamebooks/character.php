@@ -58,7 +58,7 @@ class book_character extends book_none {
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = array('lastpage' => 1,
             'stuff' => [],
-            'creationdice' => [],
+            'creationdice' => '',
             'temp' => []);
         // Roll/Set stats!
         roll_stats($p, $this->getStats());
@@ -188,7 +188,7 @@ class book_character extends book_none {
         $attach = $this->getCharcterSheetAttachments();
         $attach[] = $this->getStuffAttachment();
 
-        sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n".$this->getCharacterString(), $attach, $icon);
+        sendmsg("_*NEW CHARACTER!*_ ".$player['creationdice']."\n".$this->getCharacterString(), $attach, $icon);
     }
 
 

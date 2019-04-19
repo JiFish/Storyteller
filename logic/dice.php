@@ -50,7 +50,7 @@ function ff1die(&$player, $statname) {
     $player[$statname] = $d+6;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = $player[$statname];
-    $player['creationdice'][] = $d;
+    $player['creationdice'] .= ' '.diceemoji($d);
 }
 
 
@@ -59,8 +59,7 @@ function ff2die(&$player, $statname) {
     $player[$statname] = $d1+$d2+6;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = $player[$statname];
-    $player['creationdice'][] = $d1;
-    $player['creationdice'][] = $d2;
+    $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
 }
 
 
@@ -69,8 +68,7 @@ function ffstam(&$player, $statname) {
     $player[$statname] = $d1+$d2+12;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = $player[$statname];
-    $player['creationdice'][] = $d1;
-    $player['creationdice'][] = $d2;
+    $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
 }
 
 
@@ -79,9 +77,7 @@ function loz3die(&$player, $statname) {
     $player[$statname] = $d1+$d2+$d3+2;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = 99999;
-    $player['creationdice'][] = $d1;
-    $player['creationdice'][] = $d2;
-    $player['creationdice'][] = $d3;
+    $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2).' '.diceemoji($d3);
 }
 
 
@@ -90,8 +86,7 @@ function twodieplus12(&$player, $statname) {
     $player[$statname] = $d1+$d2+12;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = 99999;
-    $player['creationdice'][] = $d1;
-    $player['creationdice'][] = $d2;
+    $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
 }
 
 
@@ -100,7 +95,7 @@ function fffeardie(&$player, $statname) {
     $player[$statname] = 0;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = $d+6;
-    $player['creationdice'][] = $d;
+    $player['creationdice'] .= ' '.diceemoji($d);
 }
 
 
@@ -114,4 +109,5 @@ function roll_stats(&$player, $stats) {
             $v['roll']($player, $statname);
         }
     }
+    $player['creationdice'] = trim($player['creationdice']);
 }

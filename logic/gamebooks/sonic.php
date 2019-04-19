@@ -46,7 +46,7 @@ class book_sonic extends book_character {
 
 
     protected function rollSonicCharacter($statarray = null) {
-        $p['creationdice'] = [];
+        $p['creationdice'] = '';
         $p['name'] = 'Sonic';
         $p['adjective'] = 'Hedgehog';
         $p['gender'] = 'Male';
@@ -161,7 +161,7 @@ class book_sonic extends book_character {
         $attach = $this->getCharcterSheetAttachments();
         $attach[] = $this->getStuffAttachment();
 
-        sendmsg("_*NEW CHARACTER!*_ ".implode(' ', array_map("diceemoji", $player['creationdice']))."\n*".$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_".$extratext, $attach, $icon);
+        sendmsg("_*NEW CHARACTER!*_ ".$player['name']."* the ".$player['adjective']." _(".$player['gender']." ".$player['race'].")_".$extratext, $attach, $icon);
     }
 
 
