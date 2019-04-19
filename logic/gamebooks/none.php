@@ -341,13 +341,25 @@ class book_none extends gamebook_base {
         global $config;
 
         $out = "*List of available books:*\n";
+        $lib = [];
         foreach ($config->books as $key => $b) {
-            $out .= "- ".$b['name'].' ';
+            $title = "- ".$b['name'].' ';
             if ($key == $config->book_id) {
-                $out .= "- _Currently open_\n";
+                $title .= "- _Currently open_";
             } else {
-                $out .= "- `!book $key`\n";
+                $title .= "- `!book $key`";
             }
+            $lib[$b['group']][] = $title;
+        }
+        // Books without group first
+        if (array_key_exists('none',$lib)) {
+            $out .= implode("\n",$lib['none']);
+            unset($lib['none']);
+        }
+        // Then each group
+        foreach ($lib as $group => $titles) {
+            $out .= "\n_*$group*_\n";
+            $out .= implode("\n",$titles);
         }
         sendqmsg($out, ':books:');
     }

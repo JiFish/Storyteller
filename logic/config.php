@@ -72,6 +72,7 @@ class Config {
         $out['file'] = $this->get('file', null, $bookid);
         $out['rules'] = $this->get('rules', 'none', $bookid);
         $out['images_dir'] = $this->get('images_dir', $bookid, $bookid);
+        $out['group'] = $this->get('group', 'none', $bookid);
 
         if (!file_exists($out['file'])) {
             die("ERROR in $bookid: book file '".$out['file']."' not found!");
