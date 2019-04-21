@@ -37,7 +37,8 @@
 // List of files in your project
 // Wildcards for glob() may be used.
 // Example: array("*.php", "inc/*.php");
-$project_files = array("*.php", "logic/gamebooks/*.php", "logic/*.php", "extras/*.php");
+chdir(dirname(__FILE__));
+$project_files = array("../*.php", "../logic/gamebooks/*.php", "../logic/*.php", "../extras/*.php");
 
 // List of files you want to exclude from the project files
 // Wildcards are not allowed here.
