@@ -77,7 +77,7 @@ class Config {
         if (!file_exists($out['file'])) {
             die("ERROR in $bookid: book file '".$out['file']."' not found!");
         }
-        if (!file_exists('logic/gamebooks/'.$out['rules'].'.php')) {
+        if (!file_exists('logic/rulesets/'.$out['rules'].'.php')) {
             die("ERROR in $bookid: rules '".$out['rules']."' doesn't exist!");
         }
 

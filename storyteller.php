@@ -11,7 +11,7 @@ if ($_POST['token'] != $config->slack_token) {
 }
 
 // Gamebook Object
-require_once 'logic/gamebooks/'.getbook().'.php';
+require_once 'logic/rulesets/'.getbook().'.php';
 $bookclass = 'Book_'.getbook();
 $gamebook = new $bookclass($player);
 
