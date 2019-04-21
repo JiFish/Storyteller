@@ -290,6 +290,7 @@ class book_none extends gamebook_base {
         $macros = file('macros.txt');
         if ($cmd[1] < 1 || $cmd[1] > sizeof($macros)) {
             sendqmsg('Macro '.$cmd[1].' not found.', ':interrobang:');
+            return;
         }
         $fullcmd = trim($macros[$cmd[1]-1]);
 
