@@ -67,7 +67,7 @@ class book_none extends gamebook_base {
         $story = $this->storyModify($book[$page]);
 
         // Look for choices in the text and give them bold formatting
-        $story = preg_replace('/\(?turn(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $story);
+        $story = preg_replace('/\(?(turn|go)(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $story);
         $story = preg_replace('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', '*${0}*', $story);
 
         // Wrapping and formatting
