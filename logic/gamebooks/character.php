@@ -181,7 +181,7 @@ class book_character extends book_none {
     //// !newgame (roll new character)
     protected function _cmd_newgame($cmd) {
         $player = &$this->player;
-        $cmd = array_pad($cmd, 7, '?');
+        $cmd = array_pad($cmd, 6, '?');
         $player = $this->rollCharacter($cmd[1], $cmd[2], $cmd[3], $cmd[4], $cmd[5]);
 
         $icon = $player['emoji'];
