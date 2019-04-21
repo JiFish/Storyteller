@@ -29,7 +29,7 @@ class book_ff_basic extends book_character {
             'stam' => [
                 'friendly' => 'Stamina',
                 'alias' => ['stamina'],
-                'icons' => [':heartpulse',':face_with_head_bandage:'],
+                'icons' => [':heartpulse', ':face_with_head_bandage:'],
                 'roll' => 'ffstam',
                 'display' => 'current_and_max',
                 'testdice' => 3,

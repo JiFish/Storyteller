@@ -7,7 +7,7 @@ class book_ff_rtfm extends book_ff_basic {
         $stats = parent::getStats();
         $stats['goldzagors'] = [
             'friendly' => 'Gold Zagors',
-            'alias' => ['zagors','gz'],
+            'alias' => ['zagors', 'gz'],
             'icons' => ':moneybag:',
         ];
         return $stats;

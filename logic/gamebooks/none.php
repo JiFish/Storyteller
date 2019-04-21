@@ -20,20 +20,21 @@ class book_none extends gamebook_base {
 
     protected function registerCommands() {
         $this->registerCommand('look',       '_cmd_look');
-        $this->registerCommand('page',       '_cmd_page', ['n', 'os']);
+        $this->registerCommand('page',       '_cmd_page',     ['n', 'os']);
         $this->registerCommand('background', '_cmd_background');
-        $this->registerCommand('roll',       '_cmd_roll', ['on']);
+        $this->registerCommand('roll',       '_cmd_roll',     ['on']);
         $this->registerCommand('help',       '_cmd_help');
         $this->registerCommand('?',          '_cmd_help');
-        $this->registerCommand('echo',       '_cmd_echo', ['l']);
+        $this->registerCommand('echo',       '_cmd_echo',     ['l']);
         $this->registerCommand('randpage',   '_cmd_randpage', ['n', 'on', 'on', 'on', 'on', 'on', 'on', 'on']);
         $this->registerCommand('debugset',   '_cmd_debugset', ['s', 'l']);
         $this->registerCommand('silentset',  '_cmd_debugset', ['s', 'l']);
         $this->registerCommand('debuglist',  '_cmd_debuglist');
-        $this->registerCommand('macro',      '_cmd_macro', ['n']);
-        $this->registerCommand('m',          '_cmd_macro', ['n']);
+        $this->registerCommand('macro',      '_cmd_macro',    ['n']);
+        $this->registerCommand('m',          '_cmd_macro',    ['n']);
         $this->registerCommand('map',        '_cmd_map');
-        $this->registerCommand('book',       '_cmd_book', ['s']);
+        $this->registerCommand('book',       '_cmd_book',     ['os']);
+        $this->registerCommand('open',       '_cmd_book',     ['os']);
         $this->registerCommand('library',    '_cmd_library');
     }
 
@@ -352,14 +353,14 @@ class book_none extends gamebook_base {
             $lib[$b['group']][] = $title;
         }
         // Books without group first
-        if (array_key_exists('none',$lib)) {
-            $out .= implode("\n",$lib['none']);
+        if (array_key_exists('none', $lib)) {
+            $out .= implode("\n", $lib['none']);
             unset($lib['none']);
         }
         // Then each group
         foreach ($lib as $group => $titles) {
             $out .= "\n_*$group*_\n";
-            $out .= implode("\n",$titles);
+            $out .= implode("\n", $titles);
         }
         sendqmsg($out, ':books:');
     }
