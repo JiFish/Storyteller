@@ -320,6 +320,9 @@ class book_none extends gamebook_base {
         global $config;
         $bookid = strtolower($cmd[1]);
 
+        if (!$bookid) {
+            return $this->_cmd_library();
+        }
         if ($bookid == $config->book_id) {
             sendqmsg("*".$config->book_name.": Already open!*", ':interrobang:');
             return;
@@ -338,7 +341,7 @@ class book_none extends gamebook_base {
 
 
     //// !library - List books
-    protected function _cmd_library($cmd) {
+    protected function _cmd_library($cmd = null) {
         global $config;
 
         $out = "*List of available books:*\n";
