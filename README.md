@@ -1,11 +1,12 @@
 # Storyteller
-## A Slack / Discord* Bot for playing GameBooks (v2.0)
+## A Slack / Discord* Bot for playing Gamebooks (v2.0)
 
 ## Introduction
 Storyteller is a bot for use with Slack which helps a group of people play
 through a gamebook co-operatively. It was designed for _Fighting Fantasy_, but
-can now play a number of different gamebook types. It should work with any
-choose-your-own adventure book.
+can now play a number of different gamebook types, including _Lone Wolf_.
+
+It should work with almost any gamebook.
 
 Storyteller adds commands to read the story, manage your character and roll
 dice for fights and other challenges. It will assist you in playing the game
@@ -20,10 +21,10 @@ a complicated chat-bot.
 
 ## Book Support
 
-Anything without a character sheet is supported, this includes the Choose Your
-Own Adventure books.
+Anything without a character sheet is supported, this includes the
+_Choose Your Own Adventure_ books.
 
-The following Fighting Fantasy books currently work very well: Battleblade
+The following _Fighting Fantasy_ books currently work very well: Battleblade
 Warrior, Black Vein Prophecy, Bloodbones, Caverns of the Snow Witch, The
 Citadel of Chaos, City of Thieves, Creature of Havoc, Crypt of the Sorcerer,
 Deathmoor, Deathtrap Dungeon, Demons of the Deep, Eye of the Dragon, The Forest
@@ -33,8 +34,13 @@ Swamp, Seas of Blood, Starship Traveller, Stealer of Souls, Talisman of Death,
 Temple of Terror, Trial of Champions, The Warlock of Firetop Mountain. Most
 other can still be played.
 
-The Sonic The Hedgehog Gamebooks are also supported as are The Narnia Solo
-Games books.
+The first 20 _Lone Wolf_ books have good support.
+
+The _Sonic The Hedgehog Gamebooks_ are also supported as are The
+_Narnia Solo Games_ books.
+
+The full list of supported books is here:
+http://htmlpreview.github.io/?https://github.com/JiFish/Storyteller/master/extras/book_support.html
 
 ## Set-Up
 Download and unzip. Place on a webserver running PHP. PHP7 is recommended.
@@ -66,29 +72,27 @@ to this value.
 By default Storyteller ships with a very short and simple sample book. It isn't
 very fun, so you'll likely want to replace it. You have 3 options.
 
-#### Option 1: Download pre-prepared book
-Importing from an official source is painful since many are not available in an
-eBook format. So I am reluctantly providing a link to some books that have been
-pre-prepared for use. Download the file and replace the contents of `book.php`
-with it.
+#### Option 1: Install Lone Wolf books
+Joe Dever has generously allowed Project Aon to host copies of the Lone Wolf
+gamebooks. I've provided a tool that downloads the books ready for use. If
+you go with this option you can skip section 3. Run the script and follow
+the on-screen prompts:
+```
+php extras/install_lonewolf.php
+```
 
-Pre-Prepared book.php:
-- [Warlock of Firetop Mountain](https://pastebin.com/raw/vWWTeMFj)
-- [Return to Firetop Mountain](https://pastebin.com/raw/7gFq1WTW)
-- [Seas of Blood](https://pastebin.com/raw/Y4t3V1kq)
-- [Starship Traveller](https://pastebin.com/raw/wxi722M5)
-
-These links will be removed hastily if anyone ever objects. Don't be a jerk. If
-use them, make sure you own the books. [Amazon
-link](http://www.amazon.com/s?url=search-alias%3Daps&field-keywords=fighting+fantasy)
+Consider making a donation to Project Aon: https://www.projectaon.org/en/Main/HelpUs#donations
 
 #### Option 2: Import a book you own
 Unless you are lucky enough to find the book you want in an eBook format, your
 only option is to scan and OCR the text yourself from a paper book. One you've
 converted the book to raw text, you can use can use the `bookconvert.php`
 script in the *extras* directory to help you convert raw text to the correct
-format. e.g. `php bookconvert.php mybook.txt > mybook.php`. See `jofm.php` for
-an example book.
+format. e.g.
+```
+php extras/bookconvert.php mybook.txt > books/mybook.php
+```
+See `jofm.php` in *books* for an example book.
 
 #### Option 3: Write your own adventure
 Storyteller doesn't have to play the official books. Perhaps one of the best
@@ -119,6 +123,8 @@ rules = ff_wofm
 
 Set `default_book` under `[general]` to your book id.
 
+### 3a. Adjust other config.ini settings (optional)
+
 You may wish to adjust other settings in config.php at this point. You might
 like to remove `save` and `load` from the disabled commands list. This will
 allow players to use save-points. Alternatively, you could add the `undo`
@@ -134,8 +140,17 @@ step 1. If it's different go back and alter the hook.
 ensure the installation is secure.
 
 ### 5. Ready to play!
-Type `!newgame` in the channel you chose for the webhook to get started. Type
-`!help` to see the basic commands and get a link to the complete list.
+Type `!library` in the channel you chose for the webhook to see a list of available
+books and open one with the `!book` commands shown.
+
+Type `!0` to read the background page and `!1` to start the story. When the
+story tells you to turn to a page or section, you can read it in the same way,
+e.g. `!42`.
+
+For games with character sheets, like Lone Wolf or Fighting Fantasy, the use
+`!newgame` to roll a character.
+
+`!help` will list other commands available for the open gamebook.
 
 ## Using Discord
 
@@ -172,7 +187,7 @@ the full list
 always roll dice with `!roll` and apply any effects manually.
 - `!use` doesn't do anything on it's own. You must still apply the item's
 effects manually. e.g. `!use Potion of Skill;!skill 99`
-- If a fighting fantasy book asks you to do something after a certain number of
+- If a book asks you to do something after a certain number of
 rounds in a fight, you can make the fight end early by putting the number of
 rounds end the end of the command. e.g. To stop after 3 rounds: `!fight
 Squirrel 5 5 3`
