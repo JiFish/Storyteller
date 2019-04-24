@@ -32,6 +32,19 @@ function diceemoji($r) {
 }
 
 
+// Convert number to html entity of playing card
+function cardemoji($r) {
+    if ($r == 0) {
+        return mb_convert_encoding("&#127183;", 'UTF-8', 'HTML-ENTITIES');
+    } elseif ($r <= 9) {
+        $start = [127136, 127152, 127168, 127184][rand(0, 3)];
+        return mb_convert_encoding('&#'.($start+$r).';', 'UTF-8', 'HTML-ENTITIES');
+    }
+
+    return "[$r]";
+}
+
+
 /// ----------------------------------------------------------------------------
 /// Send message to slack functions
 function apply_temp_stats(&$player) {
@@ -119,6 +132,7 @@ function smart_remove_from_list(&$list, $item) {
     $list = array_values($list);
     return $removeditem;
 }
+
 
 function items_are_different($testarray) {
     $match = strtolower(current($testarray));
