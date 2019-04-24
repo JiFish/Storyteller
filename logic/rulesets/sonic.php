@@ -171,7 +171,7 @@ class book_sonic extends book_character {
         // Apply temp bonuses, if any
         apply_temp_stats($player);
 
-        $stat = strtolower($cmd[1]);
+        $stat = $this->getStatFromAlias(strtolower($cmd[1]), $this->getStats());
         if (in_array($stat, ['speed', 'str', 'strength', 'agility', 'cool', 'wits', 'looks'])) {
             $mod = $player[$stat];
         } elseif (!is_numeric($stat)) {

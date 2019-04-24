@@ -25,6 +25,7 @@ class book_character extends book_none {
 
 
     protected function getStatFromAlias($alias) {
+        $thisstat = $alias;
         foreach ($this->getStats() as $s => $val) {
             if ($s == $alias) {
                 $thisstat = $s;
