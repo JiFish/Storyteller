@@ -186,7 +186,10 @@ class book_character extends book_none {
 
         $icon = $player['emoji'];
         $attach = $this->getCharcterSheetAttachments();
-        $attach[] = $this->getStuffAttachment();
+        $stuffattach = $this->getStuffAttachment();
+        if ($stuffattach) {
+            $attach[] = $stuffattach;
+        }
 
         sendmsg("_*NEW CHARACTER!*_ ".$player['creationdice']."\n".$this->getCharacterString(), $attach, $icon);
     }
@@ -409,7 +412,10 @@ class book_character extends book_none {
         $player = &$this->player;
         $icon = ($this->isDead()?":skull:":$player['emoji']);
         $attach = $this->getCharcterSheetAttachments();
-        $attach[] = $this->getStuffAttachment();
+        $stuffattach = $this->getStuffAttachment();
+        if ($stuffattach) {
+            $attach[] = $stuffattach;
+        }
 
         sendmsg($this->getCharacterString(), $attach, $icon);
     }
@@ -427,7 +433,10 @@ class book_character extends book_none {
 
     //// !stuff / !i (send inventory)
     protected function _cmd_stuff($cmd) {
-        sendmsg("", [$this->getStuffAttachment()], $this->player['emoji']);
+        $stuff = $this->getStuffAttachment();
+        if ($stuff) {
+            sendmsg("", [$stuff], $this->player['emoji']);
+        }
     }
 
 
