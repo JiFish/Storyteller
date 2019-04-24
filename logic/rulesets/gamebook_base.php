@@ -18,7 +18,7 @@ abstract class gamebook_base {
     protected function loadPlayer($tag = false) {
         global $config;
 
-        $file = 'saves/save_'.$config->book_id.($tag?'_'.$tag:'').'.txt';
+        $file = 'saves/save_'.$config->book_id.($tag!==false?'_'.$tag:'').'.txt';
         if (!file_exists($file)) {
             $this->player = $this->newCharacter();
         } else {
@@ -31,7 +31,7 @@ abstract class gamebook_base {
     public function savePlayer($tag = false) {
         global $config;
 
-        $file = 'saves/save_'.$config->book_id.($tag?'_'.$tag:'').'.txt';
+        $file = 'saves/save_'.$config->book_id.($tag!==false?'_'.$tag:'').'.txt';
         file_put_contents($file, serialize($this->player));
     }
 
