@@ -8,6 +8,18 @@ class book_none extends gamebook_base {
     }
 
 
+    // This will work with almost all books
+    protected function getPageMatchRegex() {
+        return '/\(?(?:turn|go)(?:ing)?(?: back| immediately)? to (?:section |page |paragraph )?([0-9]+)\)?/i';
+    }
+
+
+    // This will work with almost all books
+    protected function getDeathMatchRegex() {
+        return '/Your (adventure|quest|story) (is over|ends here|is at an end)\.?/i';
+    }
+
+
     protected function storyModify($story) {
         return $story;
     }
@@ -67,8 +79,8 @@ class book_none extends gamebook_base {
         $story = $this->storyModify($book[$page]);
 
         // Look for choices in the text and give them bold formatting
-        $story = preg_replace('/\(?(turn|go)(ing)?( back)? to (section )?[0-9]+\)?/i', '*${0}*', $story);
-        $story = preg_replace('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', '*${0}*', $story);
+        $story = preg_replace($this->getPageMatchRegex(),  '*${0}*', $story);
+        $story = preg_replace($this->getDeathMatchRegex(), '*${0}*', $story);
 
         // Wrapping and formatting
         $story = str_replace("\n", "\n\n", $story);
@@ -131,14 +143,9 @@ class book_none extends gamebook_base {
             && stripos($story, "otherwise") === false) {
             // Attempt to find pages that give you only one choice
             // Find pages with only one turn to and add that page to the command list
-            preg_match_all('/turn to (section )?([0-9]+)/i', $story, $matches, PREG_SET_ORDER, 0);
+            preg_match_all($this->getPageMatchRegex(), $story, $matches, PREG_SET_ORDER, 0);
             if (sizeof($matches) == 1) {
-                $this->addCommand("page ".$matches[0][2]." nobackup");
-            }
-            // Attempt to find pages that end the story, kill the player if found
-            elseif (sizeof($matches) < 1 &&
-                preg_match('/Your (adventure|quest) (is over|ends here|is at an end)\.?/i', $story, $matches)) {
-                $player['stam'] = 0;
+                $this->addCommand("page ".$matches[0][1]." nobackup");
             }
         }
 
