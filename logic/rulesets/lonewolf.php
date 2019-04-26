@@ -3,6 +3,11 @@
 require_once 'character_importable.php';
 
 class book_lonewolf extends book_character_importable {
+    protected function getHelpFileId() {
+        return 'lonewolf';
+    }
+
+
     protected function getLoneWolfSkillsName() {
         return 'Skills';
     }
