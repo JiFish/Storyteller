@@ -50,6 +50,9 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
         return;
     }
 
+    // Clean message by escaping control chars
+    $message = str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $message);
+
     // Respect any rate limit
     global $limittime;
     if ($limittime) {
@@ -118,8 +121,12 @@ function get_headers_from_curl_response($response) {
 
 
 function discordize(&$data) {
-    $data['text'] = str_replace(['*', '~'], ['**', '~~'], $data['text']);
-    $data['text'] = str_replace('> ', '', $data['text']);
+    // We have to un-escape control characters because discord doesn't recognise them
+    // Also switch markdown to discord flavour
+    $find = ['*',  '~',  '&amp;', '&lt;', '&gt;'];
+    $repl = ['**', '~~', '&',     '<',    '>'];
+
+    $data['text'] = str_replace($find, $repl, $data['text']);
     if (isset($data['attachments'])) {
         foreach ($data['attachments'] as $akey => $aval) {
             if (isset($aval['fields'])) {
@@ -127,7 +134,7 @@ function discordize(&$data) {
                     if ($fval['title']) {
                         $data['attachments'][$akey]['fields'][$fkey]['title'] = '**'.$data['attachments'][$akey]['fields'][$fkey]['title'].'**';
                     }
-                    $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace(['*', '~'], ['**', '~~'], $data['attachments'][$akey]['fields'][$fkey]['value']);
+                    $data['attachments'][$akey]['fields'][$fkey]['value'] = str_replace($find, $repl, $data['attachments'][$akey]['fields'][$fkey]['value']);
                 }
             }
         }
