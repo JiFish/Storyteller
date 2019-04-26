@@ -79,7 +79,7 @@ gamebooks. I've provided a tool that downloads the books ready for use. If
 you go with this option, the config.ini file will be updated for you, and you
 can skip section 3. Run the script and follow the on-screen prompts:
 ```
-php extras/install_lonewolf.php
+php tools/install_lonewolf.php
 ```
 
 Consider making a donation to Project Aon: https://www.projectaon.org/en/Main/HelpUs#donations
@@ -88,10 +88,10 @@ Consider making a donation to Project Aon: https://www.projectaon.org/en/Main/He
 Unless you are lucky enough to find the book you want in an eBook format, your
 only option is to scan and OCR the text yourself from a paper book. One you've
 converted the book to raw text, you can use can use the `bookconvert.php`
-script in the *extras* directory to help you convert raw text to the correct
+script in the *tools* directory to help you convert raw text to the correct
 format. e.g.
 ```
-php extras/bookconvert.php mybook.txt > books/mybook.php
+php tools/bookconvert.php mybook.txt > books/mybook.php
 ```
 See `jofm.php` in *books* for an example book.
 
