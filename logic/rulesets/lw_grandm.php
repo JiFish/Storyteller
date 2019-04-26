@@ -42,7 +42,7 @@ class book_lw_grandm extends book_lw_magnakai {
             $d2 = dice(0, 9);
             $p['endurance'] = $p['max']['endurance'] = $p['max']['endurance'] + $d1 + 1;
             $p['skill'] += $d2 + 6;
-            sendqmsg('*'.$p['name'].' leveled up!* +'.($d1+1).' endurance, +'.($d2+6).' combat skill! '.cardemoji($d1).' '.cardemoji($d2), $p['emoji']);
+            sendqmsg('*'.$p['name'].' leveled up!* +'.($d1+1).' endurance, +'.($d2+6).' combat skill! '.genericemoji($d1).' '.genericemoji($d2), $p['emoji']);
         }
     }
 

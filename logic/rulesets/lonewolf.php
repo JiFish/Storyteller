@@ -216,7 +216,7 @@ class book_lonewolf extends book_character_importable {
         $t = 0;
         for ($a = 0; $a < $numdice; $a++) {
             $r = rand(0, 9);
-            $emoji = cardemoji($r);
+            $emoji = genericemoji($r);
             $out .= " $emoji ($r)";
             $t += $r;
         }
@@ -501,7 +501,7 @@ class book_lonewolf extends book_character_importable {
                 $out .= $p['name'].' hit '.$opp_name.' for *'.$r[0].'* damage!';
                 $opp_end -= $r[0];
             }
-            $out .= " ".cardemoji($rand)."\n";
+            $out .= " ".genericemoji($rand)."\n";
             if (++$turns >= $max_turns) {
                 if ($max_turns > 1) {
                     $out .= "*Stopped after $max_turns turns.*\n";
