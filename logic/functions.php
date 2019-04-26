@@ -36,9 +36,37 @@ function diceemoji($r) {
 function cardemoji($r) {
     if ($r == 0) {
         return mb_convert_encoding("&#127183;", 'UTF-8', 'HTML-ENTITIES');
-    } elseif ($r <= 9) {
+    } elseif ($r <= 13) {
         $start = [127136, 127152, 127168, 127184][rand(0, 3)];
         return mb_convert_encoding('&#'.($start+$r).';', 'UTF-8', 'HTML-ENTITIES');
+    }
+
+    return "[$r]";
+}
+
+
+// Convert number to html entity of black circled number
+function genericemoji($r) {
+    if ($r == 0) {
+        return mb_convert_encoding("&#9471;", 'UTF-8', 'HTML-ENTITIES');
+    } elseif ($r <= 10) {
+        return mb_convert_encoding('&#'.(10101+$r).';', 'UTF-8', 'HTML-ENTITIES');
+    } elseif ($r <= 20) {
+        return mb_convert_encoding('&#'.(9440+$r).';', 'UTF-8', 'HTML-ENTITIES');
+    }
+
+    return "[$r]";
+}
+
+
+// Convert number to html entity of white circled number
+function genericemojiwhite($r) {
+    if ($r == 0) {
+        return mb_convert_encoding("&#9450;", 'UTF-8', 'HTML-ENTITIES');
+    } elseif ($r <= 20) {
+        return mb_convert_encoding('&#'.(9311+$r).';', 'UTF-8', 'HTML-ENTITIES');
+    } elseif ($r <= 50) {
+        return mb_convert_encoding('&#'.(12860+$r).';', 'UTF-8', 'HTML-ENTITIES');
     }
 
     return "[$r]";
