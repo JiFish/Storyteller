@@ -124,7 +124,13 @@ rules = ff_wofm
 
 Set `default_book` under `[general]` to your book id.
 
-### 3a. Adjust other config.ini settings (optional)
+### 3a. Add book images (optional)
+
+Create a directory in `images` with the name of your book id and copy in
+illustrations. The images should be named after the page number e.g.
+`42.jpg` or `1.png`
+
+### 4. Adjust other config.ini settings (optional)
 
 You may wish to adjust other settings in config.php at this point. You might
 like to remove `save` and `load` from the disabled commands list. This will
@@ -132,7 +138,7 @@ allow players to use save-points. Alternatively, you could add the `undo`
 command to this list if you want to prevent players from undoing their
 mistakes.
 
-### 4. Get the code online
+### 5. Get the code online
 - Upload the installation to your PHP enabled web-server. No database is
 needed. The uploaded directory must be writeable.
 - Make sure it's location matches what you step up for the outgoing hook in
@@ -140,7 +146,7 @@ step 1. If it's different go back and alter the hook.
 - If you are _not_ using apache, you must replicate the rules in `.htaccess` to
 ensure the installation is secure.
 
-### 5. Ready to play!
+### 6. Ready to play!
 Type `!library` in the channel you chose for the webhook to see a list of available
 books and open one with the `!book` commands shown.
 
