@@ -1,10 +1,15 @@
 <?php
 
 require_once 'none.php';
-require_once 'logic/RandomColor.php';
+require_once 'logic/vendor/RandomColor.php';
 require_once 'logic/dice.php';
 
 class book_character extends book_none {
+    protected function getHelpFileId() {
+        return 'character';
+    }
+
+
     protected function getStats() {
         return [];
     }
@@ -321,15 +326,6 @@ class book_character extends book_none {
         }
 
         sendqmsg($msg, $icons[($oldval <= $statref?0:1)]);
-    }
-
-
-    //// !help (send basic help)
-    protected function _cmd_help($cmd) {
-        $help = file_get_contents('resources/help.txt');
-        // Replace "!" with whatever the trigger word is
-        $help = str_replace("!", $_POST['trigger_word'], $help);
-        sendqmsg($help);
     }
 
 

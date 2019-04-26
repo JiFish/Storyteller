@@ -20,6 +20,12 @@ class book_none extends gamebook_base {
     }
 
 
+    // Customise this to match filenames in resources/help/
+    protected function getHelpFileId() {
+        return '';
+    }
+
+
     protected function storyModify($story) {
         return $story;
     }
@@ -199,11 +205,25 @@ class book_none extends gamebook_base {
     }
 
 
-    //// !help (send basic help)
+    //// !help (send help)
     protected function _cmd_help($cmd) {
-        $help = "Type `![page]` to turn to a page or section. e.g. `!42`";
+        global $config;
+        $helpid = $this->getHelpFileId();
+        // Look for help file
+        if (file_exists("resources/help/help_$helpid.txt")) {
+            $help = file_get_contents("resources/help/help_$helpid.txt");
+        } else {
+            $help = "Type `![page]` to turn to a page or section. e.g. `!42`";
+        }
+        // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
-        sendqmsg($help);
+        // Look for advanced help
+        if (file_exists("resources/help/help_$helpid.md")) {
+            $helpurl = $config->root."/help.php?t=$helpid";
+            $help .= "\nMore commands can be found here: $helpurl";
+        }
+
+        sendqmsg($help, ':question:');
     }
 
 

@@ -8,6 +8,12 @@ class book_sonic extends book_character {
     }
 
 
+    // Customise this to match filenames in resources/help/
+    protected function getHelpFileId() {
+        return 'sonic';
+    }
+
+
     protected function getStats() {
         $stats = array(
             'lives' => [
@@ -134,15 +140,6 @@ class book_sonic extends book_character {
         $this->registerCommand('newgame', '_cmd_newgame', ['on', 'on', 'on', 'on', 'on', 'on']);
         $this->registerCommand('fight',   '_cmd_fight', ['s', 'onm', 'oms', 'n']);
         $this->registerCommand('hit',     '_cmd_hit');
-    }
-
-
-    //// !help (send sonic help) OVERRIDE
-    protected function _cmd_help($cmd) {
-        $help = file_get_contents('resources/help_sonic.txt');
-        // Replace "!" with whatever the trigger word is
-        $help = str_replace("!", $_POST['trigger_word'], $help);
-        sendqmsg($help);
     }
 
 

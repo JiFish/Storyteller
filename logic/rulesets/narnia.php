@@ -3,6 +3,11 @@
 require_once 'character.php';
 
 class book_narnia extends book_character {
+    protected function getHelpFileId() {
+        return 'narnia';
+    }
+
+
     protected function getCharacterString() {
         $p = &$this->player;
         return "*".$p['name']."* the ".$p['adjective']." _(".($p['gender']=='Male'?'Son of Adam':'Daughter of Eve').")_";
@@ -114,15 +119,6 @@ class book_narnia extends book_character {
         $this->registerCommand('test',    '_cmd_test', ['ms']);
         $this->registerCommand('ng',      '_cmd_newgame', ['os', 'os', 'on', 'on', 'on', 'on', 'on', 'on']);
         $this->registerCommand('newgame', '_cmd_newgame', ['os', 'os', 'on', 'on', 'on', 'on', 'on', 'on']);
-    }
-
-
-    //// !help (send narnia help) OVERRIDE
-    protected function _cmd_help($cmd) {
-        $help = file_get_contents('resources/narnia_help.txt');
-        // Replace "!" with whatever the trigger word is
-        $help = str_replace("!", $_POST['trigger_word'], $help);
-        sendqmsg($help);
     }
 
 

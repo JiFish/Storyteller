@@ -8,6 +8,11 @@ class book_ff_basic extends book_character {
     }
 
 
+    protected function getHelpFileId() {
+        return 'ff';
+    }
+
+
     protected function storyModify($story) {
         $story = parent::storyModify($story);
         $story = preg_replace('/((Add|Subject|Deduct|Regain|Gain|Lose) )?([1-9] (points? )?from your (SKILL|LUCK|STAMINA)|([1-9] )?(SKILL|LUCK|STAMINA) points?|your (SKILL|LUCK|STAMINA))/', '*${0}*', $story);
@@ -250,17 +255,6 @@ class book_ff_basic extends book_character {
             return;
         }
         parent::_cmd_drop($cmd);
-    }
-
-
-    //// !help (send basic help)
-    protected function _cmd_help($cmd) {
-        global $config;
-        $help = file_get_contents('resources/help.txt');
-        // Replace "!" with whatever the trigger word is
-        $help = str_replace("!", $_POST['trigger_word'], $help);
-        $helpurl = $config->root.'/commands.html';
-        sendqmsg($help."\nMore commands can be found here: ".$helpurl);
     }
 
 

@@ -18,6 +18,11 @@ class book_crystalm extends book_character {
     }
 
 
+    protected function getHelpFileId() {
+        return 'crystalm';
+    }
+
+
     protected function getStats() {
         $stats = array(
             'str' => [
@@ -299,15 +304,6 @@ class book_crystalm extends book_character {
         } else {
             sendqmsg("*$name has been freed!*", ':lock:');
         }
-    }
-
-
-    //// !help (send sonic help) OVERRIDE
-    protected function _cmd_help($cmd) {
-        $help = file_get_contents('resources/help_crystalm.txt');
-        // Replace "!" with whatever the trigger word is
-        $help = str_replace("!", $_POST['trigger_word'], $help);
-        sendqmsg($help);
     }
 
 

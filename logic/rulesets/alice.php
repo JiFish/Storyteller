@@ -8,6 +8,11 @@ class book_alice extends book_character {
     }
 
 
+    protected function getHelpFileId() {
+        return 'alice';
+    }
+
+
     protected function getStats() {
         $stats = array(
             'agility' => [
@@ -132,16 +137,6 @@ class book_alice extends book_character {
                 'omsg', 'on', 'on',
                 'omsg', 'on', 'on']);
     }
-
-
-    //// !help (send sonic help) OVERRIDE
-    protected function _cmd_help($cmd) {
-        $help = file_get_contents('resources/help_alice.txt');
-        // Replace "!" with whatever the trigger word is
-        $help = str_replace("!", $_POST['trigger_word'], $help);
-        sendqmsg($help);
-    }
-
 
     //// !newgame (roll new character) OVERRIDE
     protected function _cmd_newgame($cmd) {

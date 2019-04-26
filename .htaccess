@@ -10,6 +10,6 @@ Allow from all
 </FilesMatch>
 
 # Allow command help document
-<FilesMatch "^(commands\.html|)$">
+<FilesMatch "^(help\.php|)$">
 Allow from all
 </FilesMatch>
