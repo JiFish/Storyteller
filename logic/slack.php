@@ -141,6 +141,12 @@ function discordize(&$data) {
 
 
 function discordize_emoji($e) {
+    global $config;
+    // Don't change URLs
+    if (substr($e, 0, 4) == 'http') {
+        return $e;
+    }
+
     if (!isset($_SERVER['HTTP_HOST'])) {
         // Must be running from command line, can't send emoji
         return '';
