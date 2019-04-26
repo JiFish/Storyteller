@@ -104,7 +104,7 @@ function lonewolfendurance(&$player, $statname) {
     $player[$statname] = $d+20;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = $d+20;
-    $player['creationdice'] .= ' '.cardemoji($d);
+    $player['creationdice'] .= ' '.genericemoji($d);
 }
 
 
@@ -113,7 +113,7 @@ function lonewolfcombat(&$player, $statname) {
     $player[$statname] = $d+10;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = 9999;
-    $player['creationdice'] .= ' '.cardemoji($d);
+    $player['creationdice'] .= ' '.genericemoji($d);
 }
 
 
@@ -122,7 +122,7 @@ function lonewolfgold(&$player, $statname) {
     $player[$statname] = $d;
     $player['temp'][$statname] = 0;
     $player['max'][$statname] = 50;
-    $player['creationdice'] .= ' '.cardemoji($d);
+    $player['creationdice'] .= ' '.genericemoji($d);
 }
 
 
