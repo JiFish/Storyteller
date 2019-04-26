@@ -139,7 +139,7 @@ class book_sonic extends book_character {
 
     //// !help (send sonic help) OVERRIDE
     protected function _cmd_help($cmd) {
-        $help = file_get_contents('resources/sonic_help.txt');
+        $help = file_get_contents('resources/help_sonic.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
         sendqmsg($help);
