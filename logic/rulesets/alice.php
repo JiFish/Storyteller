@@ -138,6 +138,7 @@ class book_alice extends book_character {
                 'omsg', 'on', 'on']);
     }
 
+
     //// !newgame (roll new character) OVERRIDE
     protected function _cmd_newgame($cmd) {
         $player = &$this->player;
