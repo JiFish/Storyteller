@@ -45,6 +45,11 @@ class book_sonic extends book_character {
     }
 
 
+    protected function newCharacter() {
+        return $this->rollSonicCharacter();
+    }
+
+
     protected function rollSonicCharacter($statarray = null) {
         $p['creationdice'] = '';
         $p['name'] = 'Sonic';
