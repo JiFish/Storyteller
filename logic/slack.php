@@ -126,8 +126,12 @@ function discordize(&$data) {
     // Also switch markdown to discord flavour
     $find = ['*',  '~',  '&amp;', '&lt;', '&gt;'];
     $repl = ['**', '~~', '&',     '<',    '>'];
-
     $data['text'] = str_replace($find, $repl, $data['text']);
+
+    // Remove quote prefix as discord doesn't understand this
+    $data['text'] = preg_replace("/^> /m", "", $data['text']);
+
+    // Fix attachments
     if (isset($data['attachments'])) {
         foreach ($data['attachments'] as $akey => $aval) {
             if (isset($aval['fields'])) {
