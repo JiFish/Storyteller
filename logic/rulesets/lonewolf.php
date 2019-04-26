@@ -60,45 +60,6 @@ class book_lonewolf extends book_character_importable {
         $p['stuff'] = array();
         $p['weapons'] = array();
         $p['specials'] = array();
-        $d = rand(0, 9);
-        $p['creationdice'] .= ' '.cardemoji($d);
-        switch ($d) {
-        case 1:
-            $p['weapons'][] = 'Sword';
-            break;
-        case 2:
-            $p['specials'][] = 'Helmet (+2 END)';
-            $p['endurance'] += 2;
-            $p['max']['endurance'] += 2;
-            break;
-        case 3:
-            $p['stuff'][] = 'Meal';
-            $p['stuff'][] = 'Meal';
-            break;
-        case 4:
-            $p['specials'][] = 'Chainmail Waistcoat (+4 END)';
-            $p['endurance'] += 4;
-            $p['max']['endurance'] += 4;
-            break;
-        case 5:
-            $p['weapons'][] = 'Mace';
-            break;
-        case 6:
-            $p['stuff'][] = 'Healing Potion (Restore 4 END)';
-            break;
-        case 7:
-            $p['weapons'][] = 'Quarterstaff';
-            break;
-        case 8:
-            $p['weapons'][] = 'Spear';
-            break;
-        case 9:
-            $p['gold'] += 12;
-            break;
-        case 0:
-            $p['weapons'][] = 'Broadsword';
-            break;
-        }
         return $p;
     }
 
