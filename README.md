@@ -75,8 +75,8 @@ very fun, so you'll likely want to replace it. You have 3 options.
 #### Option 1: Install Lone Wolf books
 Joe Dever has generously allowed Project Aon to host copies of the Lone Wolf
 gamebooks. I've provided a tool that downloads the books ready for use. If
-you go with this option you can skip section 3. Run the script and follow
-the on-screen prompts:
+you go with this option, the config.ini file will be updated for you, and you
+can skip section 3. Run the script and follow the on-screen prompts:
 ```
 php extras/install_lonewolf.php
 ```
