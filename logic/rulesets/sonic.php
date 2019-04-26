@@ -8,7 +8,6 @@ class book_sonic extends book_character {
     }
 
 
-    // Customise this to match filenames in resources/help/
     protected function getHelpFileId() {
         return 'sonic';
     }
