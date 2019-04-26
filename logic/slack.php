@@ -80,6 +80,7 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     if ($config->discord_mode) {
         discordize($data);
     }
+
     $data_string = json_encode($data);
     $ch = curl_init(SLACK_HOOK);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");

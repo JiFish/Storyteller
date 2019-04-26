@@ -4,7 +4,7 @@ require_once 'character.php';
 
 class book_alice extends book_character {
     public function isDead() {
-        return ($this->player['endurance'] < 1);
+        return $this->player['endurance'] < 1;
     }
 
 
@@ -104,9 +104,9 @@ class book_alice extends book_character {
         roll_stats($p, $this->getStats());
         // Random stats array
         if ($statarray === null) {
-            $statarray = array_pad([],4,0);
+            $statarray = array_pad([], 4, 0);
             for ($c = 0; $c < 10; $c++) {
-                $statarray[rand(0,3)]++;
+                $statarray[rand(0, 3)]++;
             }
         }
         // Apply stat array
@@ -125,12 +125,12 @@ class book_alice extends book_character {
         $this->registerCommand('newgame', '_cmd_newgame', ['on', 'on', 'on', 'on']);
         $this->registerCommand('test',    '_cmd_test',    ['s', 'onm', 'on', 'on']);
         $this->registerCommand('fight',   '_cmd_fight',   ['(\sinit|\sinitiative)?',
-                                                           'oms', 'n', 'n',
-                                                           'omsg', 'on', 'on',
-                                                           'omsg', 'on', 'on',
-                                                           'omsg', 'on', 'on',
-                                                           'omsg', 'on', 'on',
-                                                           'omsg', 'on', 'on']);
+                'oms', 'n', 'n',
+                'omsg', 'on', 'on',
+                'omsg', 'on', 'on',
+                'omsg', 'on', 'on',
+                'omsg', 'on', 'on',
+                'omsg', 'on', 'on']);
     }
 
 
@@ -141,8 +141,8 @@ class book_alice extends book_character {
         $help = str_replace("!", $_POST['trigger_word'], $help);
         sendqmsg($help);
     }
-    
-    
+
+
     //// !newgame (roll new character) OVERRIDE
     protected function _cmd_newgame($cmd) {
         $player = &$this->player;
@@ -165,8 +165,8 @@ class book_alice extends book_character {
 
         sendmsg("_*NEW CHARACTER!*_ Alice. ".$extratext, $attach, $icon);
     }
-    
-    
+
+
     //// !test <stat> <target> ALICE VERSION
     protected function _cmd_test($cmd) {
         $player = &$this->player;
@@ -190,19 +190,19 @@ class book_alice extends book_character {
         // Describer
         switch ($stat) {
         case 'agility':
-            $desc = ['agile','clumsy'];
+            $desc = ['agile', 'clumsy'];
             break;
         case 'logic':
-            $desc = ['logical','illogical'];
+            $desc = ['logical', 'illogical'];
             break;
         case 'insanity':
-            $desc = ['sane','insane'];
+            $desc = ['sane', 'insane'];
             break;
         case 'combat':
-            $desc = ['strong','weak'];
+            $desc = ['strong', 'weak'];
             break;
         case 'endurance':
-            $desc = ['not hurt','hurt'];
+            $desc = ['not hurt', 'hurt'];
             break;
         default:
         }
@@ -247,7 +247,8 @@ class book_alice extends book_character {
         // Remove temp bonuses, if any and clear temp bonus array
         unapply_temp_stats($player);
     }
-    
+
+
     private function deck($todraw = 1) {
         $out = [
             'val' => 0,
@@ -255,7 +256,7 @@ class book_alice extends book_character {
             'autopass' => false
         ];
         for ($c = 0; $c < $todraw; $c++) {
-            $draw = rand(1,13);
+            $draw = rand(1, 13);
             if ($draw == 1) {
                 $out['val'] += 12;
                 $out['emoji'] .= cardemoji($draw).' ';
@@ -271,8 +272,8 @@ class book_alice extends book_character {
         $out['emoji'] = trim($out['emoji']);
         return $out;
     }
-    
-    
+
+
     protected function _cmd_fight($cmd) {
         $aliceinit = $cmd[1]?true:false;
         $opps = [];
@@ -353,4 +354,6 @@ class book_alice extends book_character {
         unapply_temp_stats($p);
         return $out;
     }
+
+
 }
