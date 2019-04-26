@@ -4,6 +4,7 @@ current_bookid.txt
 # ignore images
 images/*
 !images/jofm
+!images/custom_avatars
 
 # ignore books
 books/*

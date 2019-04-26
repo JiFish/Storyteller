@@ -152,6 +152,9 @@ abstract class gamebook_base {
             case 'oms':  //optional multi string (hard, doesn't match numbers)
                 $regex .= "(\s+(?![0-9]+).+?)?";
                 break;
+            case 'omsg':  //optional multi string (very hard, greedy)
+                $regex .= "(\s+[a-zA-Z ']+)?";
+                break;
             case 'ms':  //multi string (hard, doesn't match numbers)
                 $regex .= "\s+((?![0-9]+).+?)";
                 break;

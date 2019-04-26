@@ -36,8 +36,9 @@ other can still be played.
 
 The first 20 _Lone Wolf_ books have good support.
 
-The _Sonic The Hedgehog Gamebooks_ are also supported as are The
-_Narnia Solo Games_ books.
+The following other books / series are supported: Alice's Nightmare in Wonderland,
+The Crystal Maze Adventure, The Sonic The Hedgehog Gamebooks, The Narnia Solo
+Games books.
 
 The full list of supported books is here:
 http://htmlpreview.github.io/?https://github.com/JiFish/Storyteller/master/extras/book_support.html
