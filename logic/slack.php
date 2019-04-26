@@ -149,7 +149,7 @@ function discordize_emoji($e) {
     // Check for emoji in cache and send url if found
     $clean = str_replace(':', '', $e);
     $path = 'images'.DIRECTORY_SEPARATOR.'emoji_cache'.DIRECTORY_SEPARATOR.$clean.'.png';
-    $url = 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'images/emoji_cache/'.$clean.'.png';
+    $url = $config->root.'/images/emoji_cache/'.$clean.'.png';
     if (file_exists($path)) {
         return $url;
     }

@@ -45,6 +45,10 @@ class Config {
         $this->character_rolls = $this->get('character_rolls', 'normal');
         $this->disabled_commands = $this->get('disable_cmd', []);
         $this->max_executions = $this->get('max_executions', 30);
+        $this->root = $this->get('override_root', null);
+        if ($this->root === null) {
+            $this->root = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI']);
+        }
 
         // Load book sections
         foreach ($this->ini as $key => $val) {

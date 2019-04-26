@@ -163,9 +163,9 @@ class book_none extends gamebook_base {
 
         $imgpath = "images/".$config->book_images_dir."/".$player['lastpage'];
         if (file_exists($imgpath.'.jpg')) {
-            sendimgmsg($story, 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.jpg');
+            sendimgmsg($story, $config->root.'/'.$imgpath.'.jpg');
         } elseif (file_exists($imgpath.'.png')) {
-            sendimgmsg($story, 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.png');
+            sendimgmsg($story, $config->root.'/'.$imgpath.'.png');
         } else {
             sendqmsg($story);
         }
@@ -314,9 +314,9 @@ class book_none extends gamebook_base {
 
         $imgpath = "images/".$config->book_images_dir."/map";
         if (file_exists($imgpath.'.jpg')) {
-            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.jpg');
+            sendimgmsg("*Map*", $config->root.'/'.$imgpath.'.jpg');
         } elseif (file_exists($imgpath.'.png')) {
-            sendimgmsg("*Map*", 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).$imgpath.'.png');
+            sendimgmsg("*Map*", $config->root.'/'.$imgpath.'.png');
         } else {
             sendqmsg("*No map found!*", ':interrobang:');
         }

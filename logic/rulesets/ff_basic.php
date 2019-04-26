@@ -255,10 +255,11 @@ class book_ff_basic extends book_character {
 
     //// !help (send basic help)
     protected function _cmd_help($cmd) {
+        global $config;
         $help = file_get_contents('resources/help.txt');
         // Replace "!" with whatever the trigger word is
         $help = str_replace("!", $_POST['trigger_word'], $help);
-        $helpurl = (isset($_SERVER['HTTPS']) ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI']).'commands.html';
+        $helpurl = $config->root.'/commands.html';
         sendqmsg($help."\nMore commands can be found here: ".$helpurl);
     }
 
