@@ -96,11 +96,10 @@ php tools/bookconvert.php mybook.txt > books/mybook.php
 See `jofm.php` in *books* for an example book.
 
 #### Option 3: Write your own adventure
-Storyteller doesn't have to play the official books. Perhaps one of the best
-ways to get a story in to the bot is to write your own. Choose a set of
-supported rules you like and come up with your own adventure. If anyone does do
-this, please consider submitting your story back here. I'd love to include
-longer stories with this distribution.
+Perhaps one of the best ways to get a story in to the bot is to write your own.
+Choose a set of supported rules you like and come up with your own adventure.
+If anyone does do this, please consider submitting your story back here. I'd
+love to include longer stories with this distribution.
 
 ### 3. Add your book to config.ini
 Once you have your book php file, put it in the `books` directory. Next add a
