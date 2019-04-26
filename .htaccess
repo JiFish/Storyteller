@@ -13,8 +13,3 @@ Allow from all
 <FilesMatch "^(commands\.html|)$">
 Allow from all
 </FilesMatch>
-
-# Allow page images
-<FilesMatch "^images\/[0-9]+\.jpg$">
-Allow from all
-</FilesMatch>
