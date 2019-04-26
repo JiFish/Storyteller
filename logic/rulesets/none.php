@@ -355,13 +355,18 @@ class book_none extends gamebook_base {
         $out = "*List of available books:*\n";
         $lib = [];
         foreach ($config->books as $key => $b) {
-            $title = "- ".$b['name'].' ';
+            $title = "- ".ucfirst($b['name']).' ';
             if ($key == $config->book_id) {
                 $title .= "- _Currently open_";
             } else {
                 $title .= "- `!book $key`";
             }
             $lib[$b['group']][] = $title;
+        }
+        // Sorting
+        ksort($lib, SORT_NATURAL);
+        foreach ($lib as $k => $v) {
+            sort($lib[$k], SORT_NATURAL);
         }
         // Books without group first
         if (array_key_exists('none', $lib)) {
