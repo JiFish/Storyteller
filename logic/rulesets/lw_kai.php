@@ -19,6 +19,12 @@ class book_lw_kai extends book_lonewolf {
     }
 
 
+    protected function getCharacterString() {
+        $p = &$this->player;
+        return "*".$p['name']."*, ".$p['adjective']." Wolf _(".$p['gender'].")_";
+    }
+
+
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         $p['weapons'][] = 'Axe';

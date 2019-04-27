@@ -55,7 +55,7 @@ class book_lonewolf extends book_character_importable {
 
     protected function getCharacterString() {
         $p = &$this->player;
-        return "*".$p['name']."*, ".$p['adjective']." Wolf _(".$p['gender'].")_";
+        return "*".$p['name']."*, the ".$p['adjective']." _(".$p['gender'].")_";
     }
 
 
