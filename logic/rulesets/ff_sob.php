@@ -50,6 +50,7 @@ class book_ff_sob extends book_ff_basic {
         $stats['strike'] = [
             'friendly' => 'Crew Strike',
             'alias' => ['crewstrike'],
+            'icons' => ':crossed_swords:',
             'roll' => 'ff1die',
             'display' => 'current_and_max',
             'sheet' => 1,

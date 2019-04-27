@@ -28,21 +28,26 @@ class book_crystalm extends book_character {
             'str' => [
                 'friendly' => 'Strength',
                 'alias' => ['strength'],
+                'icons' => ':muscle:',
             ],
             'dex' => [
                 'friendly' => 'Dexterity',
                 'alias' => ['dexterity'],
+                'icons' => ':juggling:',
             ],
             'int' => [
                 'friendly' => 'Intelligence',
                 'alias' => ['intelligence'],
+                'icons' => ':thinking_face:',
             ],
             'crystals' => [
                 'friendly' => 'Time Crystals',
                 'alias' => ['timecrystals', 'cry'],
+                'icons' => ':gem:',
             ],
             'time' => [
                 'friendly' => 'Time',
+                'icons' => [':hourglass:', ':hourglass_flowing_sand:'],
             ],
         );
         return $stats;

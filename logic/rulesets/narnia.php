@@ -18,31 +18,37 @@ class book_narnia extends book_character {
         $stats = array(
             'fight' => [
                 'friendly' => 'Fighting Skill',
+                'icons' => ':crossed_swords:',
                 'alias' => ['fighting', 'fightingskill'],
                 'allownegative' => true,
             ],
             'trick' => [
                 'friendly' => 'Trickery Skill',
+                'icons' => ':crossed_fingers:',
                 'alias' => ['trickery', 'trickeryskill'],
                 'allownegative' => true,
             ],
             'action' => [
                 'friendly' => 'Action Skill',
+                'icons' => ':juggling:',
                 'alias' => ['actionskill'],
                 'allownegative' => true,
             ],
             'talk' => [
                 'friendly' => 'Talking Skill',
+                'icons' => ':lips:',
                 'alias' => ['talking', 'talkingkill'],
                 'allownegative' => true,
             ],
             'perception' => [
                 'friendly' => 'Perception Skill',
+                'icons' => ':eyes:',
                 'alias' => ['perceptionskill'],
                 'allownegative' => true,
             ],
             'innerstrength' => [
                 'friendly' => 'Inner Strength',
+                'icons' => ':latin_cross:',
                 'alias' => ['is', 'strength', 'str', 'inner strength'],
                 'allownegative' => true,
             ],

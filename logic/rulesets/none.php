@@ -220,8 +220,15 @@ class book_none extends gamebook_base {
         // Look for advanced help
         if (file_exists("resources/help/help_$helpid.md")) {
             $helpurl = $config->root."/help.php?t=$helpid";
-            $help .= "\nMore commands can be found here: $helpurl";
+            $help .= "\nMore detailed help can be found here: $helpurl\n";
         }
+        // Get complete command list
+        $clist = array_keys($this->commands);
+        sort($clist);
+        // Remove disabled commands and Easter eggs
+        $clist = array_diff($clist, $config->disabled_commands, [':pie:', 'π']);
+        $help .= "\nComplete list of available commands: `!".implode("` `!", $clist).'`';
+
 
         sendqmsg($help, ':question:');
     }

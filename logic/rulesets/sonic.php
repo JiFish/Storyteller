@@ -24,22 +24,28 @@ class book_sonic extends book_character {
             'str' => [
                 'friendly' => 'Strength',
                 'alias' => ['strength'],
+                'icons' => ':muscle:',
             ],
             'speed' => [
                 'friendly' => 'Speed',
+                'icons' => ':runner:',
             ],
             'agility' => [
                 'friendly' => 'Agility',
+                'icons' => ':juggling:',
             ],
             'cool' => [
                 'friendly' => 'Cool',
+                'icons' => ':sunglasses:',
             ],
             'wits' => [
                 'friendly' => 'Wits',
+                'icons' => ':eyes:',
             ],
             'looks' => [
                 'friendly' => 'Good Looks',
                 'alias' => ['goodlooks'],
+                'icon' => ':man_in_tuxedo:',
             ],
             'rings' => [
                 'friendly' => 'Rings',
