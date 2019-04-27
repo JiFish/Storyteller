@@ -25,6 +25,7 @@ Mostly everything you'll need to know.
 - `!lose <item>` Removes <item> from your inventory. You can also use !drop and !use for different descriptions. This will try to match partial names.
 - `!wield [weapon]` and `!unwield [weapon]` Wield (or unwield) a weapon called [weapon].
 - `!undo` When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
+- `!import <bookid>` Import character from another Lone Wolf book. `!import` shows a list of available characters. e.g. `!import lw01`
 
 You can chain multiple commands together in one go with semicolons e.g. `!newgame; !1`
 
@@ -102,8 +103,9 @@ Examples:
 - `!fight 6 6 +4` Fight with a +4 bonus
 - `!fight Green Goo 8 20 -2 3` Fight green goo with -2 penalty and stop after 3 rounds
 
-### Restoring To Earlier
+### Restoring
 
+- `!import <bookid>` Import character from another Lone Wolf book. `!import` shows a list of available characters. e.g. `!import lw01`
 - `!undo` When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
 - `!save [slot]` Save the current game in slot numbered [slot]. Valid slot numbers are 0 - 10. If you don't specify a slot, 0 will be used. (This command is disabled by default.)
 - `!load [slot]` Restore the game from slot [slot]. (This command is disabled by default.)
