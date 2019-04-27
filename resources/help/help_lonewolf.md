@@ -7,6 +7,7 @@ Mostly everything you'll need to know.
 - `!<number>` Read page . e.g. `!42`. `!look` Re-read last page.
 - `!info` Show character sheet. !stats just shows stats, !stuff just shows inventory.
 - `!map` Send the map image, if available.
+- `!library` List available books to read.
 
 ### Random Numbers
 
@@ -37,6 +38,8 @@ For the nerds
 - `!<number>` or `!page <number>` Read page <number>. e.g. `!42`
 - `!look` Re-read last page.
 - `!map` Send the map image, if available.
+- `!library` List available books to read.
+- `!book [bookid]` or `!open` to open a book from the library.
 
 ### Character Information
 
