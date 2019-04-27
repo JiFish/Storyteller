@@ -34,7 +34,8 @@ Swamp, Seas of Blood, Starship Traveller, Stealer of Souls, Talisman of Death,
 Temple of Terror, Trial of Champions, The Warlock of Firetop Mountain. Most
 other can still be played.
 
-The first 20 _Lone Wolf_ books have good support.
+The first 20 _Lone Wolf_ books have good support, as do the 8
+_Lone Wolf: New Order_ books.
 
 The following other books / series are supported: Alice's Nightmare in Wonderland,
 The Crystal Maze Adventure, The Sonic The Hedgehog Gamebooks, The Narnia Solo
