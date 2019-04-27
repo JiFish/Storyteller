@@ -26,7 +26,8 @@ class book_lw_magnakai extends book_lw_kai {
 
     protected function getLoneWolfWeaponTypes() {
         // This order is important, when looking for weapon matches check from 0 onwards.
-        foreach (['Dagger', 'Mace', 'Warhammer', 'Axe', 'Quaterstaff', 'Spear', 'Short Sword', 'Bow', 'Broadsword', 'Sword'] as $w) {
+        foreach (['Dagger', 'Mace', 'Warhammer', 'Axe', 'Quarterstaff', 'Spear',
+                'Short Sword', 'Bow', 'Broadsword', 'Sword'] as $w) {
             $o[$w] = 0;
         }
         return $o;
