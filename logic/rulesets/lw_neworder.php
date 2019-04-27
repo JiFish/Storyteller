@@ -26,7 +26,7 @@ class book_lw_neworder extends book_lw_grandm {
         if (!$adjective || $adjective == '?') {
             $a = ['Swift', 'Sun', 'True', 'Bold', 'Moon', 'Sword', 'Wise', 'Storm', 'Rune', 'Brave'];
             $b = ['Blade', 'Fire', 'Hawk', 'Heart', 'Friend', 'Star', 'Dancer', 'Helm', 'Strider', 'Shield'];
-            $p['adjective'] = $a[rand(0,9)].' '.$b[rand(0,9)];
+            $p['adjective'] = $a[rand(0, 9)].' '.$b[rand(0, 9)];
         }
         return $p;
     }
