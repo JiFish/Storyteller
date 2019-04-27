@@ -49,7 +49,7 @@ $booklist = [
 $list1 = array_slice($booklist, 0, ceil(sizeof($booklist) / 2));
 $list2 = array_slice($booklist, ceil(sizeof($booklist) / 2));
 
-$out  = "By downloading books from Project Aon, you agree to the Project Aon License.\n";
+$out  = "\n\nBy downloading books from Project Aon, you agree to the Project Aon License.\n";
 $out .= "https://www.projectaon.org/en/Main/License\n\n";
 $out .= "BOOK LIST:\n\n";
 $cnt = 1;
@@ -114,12 +114,31 @@ foreach ($worklist as $book) {
         die('Book start not found...');
     }
     $book = substr($book, $pos);
+    // Remove rules
+    $pos = strpos($book, '<a name="gamerulz">');
+    $epos = strpos($book, '<a name="equipmnt">');
+    if (!$pos || !$epos) {
+        die('Rules section not found...');
+    }
+    $book = substr($book, 0, $pos).substr($book, $epos);
+    // Remove more rules
+    $pos = strpos($book, '<a name="howcarry">');
+    if (!$pos) {
+        $pos = strpos($book, '<a name="howuse">');
+    }
+    $epos = strpos($book, '<a name="sect1">1</a>');
+    $book = substr($book, 0, $pos).substr($book, $epos);
+    if (!$pos || !$epos) {
+        die('More rules section not found...');
+    }
     // end
     $pos = strrpos( $book, '<a name="map">');
     if (!$pos) {
         die('Book end not found...');
     }
     $book = substr($book, 0, $pos);
+    // Add link to rules
+    $book = "Licence, copyright and full game rules at: https://www.projectaon.org/en/xhtml-simple/$bookpaid.htm#gamerulz\n\n".$book;
 
     if ($downloadpics) {
         $book = strip_tags($book, '<img>');
