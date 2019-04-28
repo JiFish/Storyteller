@@ -374,7 +374,7 @@ class book_character extends book_none {
 
         $player = &$this->player;
         $slot = ($cmd[1]?$cmd[1]:0);
-        $file = 'saves/save_'.$config->book_id.$slot.'.txt';
+        $file = 'saves/save_'.$config->book_id.'_'.$slot.'.txt';
         if ($slot < 0 || $slot > 10) {
             sendqmsg("*Slot must be between 0 and 10*", ':interrobang:');
             return;
