@@ -245,6 +245,11 @@ class book_lonewolf extends book_character_importable {
         if (strtolower($drop) == 'backpack') {
             $this->player['stuff'] = array();
             $result = 'entire backpack';
+        } elseif (strtolower($drop) == 'everything') {
+            $this->player['stuff'] = array();
+            $this->player['specials'] = array();
+            $this->player['weapons'] = array();
+            $result = 'backpack and everything else';
         } else {
             $result = smart_remove_from_list($this->player['stuff'], $drop);
         }
