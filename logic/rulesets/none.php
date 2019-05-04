@@ -43,7 +43,7 @@ class book_none extends gamebook_base {
         $this->registerCommand('roll',           '_cmd_roll',      ['on']);
         $this->registerCommand(['help', '?'],    '_cmd_help');
         $this->registerCommand('echo',           '_cmd_echo',      ['l']);
-        $this->registerCommand('randpage',       '_cmd_randpage',  ['n', 'on', 'on', 'on', 'on', 'on', 'on', 'on']);
+        $this->registerCommand('randpage',       '_cmd_randpage',  ['n', 'n', 'on', 'on', 'on', 'on', 'on', 'on']);
         $this->registerCommand('debugset',       '_cmd_debugset',  ['s', 'l']);
         $this->registerCommand('silentset',      '_cmd_debugset',  ['s', 'l']);
         $this->registerCommand('debuglist',      '_cmd_debuglist');
