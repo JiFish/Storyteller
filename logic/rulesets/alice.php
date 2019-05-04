@@ -41,7 +41,7 @@ class book_alice extends book_character {
             ],
             'damage' => [
                 'friendly' => 'Combat Damage',
-                'alias' => ['dmg', 'combat', 'combatdamage'],
+                'alias' => ['dmg', 'combatdamage'],
                 'roll' => 2,
             ],
             'cc' => [
@@ -74,7 +74,7 @@ class book_alice extends book_character {
                 'value' => $player['logic'],
                 'short' => true],
             ['title' => 'Combat',
-                'value' => $player['combat']." (*Damage:* ".$player['damage']."*)",
+                'value' => $player['combat']." (*Damage:* ".$player['damage'].")",
                 'short' => true],
             ['title' => 'Insanity',
                 'value' => $player['insanity'],
