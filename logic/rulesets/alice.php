@@ -39,6 +39,11 @@ class book_alice extends book_character {
                 'alias' => ['end'],
                 'roll' => 20,
             ],
+            'damage' => [
+                'friendly' => 'Combat Damage',
+                'alias' => ['dmg', 'combat', 'combatdamage'],
+                'roll' => 2,
+            ],
             'cc' => [
                 'friendly' => 'Curiouser and Curiouser',
                 'roll' => 3,
@@ -69,7 +74,7 @@ class book_alice extends book_character {
                 'value' => $player['logic'],
                 'short' => true],
             ['title' => 'Combat',
-                'value' => $player['combat'],
+                'value' => $player['combat']." (*Damage:* ".$player['damage']."*)",
                 'short' => true],
             ['title' => 'Insanity',
                 'value' => $player['insanity'],
@@ -309,7 +314,7 @@ class book_alice extends book_character {
                 if ($acr > $ocr) {
                     $out .= "_Alice hits ".$opp['name']."._ $dicestr\n";
                     $fighters[$k]['init'] = false;
-                    $fighters[$k]['endurance'] -= 2;
+                    $fighters[$k]['endurance'] -= $p['damage'];
                 }
                 // Opp hits
                 elseif ($acr < $ocr) {
