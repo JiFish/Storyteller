@@ -143,7 +143,7 @@ class book_character extends book_none {
             'fields'   => array(
                 [
                     'title' => 'Inventory',
-                    'value' => implode("\n", array_slice($s, 0, ceil(sizeof($s) / 2))),
+                    'value' => implode(html_entity_decode("&nbsp;")."\n", array_slice($s, 0, ceil(sizeof($s) / 2))),
                     'short' => true
                 ],
                 [
