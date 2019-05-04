@@ -102,18 +102,18 @@ Examples:
 
 ### Fight Automation
 
-- `!fight [name] <skill> <stamina> [stopafter]` Fight a monster named [name] (optional) with skill <skill> and stamina <stamina>. Spaces are accepted in the name. Stop after [stopafter] rounds (optional.) You can use 3 special phrases for [stopafter]: hitme, hitthem and hitany to stop the fight in those situations.
+- `!fight [name] <skill> <stamina> [+/-dicemod] [stopafter]` Fight a monster named [name] (optional) with skill <skill> and stamina <stamina>. Spaces are accepted in the name. [dicemod] will be added (or subtracted) from the player's rolls (optional.) Stop after [stopafter] rounds (optional.) You can use 3 special phrases for [stopafter]: hitme, hitthem and hitany to stop the fight in those situations.
 - `!attack <skill> [damage]` or `!a <skill> [damage]` Perform a single attack roll versus a monster with skill . [damage] is taken from stamina on a fail (Default: 0) This is for manually running combat with special rules.
 
 The following covers many custom fight rules:
 
-- `!critfight [name] <skill> [who] [critchance]` Fight a monster named [name] (optional) with skill with critical strikes doing damage only. [who] is who has to roll the crits, me or both (Default: me). [critchance] is the chance of the crit hitting x in 6. (Default: 2)
-- `!bonusfight [name] <skill> <stamina> <bonusdmg> [bonusdmgchance]` Fight a monster named [name] (optional) with skill and stamina . After each round the monster has a [bonusdmgchance]/6 chance of doing damage. Default 3/6.
-- `!fighttwo <name 1> <skill 1> <stamina 1> [<name 2> <skill 2> <stamina 2>]` Fight two opponents at the same time. If a second monster isn't provided, you'll fight two copies of the first.
-- `!fightbackup [name] <skill> <stamina> [allyname] <allyskill>` Fight an opponent with an ally named [allyname] (optional) and with skill <allyskill> backing you up in the fight.
+- `!critfight [name] <skill> [who] [critchance] [+/-dicemod]` Fight a monster named [name] (optional) with skill with critical strikes doing damage only. [who] is who has to roll the crits, me or both (Default: me). [critchance] is the chance of the crit hitting x in 6. (Default: 2)
+- `!bonusfight [name] <skill> <stamina> <bonusdmg> [bonusdmgchance] [+/-dicemod]` Fight a monster named [name] (optional) with skill and stamina . After each round the monster has a [bonusdmgchance]/6 chance of doing damage. Default 3/6.
+- `!fighttwo <name 1> <skill 1> <stamina 1> [<name 2> <skill 2> <stamina 2>]  [+/-dicemod]` Fight two opponents at the same time. If a second monster isn't provided, you'll fight two copies of the first.
+- `!fightbackup [name] <skill> <stamina> [allyname] <allyskill> [+/-dicemod]` Fight an opponent with an ally named [allyname] (optional) and with skill <allyskill> backing you up in the fight.
 - `!vs <name 1> <skill 1> <stamina 1> <name 2> <skill 2> <stamina 2>` Fight two monsters against each other.
 - `!battle [name] <strike> <strength> [stopafter]` Fight a large scale battle with opponent named [name] (optional) with strike <strike> and strength <strength>. This command is only available for some books.
-- `!phaser [-/+penalty] [stun/kill] [name] <skill> [stun/kill] [maxrounds]` or `!gun`. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of . The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.
+- `!phaser [stun/kill] [name] <skill> [stun/kill] [maxrounds] [+/-dicemod]` or `!gun`. Run phaser combat. [Penalty] is added to your dice rolls. Shooting to [stun/kill] (default: stun.) Against a opponent named [name] (optional) with a skill of <skill>. The opponent is shooting to [stun/kill] (default: kill.) This command is only available for some books.
 - `!shipbattle [name] <weapons> <shields> [stopafter]` Battle a ship named [name] (optional) with weapons <weapons> and shields <shields>. This command is only available for some books.
 
 ### Restoring To Earlier

@@ -178,13 +178,13 @@ class book_ff_basic extends book_character {
         $this->registerCommand(['luckyescape', 'le'], '_cmd_luckyescape');
         $this->registerCommand('shield',              '_cmd_shield',      ['os']);
         $this->registerCommand('test',                '_cmd_test',        ['s', 'onm', 'on', 'on']);
-        $this->registerCommand('fight',               '_cmd_fight',       ['oms', 'n', 'n', 'osl']);
-        $this->registerCommand('critfight',           '_cmd_critfight',   ['oms', 'n', 'os', 'on']);
-        $this->registerCommand('bonusfight',          '_cmd_bonusfight',  ['oms', 'n', 'n', 'n', 'on']);
+        $this->registerCommand('fight',               '_cmd_fight',       ['oms', 'n', 'n', 'onm', 'osl']);
+        $this->registerCommand('critfight',           '_cmd_critfight',   ['oms', 'n', 'os', 'on', 'onm']);
+        $this->registerCommand('bonusfight',          '_cmd_bonusfight',  ['oms', 'n', 'n', 'n', 'on', 'onm']);
         $this->registerCommand('vs',                  '_cmd_vs',          ['ms', 'n', 'n', 'ms', 'n', 'n']);
-        $this->registerCommand('fighttwo',            '_cmd_fighttwo',    ['ms', 'n', 'n', 'oms', 'on', 'on']);
-        $this->registerCommand('fightbackup',         '_cmd_fightbackup', ['oms', 'n', 'n', 'oms', 'n']);
-        $this->registerCommand('gun',                 '_cmd_gun',         ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
+        $this->registerCommand('fighttwo',            '_cmd_fighttwo',    ['ms', 'n', 'n', 'oms', 'on', 'on', 'onm']);
+        $this->registerCommand('fightbackup',         '_cmd_fightbackup', ['oms', 'n', 'n', 'oms', 'n', 'onm']);
+        $this->registerCommand(['gun','phaser'],      '_cmd_gun',         ['(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on', 'onm']);
         $this->registerCommand(['attack', 'a'],       '_cmd_attack',      ['n', 'on']);
         $this->registerCommand('dead',                '_cmd_dead');
         $this->registerCommand(['π', ':pie:'],        '_cmd_easteregg');
@@ -453,13 +453,14 @@ class book_ff_basic extends book_character {
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'monsterstam' => $cmd[3],
-                'maxrounds' => ($cmd[4]?$cmd[4]:50)
+                'playerdicemod' => ($cmd[4]?$cmd[4]:0),
+                'maxrounds' => ($cmd[5]?$cmd[5]:50)
             ]);
         sendqmsg($out, ":crossed_swords:");
     }
 
 
-    //// !critfight [name] <skill> [who] [critchance] (run crit fight logic)
+    //// !critfight [name] <skill> [who] [critchance] [+/-dicemod] (run crit fight logic)
     protected function _cmd_critfight($cmd) {
         $critsfor = ($cmd[3]?$cmd[3]:'me');
         $critchance = ($cmd[4]?$cmd[4]:2);
@@ -475,19 +476,22 @@ class book_ff_basic extends book_character {
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'critsfor' => $critsfor,
-                'critchance' => $critchance]);
+                'critchance' => $critchance,
+                'playerdicemod' => ($cmd[5]?$cmd[5]:0)
+            ]);
         sendqmsg($out, ":crossed_swords:");
     }
 
 
-    //// !bonusfight [name] <skill> <stamina> <bonusdamage> [bonusdmgchance] (run bonus attack fight logic)
+    //// !bonusfight [name] <skill> <stamina> <bonusdamage> [bonusdmgchance] [+/-dicemod] (run bonus attack fight logic)
     protected function _cmd_bonusfight($cmd) {
         $out = $this->runFight(['player' => &$this->player,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),
                 'monsterskill' => $cmd[2],
                 'monsterstam' => $cmd[3],
                 'bonusdmg' => $cmd[4],
-                'bonusdmgchance' => ($cmd[5]?$cmd[5]:3)
+                'bonusdmgchance' => ($cmd[5]?$cmd[5]:3),
+                'playerdicemod' => ($cmd[6]?$cmd[6]:0)
             ]);
         sendqmsg($out, ":crossed_swords:");
     }
@@ -543,9 +547,17 @@ class book_ff_basic extends book_character {
                 'monsterskill' => $mskill,
                 'monsterstam' => $mstam,
                 'monster2name' => $m2,
-                'monster2skill' => $mskill2]);
+                'monster2skill' => $mskill2,
+                'playerdicemod' => ($cmd[7]?$cmd[7]:0)
+            ]);
         if ($this->player['stam'] > 0) {
             $this->addCommand("fight $m2 $mskill2 $mstam2");
+            $this->runFight(['player' => &$this->player,
+                'monstername' => $m2,
+                'monsterskill' => $mskill2,
+                'monsterstam' => $mstam2,
+                'playerdicemod' => ($cmd[7]?$cmd[7]:0)
+            ]);
         }
         sendqmsg($out, ":crossed_swords:");
     }
@@ -567,7 +579,9 @@ class book_ff_basic extends book_character {
                 'monsterskill' => $mskill,
                 'monsterstam' => $mstam,
                 'backupname' => $backupname,
-                'backupskill' => $backupskill]);
+                'backupskill' => $backupskill,
+                'playerdicemod' => ($cmd[6]?$cmd[6]:0)
+            ]);
         sendqmsg($out, ":crossed_swords:");
     }
 
@@ -590,12 +604,12 @@ class book_ff_basic extends book_character {
     //// !phaser/gun [-/+modifier] [stun/kill] [name] <skill> [stun/kill] [maxrounds] (run phaser fight logic)
     protected function _cmd_gun($cmd) {
         $out = $this->runGunFight(['player' => &$this->player,
-                'modifier' => ($cmd[1]?$cmd[1]:0),
-                'stunkill' => ($cmd[2]?$cmd[2]:'stun'),
-                'monstername' => ($cmd[3]?$cmd[3]:"Opponent"),
-                'monsterskill' => $cmd[4],
-                'mstunkill' => ($cmd[5]?$cmd[5]:'kill'),
-                'maxrounds' => ($cmd[6]?$cmd[6]:50)
+                'stunkill' => ($cmd[1]?$cmd[1]:'stun'),
+                'monstername' => ($cmd[2]?$cmd[2]:"Opponent"),
+                'monsterskill' => $cmd[3],
+                'mstunkill' => ($cmd[4]?$cmd[4]:'kill'),
+                'maxrounds' => ($cmd[5]?$cmd[5]:50),
+                'modifier' => ($cmd[6]?$cmd[6]:0),
             ]);
         sendqmsg($out, ":gun:");
     }
@@ -627,12 +641,13 @@ class book_ff_basic extends book_character {
         $critchance =     (isset($input['critchance'])?    $input['critchance']:     2);
         $m2 =             (isset($input['monster2name'])?  $input['monster2name']:   null);
         $mskill2 =        (isset($input['monster2skill'])? $input['monster2skill']:  null);
-        $backupname =     (isset($input['backupname'])?    $input['backupname']:   null);
-        $backupskill =    (isset($input['backupskill'])?   $input['backupskill']:  null);
+        $backupname =     (isset($input['backupname'])?    $input['backupname']:     null);
+        $backupskill =    (isset($input['backupskill'])?   $input['backupskill']:    null);
         $bonusdmg =       (isset($input['bonusdmg'])?      $input['bonusdmg']:       0);
         $bonusdmgchance = (isset($input['bonusdmgchance'])?$input['bonusdmgchance']: 3);
         $fasthands =      (isset($input['fasthands'])?     $input['fasthands']:      false);
         $healthstatname = (isset($input['healthstatname'])?$input['healthstatname']: 'stamina');
+        $playerdicemod =  (isset($input['playerdicemod'])? $input['playerdicemod']:  0);
         $gamebook = getbook();
 
         // Special case for Starship Traveller Macommonian
@@ -686,10 +701,10 @@ class book_ff_basic extends book_character {
             $mroll = rand(1, 6); $mroll2 = rand(1, 6);
             $proll = rand(1, 6); $proll2 = rand(1, 6);
             $memoji = diceemoji($mroll).diceemoji($mroll2);
-            $pemoji = diceemoji($proll).diceemoji($proll2);
+            $pemoji = diceemoji($proll).diceemoji($proll2).($playerdicemod?sprintf("%+d", $playerdicemod):'');
 
             $mattack = $mskill+$mroll+$mroll2;
-            $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
+            $pattack = $player['skill']+$player['weapon']+$proll+$proll2+$playerdicemod;
 
             // Special case for Creature of Havok instant kills
             if ($gamebook == 'ff_coh' && $proll == $proll2) {
@@ -702,11 +717,12 @@ class book_ff_basic extends book_character {
             if ($fasthands) {
                 $fhroll  = rand(1, 6);
                 $fhroll2 = rand(1, 6);
+                $fhemoji = diceemoji($fhroll).diceemoji($fhroll2).($playerdicemod?sprintf("%+d", $playerdicemod):'');
                 if ($fhroll+$fhroll2 > $proll+$proll2) {
-                    $pattack = $player['skill']+$player['weapon']+$fhroll;
-                    $pemoji = "~".$pemoji."~ / ".diceemoji($fhroll).diceemoji($fhroll2);
+                    $pattack = $player['skill']+$player['weapon']+$fhroll+$fhroll2+$playerdicemod;
+                    $pemoji = "~$pemoji~ / $fhemoji";
                 } else {
-                    $pemoji .= " / ~".diceemoji($fhroll).diceemoji($fhroll2)."~";
+                    $pemoji = "$pemoji / ~$fhemoji~";
                 }
                 if ($round >= 3 && !($gamebook == 'ff_sst' && $player['race'] == 'Macommonian')) {
                     $fasthands = false;
