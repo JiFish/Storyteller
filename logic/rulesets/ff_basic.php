@@ -184,7 +184,7 @@ class book_ff_basic extends book_character {
         $this->registerCommand('vs',                  '_cmd_vs',          ['ms', 'n', 'n', 'ms', 'n', 'n']);
         $this->registerCommand('fighttwo',            '_cmd_fighttwo',    ['ms', 'n', 'n', 'oms', 'on', 'on', 'onm']);
         $this->registerCommand('fightbackup',         '_cmd_fightbackup', ['oms', 'n', 'n', 'oms', 'n', 'onm']);
-        $this->registerCommand(['gun','phaser'],      '_cmd_gun',         ['(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on', 'onm']);
+        $this->registerCommand(['gun', 'phaser'],     '_cmd_gun',         ['(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on', 'onm']);
         $this->registerCommand(['attack', 'a'],       '_cmd_attack',      ['n', 'on']);
         $this->registerCommand('dead',                '_cmd_dead');
         $this->registerCommand(['π', ':pie:'],        '_cmd_easteregg');
@@ -547,11 +547,11 @@ class book_ff_basic extends book_character {
         if ($this->player['stam'] > 0) {
             $this->addCommand("fight $m2 $mskill2 $mstam2");
             $this->runFight(['player' => &$this->player,
-                'monstername' => $m2,
-                'monsterskill' => $mskill2,
-                'monsterstam' => $mstam2,
-                'playerdicemod' => ($cmd[7]?$cmd[7]:0)
-            ]);
+                    'monstername' => $m2,
+                    'monsterskill' => $mskill2,
+                    'monsterstam' => $mstam2,
+                    'playerdicemod' => ($cmd[7]?$cmd[7]:0)
+                ]);
         }
         sendqmsg($out, ":crossed_swords:");
     }

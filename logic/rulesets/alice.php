@@ -130,11 +130,11 @@ class book_alice extends book_character {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand(['newgame','ng'], '_cmd_newgame', ['on', 'on', 'on', 'on']);
-        $this->registerCommand('test',           '_cmd_test',    ['s', 'onm', 'on', 'on']);
-        $this->registerCommand(['draw', 'deal'], '_cmd_deal',    ['on']);
-        $this->registerCommand('peek',           '_cmd_peek');
-        $this->registerCommand('fight',          '_cmd_fight',   ['(\sinit|\sinitiative)?',
+        $this->registerCommand(['newgame', 'ng'], '_cmd_newgame', ['on', 'on', 'on', 'on']);
+        $this->registerCommand('test',            '_cmd_test',    ['s', 'onm', 'on', 'on']);
+        $this->registerCommand(['draw', 'deal'],  '_cmd_deal',    ['on']);
+        $this->registerCommand('peek',            '_cmd_peek');
+        $this->registerCommand('fight',           '_cmd_fight',   ['(\sinit|\sinitiative)?',
                 'oms', 'n', 'n',
                 'omsg', 'on', 'on',
                 'omsg', 'on', 'on',
@@ -385,7 +385,7 @@ class book_alice extends book_character {
         $discard = array_diff($discard, $this->player['deck']);
         $out = "Peeking at the discard pile...";
         foreach ($discard as $d) {
-            $out .= ' '.cardemoji(floor($d/4)+1,$d%4);
+            $out .= ' '.cardemoji(floor($d/4)+1, $d%4);
         }
         sendqmsg($out, ":game_die:");
     }
