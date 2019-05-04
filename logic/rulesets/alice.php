@@ -41,7 +41,7 @@ class book_alice extends book_character {
             ],
             'damage' => [
                 'friendly' => 'Combat Damage',
-                'alias' => ['dmg', 'combatdamage'],
+                'alias' => ['dmg'],
                 'roll' => 2,
             ],
             'cc' => [
@@ -132,6 +132,8 @@ class book_alice extends book_character {
         parent::registerCommands();
         $this->registerCommand(['newgame','ng'], '_cmd_newgame', ['on', 'on', 'on', 'on']);
         $this->registerCommand('test',           '_cmd_test',    ['s', 'onm', 'on', 'on']);
+        $this->registerCommand(['draw', 'deal'], '_cmd_deal',    ['on']);
+        $this->registerCommand('peek',           '_cmd_peek');
         $this->registerCommand('fight',          '_cmd_fight',   ['(\sinit|\sinitiative)?',
                 'oms', 'n', 'n',
                 'omsg', 'on', 'on',
@@ -154,7 +156,7 @@ class book_alice extends book_character {
             return;
         } elseif ($stattotal < 1) {
             $stats = null;
-            $extratext = "\nYou can customise Alice by providing her stats in the order agility, logic, agility, combat and endurance totalling 10 points. e.g. `!".$cmd[0]." 3 3 2 2`";
+            $extratext = "\nYou can customise Alice by providing her stats in the order agility, logic, combat and endurance totalling 10 points. e.g. `!".$cmd[0]." 3 3 2 2`";
         }
         $player = $this->rollAliceCharacter($stats);
 
@@ -244,26 +246,37 @@ class book_alice extends book_character {
 
 
     private function deck($todraw = 1) {
+        $suitnames = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
+        $cardnames = ['Ace', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King'];
+        $deck = &$this->player['deck'];
         $out = [
             'val' => 0,
             'emoji' => "",
+            'text' => "",
             'autopass' => false
         ];
         for ($c = 0; $c < $todraw; $c++) {
-            $draw = rand(1, 13);
-            if ($draw == 1) {
+            if (count($deck) < 1) {
+                $deck = range(0, 51);
+                shuffle($deck);
+                $out['emoji'] .= "The deck of fate has been shuffled... ";
+            }
+            $draw = array_pop($deck);
+            $v = floor($draw/4);
+            $s = $draw % 4;
+            $out['emoji'] .= cardemoji($v+1, $s).' ';
+            $out['text'] .= $cardnames[$v]." of ".$suitnames[$s].' ';
+            if ($v == 0) {              // ACE
                 $out['val'] += 12;
-                $out['emoji'] .= cardemoji($draw).' ';
                 $out['autopass'] = true;
-            } elseif ($draw < 11) {
-                $out['val'] += $draw;
-                $out['emoji'] .= cardemoji($draw).' ';
-            } else {
+            } elseif ($v < 10) {        // TWO - TEN
+                $out['val'] += $v+1;
+            } else {                    // FACE CARDS
                 $out['val'] += 11;
-                $out['emoji'] .= cardemoji($draw).' ';
             }
         }
         $out['emoji'] = trim($out['emoji']);
+        $out['text'] = trim($out['text']);
         return $out;
     }
 
@@ -302,7 +315,7 @@ class book_alice extends book_character {
                 // Step 2 (+ step 3)
                 $d = $this->deck();
                 $ocr = $opp['combat'] + $d['val'] + ($opp['init']?1:0);
-                $dicestr = $alicedice." +".$p['combat'].($aliceinit?' (+1 init)':'')." vs ".$d['emoji']." +".$opp['combat'].($opp['init']?' (+1 init)':'');
+                $dicestr = $alicedice." $acr".($aliceinit?' (i)':'')." vs ".$d['emoji']." $ocr".($opp['init']?' (i)':'');
                 // Alice hits
                 if ($acr > $ocr) {
                     $out .= "_Alice hits ".$opp['name']."._ $dicestr\n";
@@ -345,6 +358,36 @@ class book_alice extends book_character {
         $out .= "*Alice is victorious!*\n";
         $out .= "_Remaining endurance: ".$p['endurance'].'/'.$p['max']['endurance']."_";
         return $out;
+    }
+
+
+    //// !deal [x] (deal x cards)
+    protected function _cmd_deal($cmd) {
+        $numcards = ($cmd[1]?$cmd[1]:1);
+        $numcards = max(min($numcards, 52), 1);
+        $out = "";
+        $t = 0;
+        for ($a = 0; $a < $numcards; $a++) {
+            $card = $this->deck();
+            $out .= $card['emoji'].": ".$card['text']."\n";
+            $t += $card['val'];
+        }
+        if ($numcards > 1) {
+            $out .= " *Total: $t*";
+        }
+        sendqmsg($out, ":game_die:");
+    }
+
+
+    //// !deal [x] (deal x cards)
+    protected function _cmd_peek($cmd) {
+        $discard = range(0, 51);
+        $discard = array_diff($discard, $this->player['deck']);
+        $out = "Peeking at the discard pile...";
+        foreach ($discard as $d) {
+            $out .= ' '.cardemoji(floor($d/4)+1,$d%4);
+        }
+        sendqmsg($out, ":game_die:");
     }
 
 

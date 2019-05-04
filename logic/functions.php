@@ -33,11 +33,18 @@ function diceemoji($r) {
 
 
 // Convert number to html entity of playing card
-function cardemoji($r) {
+function cardemoji($r, $suit = -1) {
+    if ($suit < 0 || $suit > 3) {
+        $suit = rand(0, 3);
+    }
     if ($r == 0) {
         return mb_convert_encoding("&#127183;", 'UTF-8', 'HTML-ENTITIES');
     } elseif ($r <= 13) {
-        $start = [127136, 127152, 127168, 127184][rand(0, 3)];
+        $start = [127136, 127152, 127168, 127184][$suit];
+        // Skip the 'Knight' card
+        if ($r >= 12) {
+            $r++;
+        }
         return mb_convert_encoding('&#'.($start+$r).';', 'UTF-8', 'HTML-ENTITIES');
     }
 
