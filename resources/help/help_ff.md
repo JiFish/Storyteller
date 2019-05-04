@@ -23,7 +23,7 @@ Mostly everything you'll need to know.
 - `!<stat> max [+/-]<amount>` As above, but alters the stat's maximum. e.g. `!stam max -1`
 - `!eat` Eats one provision and restores 4 stamina.
 - `!get <item>` Adds <item> to your inventory.
-- `!lose <item>` Removes <item> from your inventory. You can also use !drop and !use for different descriptions. This will try to match partial names.
+- `!lose <item>` or `!drop` Removes <item> from your inventory. This will try to match partial names.
 - `!buy <item> [cost]` Add <item> to your inventory and subtracts [cost] gold. If cost is missing, 2 gold will be taken.
 - `!shield <on/off>` Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using `!fight`.
 - `!dead` Reduce stamina to 0.
@@ -60,18 +60,38 @@ Some fun character ideas:
 ### Inventory Management
 
 - `!get <item>` or `!take <item>` Adds to your inventory. Attempts to automatically manage gold and provisions stats if used like "!get 5 gold"
-- `!lose <item>` Removes to your inventory. You don't have to provide a full match. e.g. Drop 'leather armor' with `!drop armor`. Will attempt to manage gold and provisions as above.
-- `!drop <item>` or `!use <item>` As above, but with thematic descriptions.
+- `!lose <item>` or `!drop` Removes to your inventory. You don't have to provide a full match. e.g. Drop 'leather armor' with `!drop armor`. Will attempt to manage gold and provisions as above.
+- `!use <item>` As above, but attempts to run a command in square brackets (`[]`) from the item's name. See '!use examples' below.
 - `!eat` Eats one provision and restores 4 stamina.
 - `!pay <amount>` or `!spend <amount>` Subtracts <amount> of gold. See stats below.
 - `!buy <item> [cost]` Add <item> to your inventory and subtracts [cost] gold. If cost is missing, 2 gold will be taken.
 - `!shield <on/off>` Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using `!fight` (and variants.)
 
+#### !use examples
+You find a red potion. You can consume it at any time to gain 10 stamina.
+```
+Player: !get Red Potion [end +10]
+Storyteller: Got the Red Potion [end +10]!
+Player: !use Red Potion
+Storyteller: Used the Red Potion [end +10]!
+Storyteller: Added 10 to endurance, now 19.
+```
+
+Add the escape button to your inventory. If at any time you wish to press it, turn to 42.
+```
+Player: !get Escape Button [42]
+Storyteller: Got the Escape Button [42]!
+Player: !use button
+Storyteller: Used the Escape Button [42]!
+Storyteller: Page 42 ...
+```
+
+
 ### Stats Management
 
 `!<stat> [max] [+/-]<amount>`
 
-Set the stat called to <amount>.
+Set <stat> to <amount>.
 
 Valid values are: skill, stam, luck, weapon, gold and prov. (Depending which booktype you are playing, additional stats may be available.)
 
@@ -115,10 +135,10 @@ The following covers many custom fight rules:
 
 ### Restoring To Earlier
 
-- `!undo` When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
+- `!undo` When dead, restore the game to the last page you turned to.
 - `!save [slot]` Save the current game in slot numbered [slot]. Valid slot numbers are 0 - 10. If you don't specify a slot, 0 will be used. (This command is disabled by default.)
 - `!load [slot]` Restore the game from slot [slot]. (This command is disabled by default.)
-- `!clearslots [confirm]` Clear all the save slots. Useful after switching books. You are required to type `!clearslots confirm` for safety. (This command is disabled by default.)
+- `!clearslots [confirm]` Clear all the save slots. You are required to type `!clearslots confirm` for safety. (This command is disabled by default.)
 
 Example
 

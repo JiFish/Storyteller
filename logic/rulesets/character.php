@@ -159,16 +159,17 @@ class book_character extends book_none {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand(['get', 'take'],         '_cmd_get',        ['l']);
-        $this->registerCommand(['drop', 'use', 'lose'], '_cmd_drop',       ['l']);
-        $this->registerCommand(['newgame', 'ng'],       '_cmd_newgame',    ['osl', 'osl', 'osl', 'osl', 'osl']);
-        $this->registerCommand('undo',                  '_cmd_undo');
-        $this->registerCommand('save',                  '_cmd_save',       ['on']);
-        $this->registerCommand('load',                  '_cmd_load',       ['on']);
-        $this->registerCommand('clearslots',            '_cmd_clearslots', ['osl']);
-        $this->registerCommand(['info', 'status'],      '_cmd_info');
-        $this->registerCommand(['stats', 's'],          '_cmd_stats');
-        $this->registerCommand(['stuff', 'i'],          '_cmd_stuff');
+        $this->registerCommand(['get', 'take'],    '_cmd_get',        ['l']);
+        $this->registerCommand(['drop', 'lose'],   '_cmd_drop',       ['l']);
+        $this->registerCommand('use',              '_cmd_use',        ['l']);
+        $this->registerCommand(['newgame', 'ng'],  '_cmd_newgame',    ['osl', 'osl', 'osl', 'osl', 'osl']);
+        $this->registerCommand('undo',             '_cmd_undo');
+        $this->registerCommand('save',             '_cmd_save',       ['on']);
+        $this->registerCommand('load',             '_cmd_load',       ['on']);
+        $this->registerCommand('clearslots',       '_cmd_clearslots', ['osl']);
+        $this->registerCommand(['info', 'status'], '_cmd_info');
+        $this->registerCommand(['stats', 's'],     '_cmd_stats');
+        $this->registerCommand(['stuff', 'i'],     '_cmd_stuff');
         // Stats commands
         foreach ($this->getAllStatCommands() as $s) {
             $this->registerCommand($s, '_cmd_stat_adjust', ['os', 'nm']);
@@ -201,7 +202,7 @@ class book_character extends book_none {
     }
 
 
-    //// !drop / !lose / !use
+    //// !drop / !lose
     protected function _cmd_drop($cmd) {
         $verb = strtolower($cmd[0]);
         $drop = strtolower($cmd[1]);
@@ -211,17 +212,33 @@ class book_character extends book_none {
             sendqmsg("*'$drop' didn't match anything in inventory. Can't $verb.*", ':interrobang:');
         } elseif (is_array($result)) {
             sendqmsg("*Which did you want to $verb? ".implode(", ", $result)."*", ':interrobang:');
+        } elseif ($verb == 'lose') {
+            sendqmsg("*Lost the $result!*");
         } else {
-            switch ($verb) {
-            case 'lose':
-                sendqmsg("*Lost the $result!*");
-                break;
-            case 'drop':
-                sendqmsg("*Dropped the $result!*", ":put_litter_in_its_place:");
-                break;
-            case 'use':
-                sendqmsg("*Used the $result!*");
-                break;
+            sendqmsg("*Dropped the $result!*", ":put_litter_in_its_place:");
+        }
+    }
+
+
+    //// !drop / !lose / !use
+    protected function _cmd_use($cmd) {
+        $drop = strtolower($cmd[1]);
+        $result = smart_remove_from_list($this->player['stuff'], $drop);
+
+        if ($result === false) {
+            sendqmsg("*'$drop' didn't match anything in inventory. Can't use.*", ':interrobang:');
+        } elseif (is_array($result)) {
+            sendqmsg("*Which did you want to use? ".implode(", ", $result)."*", ':interrobang:');
+        } else {
+            sendqmsg("*Used the $result!*");
+            // Look for included command(s)
+            preg_match('/\[(.+)\]/', $result, $matches);
+            if (isset($matches[1])) {
+                $subcmd = $matches[1];
+                if (stripos($subcmd, $_POST['trigger_word']) === 0) {
+                    $subcmd = substr($subcmd, strlen($_POST['trigger_word']));
+                }
+                $this->addCommand($subcmd);
             }
         }
     }

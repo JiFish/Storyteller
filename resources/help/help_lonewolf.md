@@ -22,7 +22,7 @@ Mostly everything you'll need to know.
 - `!eat` Eats one meal, if there is none lose 3 endurance.
 - `!get <item>` Adds <item> to your inventory.
 - `!get special [item]` Adds [item] to your special items inventory. e.g. `!get special key`
-- `!lose <item>` Removes <item> from your inventory. You can also use !drop and !use for different descriptions. This will try to match partial names.
+- `!lose <item>` or `!drop` Removes <item> from your inventory. This will try to match partial names.
 - `!wield [weapon]` and `!unwield [weapon]` Wield (or unwield) a weapon called [weapon].
 - `!undo` When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
 - `!import <bookid>` Import character from another Lone Wolf book. `!import` shows a list of available characters. e.g. `!import lw01`
@@ -53,18 +53,36 @@ For the nerds
 ### Inventory Management
 
 - `!get [special/sp] <item>` or `!take <item>` Adds to your inventory. If [special] is given, will add to your special items list.
-- `!lose <item>` Removes to your inventory. You don't have to provide a full match. e.g. Drop 'leather armor' with `!drop armor`. Will attempt to manage gold and provisions as above.
-- `!drop <item>` or `!use <item>` As above, but with thematic descriptions.
+- `!lose <item>` or `!drop` Removes to your inventory. You don't have to provide a full match. e.g. Drop 'leather armor' with `!drop armor`. Will attempt to manage gold and provisions as above.
+- `!use <item>` As above, but attempts to run a command in square brackets (`[]`) from the item's name. See '!use examples' below.
 - `!wield [weapon]` wield [weapon]. If you already have two, the second will be `!unwield`ed. If [weapon] matches an item in the backpack that item will be removed and wielded.
 - `!unwield [weapon]` Unwield a weapon called [weapon]. Will try to match like `!lose` above. If you have backpack space, it will be placed in the backpack.
 - `!eat` Eats one meal, if there is none lose 3 endurance.
 
+#### !use examples
+You find a red potion. You can consume it at any time to gain 10 endurance.
+```
+Player: !get Red Potion [end +10]
+Storyteller: Got the Red Potion [end +10]!
+Player: !use Red Potion
+Storyteller: Used the Red Potion [end +10]!
+Storyteller: Added 10 to endurance, now 19.
+```
+
+Add the escape button to your inventory. If at any time you wish to press it, turn to 42.
+```
+Player: !get Escape Button [42]
+Storyteller: Got the Escape Button [42]!
+Player: !use button
+Storyteller: Used the Escape Button [42]!
+Storyteller: Page 42 ...
+```
 
 ### Stats Management
 
 `!<stat> [max] [+/-]<amount>`
 
-Set the stat called to <amount>.
+Set <stat> to <amount>.
 
 Valid values are: endurance, skill, and gold.
 
@@ -103,10 +121,10 @@ Examples:
 ### Restoring
 
 - `!import <bookid>` Import character from another Lone Wolf book. `!import` shows a list of available characters. e.g. `!import lw01`
-- `!undo` When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
+- `!undo` When dead, restore the game to the last page you turned to.
 - `!save [slot]` Save the current game in slot numbered [slot]. Valid slot numbers are 0 - 10. If you don't specify a slot, 0 will be used. (This command is disabled by default.)
 - `!load [slot]` Restore the game from slot [slot]. (This command is disabled by default.)
-- `!clearslots [confirm]` Clear all the save slots. Useful after switching books. You are required to type `!clearslots confirm` for safety. (This command is disabled by default.)
+- `!clearslots [confirm]` Clear all the save slots. You are required to type `!clearslots confirm` for safety. (This command is disabled by default.)
 
 Example
 
