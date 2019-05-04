@@ -190,10 +190,10 @@ class book_crystalm extends book_character {
 
         // Setup outcome pages to read if provided
         if ($cmd[3]) {
-            $success_page = "page ".$cmd[3]." nobackup";
+            $success_page = "page ".$cmd[3];
         }
         if ($cmd[4]) {
-            $fail_page = "page ".$cmd[4]." nobackup";
+            $fail_page = "page ".$cmd[4];
         }
 
         // Describer

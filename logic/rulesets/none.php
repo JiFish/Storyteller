@@ -38,7 +38,7 @@ class book_none extends gamebook_base {
 
     protected function registerCommands() {
         $this->registerCommand('look',           '_cmd_look');
-        $this->registerCommand('page',           '_cmd_page',      ['n', 'os']);
+        $this->registerCommand('page',           '_cmd_page',      ['n']);
         $this->registerCommand('background',     '_cmd_background');
         $this->registerCommand('roll',           '_cmd_roll',      ['on']);
         $this->registerCommand(['help', '?'],    '_cmd_help');
@@ -129,12 +129,8 @@ class book_none extends gamebook_base {
             return;
         }
         $page = $cmd[1];
-        $backup = (isset($cmd[2])?strtolower($cmd[2])!='nobackup':true);
 
-        // Save a backup of the player for undo
-        if ($backup) {
-            $this->savePlayer('backup');
-        }
+        $this->savePlayer('backup');
 
         $player['lastpage'] = $page;
         require $config->book_file;
@@ -148,7 +144,7 @@ class book_none extends gamebook_base {
             // Find pages with only one turn to and add that page to the command list
             preg_match_all($this->getPageMatchRegex(), $story, $matches, PREG_SET_ORDER, 0);
             if (sizeof($matches) == 1) {
-                $this->addCommand("page ".$matches[0][1]." nobackup");
+                $this->addCommand("page ".$matches[0][1]);
             }
         }
 
@@ -267,7 +263,7 @@ class book_none extends gamebook_base {
         }
 
         sendqmsg("Rolled $de", ":game_die:");
-        $this->addCommand("page ".$pagelist[$choice]." nobackup");
+        $this->addCommand("page ".$pagelist[$choice]);
     }
 
 

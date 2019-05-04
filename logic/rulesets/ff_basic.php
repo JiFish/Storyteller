@@ -359,10 +359,10 @@ class book_ff_basic extends book_character {
         $dicemod = ($cmd[2]?(int)$cmd[2]:0);
         // Setup outcome pages to read if provided
         if ($cmd[3]) {
-            $success_page = "page ".$cmd[3]." nobackup";
+            $success_page = "page ".$cmd[3];
         }
         if ($cmd[4]) {
-            $fail_page = "page ".$cmd[4]." nobackup";
+            $fail_page = "page ".$cmd[4];
         }
 
         // Referrers
