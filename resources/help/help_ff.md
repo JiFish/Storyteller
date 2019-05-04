@@ -69,7 +69,7 @@ Some fun character ideas:
 
 ### Stats Management
 
-`!<stat> [max/temp] [+/-]<amount>`
+`!<stat> [max] [+/-]<amount>`
 
 Set the stat called to <amount>.
 
@@ -77,16 +77,13 @@ Valid values are: skill, stam, luck, weapon, gold and prov. (Depending which boo
 
 If max is used, the stat's maximum is changed instead.
 
-If temp is used, you set a bonus that will be applied to the stat for the next `!test` or `!fight` only.
-
-If starts with a - or +, will be subtracted or added from the total. Otherwise the value is replaced with <amount>. Only the weapon stat and temp bonuses can be reduced below 0.
+If starts with a - or +, will be subtracted or added from the total. Otherwise the value is replaced with <amount>. Only the weapon bonus can be reduced below 0.
 
 Examples:
 
 - `!stam -3` Take 3 stamina loss.
 - `!weapon 2` Set weapon bonus to 2.
 - `!luck max +1` Add 1 to maximum luck.
-- `!skill temp -2; !test skill` Do a skill test at a -2 penalty to skill.
 
 ### Roll Automation
 

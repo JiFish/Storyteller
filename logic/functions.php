@@ -73,27 +73,6 @@ function genericemojiwhite($r) {
 }
 
 
-/// ----------------------------------------------------------------------------
-/// Send message to slack functions
-function apply_temp_stats(&$player) {
-    foreach ($player['temp'] as $k => $v) {
-        if (array_key_exists($k, $player)) {
-            $player[$k] += $v;
-        }
-    }
-}
-
-
-function unapply_temp_stats(&$player) {
-    foreach ($player['temp'] as $k => $v) {
-        if (array_key_exists($k, $player)) {
-            $player[$k] -= $v;
-        }
-    }
-    $player['temp'] = array();
-}
-
-
 function basic_num_to_word($num) {
     switch ($num) {
     case 0:

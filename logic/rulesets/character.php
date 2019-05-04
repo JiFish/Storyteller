@@ -64,8 +64,7 @@ class book_character extends book_none {
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = array('lastpage' => 1,
             'stuff' => [],
-            'creationdice' => '',
-            'temp' => []);
+            'creationdice' => '');
         // Roll/Set stats!
         roll_stats($p, $this->getStats());
         // Character Fluff - Gender, name, race etc.
@@ -247,10 +246,7 @@ class book_character extends book_none {
         // $icons contains icons to send
         $thisstat = $this->getStatFromAlias(strtolower($cmd[0]), $this->getStats());
         $statname = $stats[$thisstat]['friendly'];
-        // Allow negative for temp values, others have a min 0 unless allownegative set
-        if ($cmd[1] == 'temp') {
-            $allownegative = true;
-        } elseif (isset($stats[$thisstat]['allownegative']) && $stats[$thisstat]['allownegative']) {
+        if (isset($stats[$thisstat]['allownegative']) && $stats[$thisstat]['allownegative']) {
             $allownegative = true;
         } else {
             $allownegative = false;
@@ -271,11 +267,6 @@ class book_character extends book_none {
             $statref = &$player['max'][$thisstat];
             $max = 999;
             $statname = "Maximum $statname";
-        } elseif (strtolower($cmd[1]) == "temp") {
-            $player['temp'][$thisstat] = 0;
-            $statref = &$player['temp'][$thisstat];
-            $max = 999;
-            $statname = "Temp $statname Bonus";
         } elseif (!$cmd[1]) {
             $statref = &$player[$thisstat];
             $max = $player['max'][$thisstat];
@@ -311,11 +302,6 @@ class book_character extends book_none {
             (strtolower($cmd[1]) == "max") &&
             ($player[$thisstat] > $statref)) {
             $player[$thisstat] = $statref;
-        }
-
-        // Extra message when using temp stat adjustment
-        if (strtolower($cmd[1]) == "temp") {
-            $msg .= " _(This will reset after the next fight or test.)_";
         }
 
         sendqmsg($msg, $icons[($oldval <= $statref?0:1)]);

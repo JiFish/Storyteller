@@ -418,8 +418,6 @@ class book_lonewolf extends book_character_importable {
     //// !fight Lone Wolf version
     protected function runLoneWolfFight($opp_name, $opp_skill, $opp_end, $bonus = 0, $max_turns = 100, $flee = false) {
         $p = &$this->player;
-
-        apply_temp_stats($p);
         $sk = $p['skill']+$bonus;
         $cr = $sk - $opp_skill;
 
@@ -487,7 +485,6 @@ class book_lonewolf extends book_character_importable {
             }
         }
 
-        unapply_temp_stats($p);
         sendqmsg($out, ":crossed_swords:");
     }
 

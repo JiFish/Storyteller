@@ -395,8 +395,6 @@ class book_ff_basic extends book_character {
             $emojidice .= ($dicemod>0?'+':'').$dicemod;
         }
 
-        // Apply temp bonuses, if any
-        apply_temp_stats($player);
         // Check roll versus target number
         $target = $player[$stat];
         if ($roll+$dicemod <= $target) {
@@ -441,9 +439,6 @@ class book_ff_basic extends book_character {
                 $this->addCommand($fail_page);
             }
         }
-
-        // Remove temp bonuses, if any and clear temp bonus array
-        unapply_temp_stats($player);
     }
 
 
@@ -506,8 +501,7 @@ class book_ff_basic extends book_character {
             'stam' => $cmd[3],
             'luck' => 0,
             'weapon' => 0,
-            'shield' => false,
-            'temp' => []
+            'shield' => false
         );
         $out = $this->runFight(['player' => &$vsplayer,
                 'monstername' => $cmd[4],
@@ -675,9 +669,6 @@ class book_ff_basic extends book_character {
         $youlc = $referrers['you'];
         $youare = ucfirst($referrers['youare']);
         $your = ucfirst($referrers['your']);
-
-        // Apply temp bonuses, if any
-        apply_temp_stats($player);
 
         // Process maxrounds special cases
         $stop_when_hit_you = false;
@@ -864,17 +855,11 @@ class book_ff_basic extends book_character {
             $out .= "_($m's remaining $healthstatname: $mstam. $your remaining $healthstatname: ".$player['stam'].")_";
         }
 
-        // Remove temp bonuses, if any and clear temp bonus array
-        unapply_temp_stats($player);
-
         return $out;
     }
 
 
     protected function runSingleAttack(&$player, $mname, $mskill, $mstam, $mdamage = 2, $pdamage = 2) {
-        // Apply temp bonuses, if any
-        apply_temp_stats($player);
-
         $mroll = rand(1, 6); $mroll2 = rand(1, 6);
         $proll = rand(1, 6); $proll2 = rand(1, 6);
         $mattack = $mskill+$mroll+$mroll2;
@@ -909,9 +894,6 @@ class book_ff_basic extends book_character {
             $out = "_You avoid each others blows. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
         }
 
-        // Remove temp bonuses, if any and clear temp bonus array
-        unapply_temp_stats($player);
-
         return $out;
     }
 
@@ -938,9 +920,6 @@ class book_ff_basic extends book_character {
         $you = ucfirst($referrers['you']);
         $your = ucfirst($referrers['your']);
         $youare = ucfirst($referrers['youare']);
-
-        // Apply temp bonuses, if any
-        apply_temp_stats($player);
 
         // Fight loop
         $out = "";
@@ -976,9 +955,6 @@ class book_ff_basic extends book_character {
                 break;
             }
         }
-
-        // Remove temp bonuses, if any and clear temp bonus array
-        unapply_temp_stats($player);
 
         return $out;
     }

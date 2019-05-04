@@ -102,7 +102,6 @@ class book_alice extends book_character {
             'lastpage' => 1,
             'creationdice' => '',
             'stuff' => [],
-            'temp' => [],
             'name' => 'Alice',
             'adjective' => '',
             'gender' => 'Female',
@@ -170,8 +169,6 @@ class book_alice extends book_character {
     //// !test <stat> <target> ALICE VERSION
     protected function _cmd_test($cmd) {
         $player = &$this->player;
-        // Apply temp bonuses, if any
-        apply_temp_stats($player);
 
         $stat = $this->getStatFromAlias(strtolower($cmd[1]), $this->getStats());
         if (!in_array($stat, ['agility', 'logic', 'insanity', 'combat', 'endurance'])) {
@@ -243,9 +240,6 @@ class book_alice extends book_character {
                 $this->addCommand($fail_page);
             }
         }
-
-        // Remove temp bonuses, if any and clear temp bonus array
-        unapply_temp_stats($player);
     }
 
 
@@ -294,7 +288,6 @@ class book_alice extends book_character {
 
     protected function runAliceFight($fighters, $aliceinit = true) {
         $p = &$this->player;
-        apply_temp_stats($p);
         $out = "";
         foreach ($fighters as $k => $v) {
             $fighters[$k]['init'] = !$aliceinit;
@@ -351,7 +344,6 @@ class book_alice extends book_character {
         }
         $out .= "*Alice is victorious!*\n";
         $out .= "_Remaining endurance: ".$p['endurance'].'/'.$p['max']['endurance']."_";
-        unapply_temp_stats($p);
         return $out;
     }
 

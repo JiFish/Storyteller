@@ -178,8 +178,6 @@ class book_crystalm extends book_character {
     //// !test <stat> <target> SONIC VERSION
     protected function _cmd_test($cmd) {
         $player = &$this->player;
-        // Apply temp bonuses, if any
-        apply_temp_stats($player);
 
         $stat = $this->getStatFromAlias(strtolower($cmd[1]), $this->getStats());
         if (in_array($stat, ['str', 'dex', 'int'])) {
@@ -233,9 +231,6 @@ class book_crystalm extends book_character {
                 $this->addCommand($fail_page);
             }
         }
-
-        // Remove temp bonuses, if any and clear temp bonus array
-        unapply_temp_stats($player);
     }
 
 

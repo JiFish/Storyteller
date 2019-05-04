@@ -140,8 +140,7 @@ class book_ff_sob extends book_ff_basic {
             'stam' => $player['str'],
             'luck' => 0,
             'weapon' => 0,
-            'shield' => false,
-            'temp' => []
+            'shield' => false
         );
         $out = $this->runFight(['player' => &$bp,
                 'monstername' => ($cmd[1]?$cmd[1]:"Opponent"),

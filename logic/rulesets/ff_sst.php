@@ -72,8 +72,7 @@ class book_ff_sst extends book_ff_basic {
             'awayteam' => false,
             'luck' => 0,
             'weapon' => 0,
-            'shield' => false,
-            'temp' => []
+            'shield' => false
         );
         $cm['max']['skill'] = $cm['skill'];
         $cm['max']['stam']  = $cm['stam'];
@@ -326,7 +325,10 @@ class book_ff_sst extends book_ff_basic {
 
         // Apply combat penalty
         if ($crew['combatpenalty'] && in_array($order, $combat_orders)) {
-            $crew['temp']['skill'] += -2;
+            $crew['skill'] -= 2;
+            $appliedcp = true;
+        } else {
+            $appliedcp = false;
         }
 
         // Set the player to crew member
@@ -335,6 +337,11 @@ class book_ff_sst extends book_ff_basic {
         $this->processCommand($order.' '.$args);
         // Set the player back
         $this->player = &$mainplayer;
+
+        // Unapply combat penalty
+        if ($appliedcp) {
+            $crew['skill'] += 2;
+        }
 
         if ($crew['stam'] < 1) {
             $out = "*".$crew['name']." is dead!* :skull:\n";
@@ -373,9 +380,6 @@ class book_ff_sst extends book_ff_basic {
         $mweapons = &$input['oppweapons'];
         $mshields = &$input['oppshields'];
         $maxrounds = (isset($input['maxrounds'])? $input['maxrounds']: 50);
-
-        // Apply temp bonuses, if any
-        apply_temp_stats($player);
 
         // Fight loop
         $out = "";
@@ -443,9 +447,6 @@ class book_ff_sst extends book_ff_basic {
                 break;
             }
         }
-
-        // Remove temp bonuses, if any and clear temp bonus array
-        unapply_temp_stats($player);
 
         return $out;
     }

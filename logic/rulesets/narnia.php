@@ -165,8 +165,6 @@ class book_narnia extends book_character {
     //// !test <stat> <target> NARNIA VERSION
     protected function _cmd_test($cmd) {
         $player = &$this->player;
-        // Apply temp bonuses, if any
-        apply_temp_stats($player);
 
         $stat = strtolower($cmd[1]);
         if (in_array($stat, $this->getAllStatCommands())) {
@@ -184,9 +182,6 @@ class book_narnia extends book_character {
         $emojidice = diceemoji($d1).diceemoji($d2).'+'.$mod;
         $total = $d1+$d2+$mod;
         sendqmsg("_".$player['name']." tests $statname and got *$total*!_ ($emojidice)", ':game_die:');
-
-        // Remove temp bonuses, if any and clear temp bonus array
-        unapply_temp_stats($player);
     }
 
 

@@ -40,7 +40,6 @@ function dice($min = 1, $max = 6) {
 
 function baseroll(&$player, $statname, $val = 0) {
     $player[$statname] = $val;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = 99999;
 }
 
@@ -48,7 +47,6 @@ function baseroll(&$player, $statname, $val = 0) {
 function ff1die(&$player, $statname) {
     $d = dice();
     $player[$statname] = $d+6;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = $player[$statname];
     $player['creationdice'] .= ' '.diceemoji($d);
 }
@@ -57,7 +55,6 @@ function ff1die(&$player, $statname) {
 function ff2die(&$player, $statname) {
     $d1 = dice(); $d2 = dice();
     $player[$statname] = $d1+$d2+6;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = $player[$statname];
     $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
 }
@@ -66,7 +63,6 @@ function ff2die(&$player, $statname) {
 function ffstam(&$player, $statname) {
     $d1 = dice(); $d2 = dice();
     $player[$statname] = $d1+$d2+12;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = $player[$statname];
     $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
 }
@@ -75,7 +71,6 @@ function ffstam(&$player, $statname) {
 function loz3die(&$player, $statname) {
     $d1 = dice(); $d2 = dice(); $d3 = dice();
     $player[$statname] = $d1+$d2+$d3+2;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = 99999;
     $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2).' '.diceemoji($d3);
 }
@@ -84,7 +79,6 @@ function loz3die(&$player, $statname) {
 function twodieplus12(&$player, $statname) {
     $d1 = dice(); $d2 = dice();
     $player[$statname] = $d1+$d2+12;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = 99999;
     $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
 }
@@ -93,7 +87,6 @@ function twodieplus12(&$player, $statname) {
 function fffeardie(&$player, $statname) {
     $d = dice();
     $player[$statname] = 0;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = $d+6;
     $player['creationdice'] .= ' '.diceemoji($d);
 }
@@ -102,7 +95,6 @@ function fffeardie(&$player, $statname) {
 function lonewolfendurance(&$player, $statname) {
     $d = dice(0, 9);
     $player[$statname] = $d+20;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = $d+20;
     $player['creationdice'] .= ' '.genericemoji($d);
 }
@@ -111,7 +103,6 @@ function lonewolfendurance(&$player, $statname) {
 function lonewolfcombat(&$player, $statname) {
     $d = dice(0, 9);
     $player[$statname] = $d+10;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = 9999;
     $player['creationdice'] .= ' '.genericemoji($d);
 }
@@ -120,7 +111,6 @@ function lonewolfcombat(&$player, $statname) {
 function lonewolfgold(&$player, $statname) {
     $d = dice(0, 9);
     $player[$statname] = $d;
-    $player['temp'][$statname] = 0;
     $player['max'][$statname] = 50;
     $player['creationdice'] .= ' '.genericemoji($d);
 }
