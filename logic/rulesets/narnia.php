@@ -122,9 +122,8 @@ class book_narnia extends book_character {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand('test',    '_cmd_test', ['ms']);
-        $this->registerCommand('ng',      '_cmd_newgame', ['os', 'os', 'on', 'on', 'on', 'on', 'on', 'on']);
-        $this->registerCommand('newgame', '_cmd_newgame', ['os', 'os', 'on', 'on', 'on', 'on', 'on', 'on']);
+        $this->registerCommand('test',            '_cmd_test',    ['ms']);
+        $this->registerCommand(['newgame', 'ng'], '_cmd_newgame', ['os', 'os', 'on', 'on', 'on', 'on', 'on', 'on']);
     }
 
 

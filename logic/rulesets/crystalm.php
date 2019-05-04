@@ -143,14 +143,11 @@ class book_crystalm extends book_character {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand('stuff',    '_cmd_stats');
-        $this->registerCommand('i',        '_cmd_stats');
-        $this->registerCommand('test',     '_cmd_test',   ['s', 'onm', 'on', 'on']);
-        $this->registerCommand('lose',     '_cmd_drop',   ['oms']);
-        $this->registerCommand('drop',     '_cmd_drop',   ['oms']);
-        $this->registerCommand('use',      '_cmd_drop',   ['oms']);
-        $this->registerCommand('switch',   '_cmd_switch', ['s']);
-        $this->registerCommand('lockedin', '_cmd_lockedin');
+        $this->registerCommand('stuff',                 '_cmd_stats',  ['i']);
+        $this->registerCommand('test',                  '_cmd_test',   ['s', 'onm', 'on', 'on']);
+        $this->registerCommand(['lose', 'use', 'lose'], '_cmd_drop',   ['oms']);
+        $this->registerCommand('switch',                '_cmd_switch', ['s']);
+        $this->registerCommand('lockedin',              '_cmd_lockedin');
     }
 
 

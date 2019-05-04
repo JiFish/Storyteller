@@ -140,11 +140,10 @@ class book_sonic extends book_character {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand('test',    '_cmd_test', ['s', 'n', 'on', 'on']);
-        $this->registerCommand('ng',      '_cmd_newgame', ['on', 'on', 'on', 'on', 'on', 'on']);
-        $this->registerCommand('newgame', '_cmd_newgame', ['on', 'on', 'on', 'on', 'on', 'on']);
-        $this->registerCommand('fight',   '_cmd_fight', ['s', 'onm', 'oms', 'n']);
-        $this->registerCommand('hit',     '_cmd_hit');
+        $this->registerCommand('test',            '_cmd_test',    ['s', 'n', 'on', 'on']);
+        $this->registerCommand(['newgame', 'ng'], '_cmd_newgame', ['on', 'on', 'on', 'on', 'on', 'on']);
+        $this->registerCommand('fight',           '_cmd_fight',   ['s', 'onm', 'oms', 'n']);
+        $this->registerCommand('hit',             '_cmd_hit');
     }
 
 

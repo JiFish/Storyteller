@@ -160,23 +160,16 @@ class book_character extends book_none {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand('get',        '_cmd_get', ['l']);
-        $this->registerCommand('take',       '_cmd_get', ['l']);
-        $this->registerCommand('drop',       '_cmd_drop', ['l']);
-        $this->registerCommand('lose',       '_cmd_drop', ['l']);
-        $this->registerCommand('use',        '_cmd_drop', ['l']);
-        $this->registerCommand('ng',         '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl']);
-        $this->registerCommand('newgame',    '_cmd_newgame', ['osl', 'osl', 'osl', 'osl', 'osl']);
-        $this->registerCommand('undo',       '_cmd_undo');
-        $this->registerCommand('save',       '_cmd_save', ['on']);
-        $this->registerCommand('load',       '_cmd_load', ['on']);
-        $this->registerCommand('clearslots', '_cmd_clearslots', ['osl']);
-        $this->registerCommand('info',       '_cmd_info');
-        $this->registerCommand('status',     '_cmd_info');
-        $this->registerCommand('stats',      '_cmd_stats');
-        $this->registerCommand('s',          '_cmd_stats');
-        $this->registerCommand('stuff',      '_cmd_stuff');
-        $this->registerCommand('i',          '_cmd_stuff');
+        $this->registerCommand(['get', 'take'],         '_cmd_get',        ['l']);
+        $this->registerCommand(['drop', 'use', 'lose'], '_cmd_drop',       ['l']);
+        $this->registerCommand(['newgame', 'ng'],       '_cmd_newgame',    ['osl', 'osl', 'osl', 'osl', 'osl']);
+        $this->registerCommand('undo',                  '_cmd_undo');
+        $this->registerCommand('save',                  '_cmd_save',       ['on']);
+        $this->registerCommand('load',                  '_cmd_load',       ['on']);
+        $this->registerCommand('clearslots',            '_cmd_clearslots', ['osl']);
+        $this->registerCommand(['info', 'status'],      '_cmd_info');
+        $this->registerCommand(['stats', 's'],          '_cmd_stats');
+        $this->registerCommand(['stuff', 'i'],          '_cmd_stuff');
         // Stats commands
         foreach ($this->getAllStatCommands() as $s) {
             $this->registerCommand($s, '_cmd_stat_adjust', ['os', 'nm']);

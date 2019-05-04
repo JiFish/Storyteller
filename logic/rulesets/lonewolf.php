@@ -145,20 +145,17 @@ class book_lonewolf extends book_character_importable {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand('get',     '_cmd_get',     ['(\s+special|\s+sp)?', 'l']);
-        $this->registerCommand('take',    '_cmd_get',     ['(\s+special|\s+sp)?', 'l']);
-        $this->registerCommand('ng',      '_cmd_newgame', ['osl', 'osl', 'osl', 'osl']);
-        $this->registerCommand('newgame', '_cmd_newgame', ['osl', 'osl', 'osl', 'osl']);
-        $this->registerCommand('fight',   '_cmd_fight',   ['oms', 'n', 'n', 'onm', 'on']);
-        $this->registerCommand('attack',  '_cmd_attack',  ['oms', 'n', 'n', 'onm', 'on']);
-        $this->registerCommand('a',       '_cmd_attack',  ['oms', 'n', 'on', 'onm']);
-        $this->registerCommand('flee',    '_cmd_flee',    ['oms', 'n', 'onm', 'on']);
-        $this->registerCommand('rand',    '_cmd_roll',    ['on']);
-        $this->registerCommand('learn',   '_cmd_learn',   ['l']);
-        $this->registerCommand('forget',  '_cmd_forget',  ['l']);
-        $this->registerCommand('wield',   '_cmd_wield',   ['l']);
-        $this->registerCommand('unwield', '_cmd_unwield', ['l']);
-        $this->registerCommand('eat',     '_cmd_eat');
+        $this->registerCommand(['get', 'take'],   '_cmd_get',     ['(\s+special|\s+sp)?', 'l']);
+        $this->registerCommand(['newgame', 'ng'], '_cmd_newgame', ['osl', 'osl', 'osl', 'osl']);
+        $this->registerCommand('fight',           '_cmd_fight',   ['oms', 'n', 'n', 'onm', 'on']);
+        $this->registerCommand(['attack', 'a'],   '_cmd_attack',  ['oms', 'n', 'on', 'onm']);
+        $this->registerCommand('flee',            '_cmd_flee',    ['oms', 'n', 'onm', 'on']);
+        $this->registerCommand('rand',            '_cmd_roll',    ['on']);
+        $this->registerCommand('learn',           '_cmd_learn',   ['l']);
+        $this->registerCommand('forget',          '_cmd_forget',  ['l']);
+        $this->registerCommand('wield',           '_cmd_wield',   ['l']);
+        $this->registerCommand('unwield',         '_cmd_unwield', ['l']);
+        $this->registerCommand('eat',             '_cmd_eat');
     }
 
 

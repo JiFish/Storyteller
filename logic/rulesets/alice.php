@@ -126,10 +126,9 @@ class book_alice extends book_character {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand('ng',      '_cmd_newgame', ['on', 'on', 'on', 'on']);
-        $this->registerCommand('newgame', '_cmd_newgame', ['on', 'on', 'on', 'on']);
-        $this->registerCommand('test',    '_cmd_test',    ['s', 'onm', 'on', 'on']);
-        $this->registerCommand('fight',   '_cmd_fight',   ['(\sinit|\sinitiative)?',
+        $this->registerCommand(['newgame','ng'], '_cmd_newgame', ['on', 'on', 'on', 'on']);
+        $this->registerCommand('test',           '_cmd_test',    ['s', 'onm', 'on', 'on']);
+        $this->registerCommand('fight',          '_cmd_fight',   ['(\sinit|\sinitiative)?',
                 'oms', 'n', 'n',
                 'omsg', 'on', 'on',
                 'omsg', 'on', 'on',

@@ -206,12 +206,12 @@ class book_ff_sst extends book_ff_basic {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand('phaser',     '_cmd_gun', ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
+        $this->registerCommand('phaser',     '_cmd_gun',        ['onm', '(\sstun|\skill)?', 'oms', 'n', '(\sstun|\skill)?', 'on']);
         $this->registerCommand('shipbattle', '_cmd_shipbattle', ['oms', 'n', 'n']);
-        $this->registerCommand('recruit',    '_cmd_recruit', ['s', 'os', 'on', 'on', 'os', 'os']);
-        $this->registerCommand('beam',       '_cmd_beam', ['(\sup|\sdown)', 'os', 'os', 'os', 'os', 'os']);
-        $this->registerCommand('everyone',   '_cmd_everyone', ['l']);
-        $this->registerCommand('awayteam',   '_cmd_everyone', ['l']);
+        $this->registerCommand('recruit',    '_cmd_recruit',    ['s', 'os', 'on', 'on', 'os', 'os']);
+        $this->registerCommand('beam',       '_cmd_beam',       ['(\sup|\sdown)', 'os', 'os', 'os', 'os', 'os']);
+        $this->registerCommand('everyone',   '_cmd_everyone',   ['l']);
+        $this->registerCommand('awayteam',   '_cmd_everyone',   ['l']);
         foreach (['no1', 'science', 'medic', 'engineer', 'security', 'guard'] as $pos) {
             $this->registerCommand($pos, '_cmd_order', ['s', 'ol']);
         }

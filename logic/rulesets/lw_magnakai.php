@@ -62,7 +62,7 @@ class book_lw_magnakai extends book_lw_kai {
 
     protected function registerCommands() {
         parent::registerCommands();
-        $this->registerCommand('master',   '_cmd_master', ['ms', 'on']);
+        $this->registerCommand('master', '_cmd_master', ['ms', 'on']);
     }
 
 

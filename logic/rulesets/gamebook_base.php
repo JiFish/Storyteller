@@ -111,10 +111,19 @@ abstract class gamebook_base {
 
 
     protected function registerCommand($name, $function, $args = []) {
+        if (is_array($name)) {
+            $aliases = $name;
+            $name = array_shift($aliases);
+        } else {
+            $aliases = [];
+        }
         $this->commands[$name] = array(
             'func' => $function,
             'args' => $args
         );
+        foreach ($aliases as $a) {
+            $this->commands[$a] = $this->commands[$name];
+        }
     }
 
 
