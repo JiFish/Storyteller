@@ -41,15 +41,10 @@ abstract class gamebook_base {
     }
 
 
-    public function processCommandList($commandqueue) {
+    public function processCommandList() {
         global $config;
 
-        $this->commandqueue = $commandqueue;
         $commandqueue = &$this->commandqueue;
-
-        // Filter commands using the disabled list. Do this here so macros and $autorun
-        // can still use disabled commands
-        $this->filterCommandList();
 
         $executions = 0;
         while (sizeof($commandqueue) > 0) {
@@ -75,34 +70,41 @@ abstract class gamebook_base {
     }
 
 
-    // Filter an array of commands by a disabled list and remove entries
-    // that are on the disabled list
-    protected function filterCommandList() {
+    // Take a command with params and determine if it is on the disabled list
+    protected function isCommandDisabled($str) {
         global $config;
 
-        if (sizeof($config->disabled_commands) > 0) {
-            foreach ($this->commandqueue as $key => $cmd) {
-                // Determine end of command word.
-                // Either the 1st space of the end of the string
-                $cmdend = stripos($cmd, ' ');
-                if ($cmdend === false) {
-                    $cmdend = strlen($cmd);
-                }
-                foreach ($config->disabled_commands as $dc) {
-                    // Look for match
-                    if (strtolower(substr($cmd, 0, $cmdend)) == strtolower($dc)) {
-                        unset($this->commandqueue[$key]);
-                        break;
-                    }
-                }
+        if (sizeof($config->disabled_commands) < 1) {
+            return false;
+        }
+
+        // Split command from params
+        $parts = preg_split('/\s+/', strtolower($str));
+        $cmd = $parts[0];
+        // Look for match
+        foreach ($config->disabled_commands as $dc) {
+            if ($cmd == strtolower($dc)) {
+                return true;
             }
         }
+
+        return false;
     }
 
 
     // Adds a new command to the command list
-    protected function addCommand($cmd) {
-        return array_unshift($this->commandqueue, $cmd);
+    public function addCommand($cmd, $end = false, $safe = true) {
+        if ($safe) {
+            if ($this->isCommandDisabled($cmd)) {
+                return;
+            }
+        }
+
+        if ($end) {
+            array_push($this->commandqueue, $cmd);
+        } else {
+            array_unshift($this->commandqueue, $cmd);
+        }
     }
 
 

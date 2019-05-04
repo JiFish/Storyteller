@@ -29,5 +29,9 @@ foreach ($commandlist as $key => $command) {
     }
 }
 
-$gamebook->processCommandList($commandlist);
+foreach ($commandlist as $command) {
+    $gamebook->addCommand($command, true, true);
+}
+
+$gamebook->processCommandList();
 $gamebook->savePlayer();

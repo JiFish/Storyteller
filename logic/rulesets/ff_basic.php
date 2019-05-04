@@ -615,8 +615,9 @@ class book_ff_basic extends book_character {
         $fullcmd = trim($eggs[array_rand($eggs)]);
 
         $cmdlist = explode(";", $fullcmd);
-        for ($k = count($cmdlist)-1; $k >= 0; $k--) {
-            $this->addCommand($cmdlist[$k]);
+        foreach ($cmdlist as $cmd) {
+            // Easter eggs are assumed to be SAFE
+            $this->addCommand($cmd, true, true);
         }
     }
 

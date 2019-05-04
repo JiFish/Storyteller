@@ -153,7 +153,8 @@ class book_none extends gamebook_base {
             if (array_key_exists($page, $autorun)) {
                 $cmdlist = explode(";", $autorun[$page]);
                 for ($k = count($cmdlist)-1; $k >= 0; $k--) {
-                    $this->addCommand($cmdlist[$k]);
+                    // Autorun commands are assumed to be SAFE
+                    $this->addCommand($cmd, false, true);
                 }
             }
         }
@@ -323,7 +324,8 @@ class book_none extends gamebook_base {
 
         $cmdlist = explode(";", $fullcmd);
         for ($k = count($cmdlist)-1; $k >= 0; $k--) {
-            $this->addCommand($cmdlist[$k]);
+            // Macro commands are assumed to be SAFE
+            $this->addCommand($cmd, false, true);
         }
     }
 
