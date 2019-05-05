@@ -9,7 +9,7 @@ function senddirmsg($message, $user = false) {
     if (!$user) {
         $user = $_POST['user_id'];
     }
-    return sendmsg($message, true, ':open_book:', '@'.$user);
+    return sendmsg($message, false, ':open_book:', '@'.$user);
 }
 
 
