@@ -107,8 +107,10 @@ class book_alice extends book_character {
             'gender' => 'Female',
             'race' => 'Human',
             'colourhex' => '#02a2dc',
-            'emoji' => $config->root.'/images/custom_avatars/alice.png'
+            'emoji' => $config->root.'/images/custom_avatars/alice.png',
+            'deck' => range(0,51)
         );
+        shuffle($p['deck']);
         // Roll/Set stats!
         roll_stats($p, $this->getStats());
         // Random stats array
@@ -134,6 +136,7 @@ class book_alice extends book_character {
         $this->registerCommand('test',            '_cmd_test',    ['s', 'onm', 'on', 'on']);
         $this->registerCommand(['draw', 'deal'],  '_cmd_deal',    ['on']);
         $this->registerCommand('peek',            '_cmd_peek');
+        $this->registerCommand('shuffle',         '_cmd_shuffle');
         $this->registerCommand('fight',           '_cmd_fight',   ['(\sinit|\sinitiative)?',
                 'oms', 'n', 'n',
                 'omsg', 'on', 'on',
@@ -248,6 +251,7 @@ class book_alice extends book_character {
     private function deck($todraw = 1) {
         $suitnames = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
         $cardnames = ['Ace', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King'];
+        $suitcodes = [9824,9829,9830,9827];
         $deck = &$this->player['deck'];
         $out = [
             'val' => 0,
@@ -266,6 +270,7 @@ class book_alice extends book_character {
             $s = $draw % 4;
             $out['emoji'] .= cardemoji($v+1, $s).' ';
             $out['text'] .= $cardnames[$v]." of ".$suitnames[$s].' ';
+            $out['text'] .= mb_convert_encoding('&#'.$suitcodes[$s].';', 'UTF-8', 'HTML-ENTITIES').' ';
             if ($v == 0) {              // ACE
                 $out['val'] += 12;
                 $out['autopass'] = true;
@@ -375,19 +380,28 @@ class book_alice extends book_character {
         if ($numcards > 1) {
             $out .= " *Total: $t*";
         }
-        sendqmsg($out, ":game_die:");
+        sendqmsg($out, ":flower_playing_cards:");
     }
 
 
-    //// !deal [x] (deal x cards)
+    //// !peek (peek at draw pile and then shuffle it)
     protected function _cmd_peek($cmd) {
-        $discard = range(0, 51);
-        $discard = array_diff($discard, $this->player['deck']);
-        $out = "Peeking at the discard pile...";
-        foreach ($discard as $d) {
+        $pile = $this->player['deck'];
+        sort($pile);
+        $out = "Cards left in draw pile...\n";
+        foreach ($pile as $d) {
             $out .= ' '.cardemoji(floor($d/4)+1, $d%4);
         }
-        sendqmsg($out, ":game_die:");
+        sendqmsg($out, ":flower_playing_cards:");
+    }
+
+
+    //// !shuffle (Put discard pile back in deck and shuffle)
+    protected function _cmd_shuffle($cmd) {
+        $deck = &$this->player['deck'];
+        $deck = range(0, 51);
+        shuffle($deck);
+        sendqmsg('The deck of fate has been shuffled...', ":flower_playing_cards:");
     }
 
 
