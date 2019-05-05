@@ -39,7 +39,7 @@ class Config {
         // Load slack section
         $this->slack_hook = $this->get('slack_hook', '', 'slack');
         $this->slack_token = $this->get('slack_token', '', 'slack');
-        $this->discord_mode = $this->get('discord_mode', 'slack');
+        $this->discord_mode = $this->get('discord_mode', false, 'slack');
 
         // Load general section
         $this->default_book = $this->get('default_book');
