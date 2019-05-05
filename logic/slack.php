@@ -105,24 +105,41 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     }
 
     $data_string = json_encode($data);
-    $ch = curl_init(SLACK_HOOK);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HEADER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_string))
-    );
-    //Execute CURL
-    $result = get_headers_from_curl_response(curl_exec($ch));
+    // Send to incoming hook!
+    $result = send_json_payload($data_string);
 
-    // Look for discord rate limit header
+    // Look for discord rate limit header, and set delay
     if (isset($result['x-ratelimit-remaining']) && $result['x-ratelimit-remaining'] == 0) {
         $limittime = $result['x-ratelimit-reset'];
     }
 
-    return true;
+    // Look for Too Many Requests (slack rate-limit method)
+    // This isn't as nice as the above. We just try to resend once
+    // to avoid complication
+    if ($result['http_code'] == 'HTTP/1.1 429 Too Many Requests' &&
+        is_numeric($result['Retry-After'])) {
+            sleep($result['Retry-After']+2);
+            send_json_payload($data_string);
+    }
+}
+
+
+function send_json_payload($json) {
+    global $config;
+
+    $ch = curl_init($config->slack_hook);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($json))
+    );
+    //Execute CURL
+    $result = get_headers_from_curl_response(curl_exec($ch));
+    curl_close($ch);
+    return $result;
 }
 
 
