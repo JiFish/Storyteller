@@ -37,12 +37,13 @@ async def on_message(message):
 
     # Look for messages that match our hooks
     for h in HOOKS:
-        if (message.channel.name in h.channels) and (message.content.startswith(h.trigger_word)):
-            r = requests.post(h.url, data={'text': message.content, 'trigger_word': h.trigger_word, 'token': h.token})
+        if (message.channel.name in h['channels']) and (message.content.startswith(h['trigger_word'])):
+            print('Passing along command "'+message.content+'"')
+            r = requests.post(h['url'], data={'text': message.content, 'trigger_word': h['trigger_word'], 'token': h['token']})
             print(r.status_code, r.reason)
 
 @client.event
 async def on_ready():
-    print('Logged in as'+client.user.name+'#'+client.user.id)
+    print('Logged in as '+client.user.name+' #'+client.user.id)
 
 client.run(TOKEN)
