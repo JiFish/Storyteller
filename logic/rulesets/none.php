@@ -169,7 +169,7 @@ class book_none extends gamebook_base {
         } elseif (file_exists($imgpath.'.png')) {
             sendimgmsg($story, $config->root.'/'.$imgpath.'.png');
         } else {
-            sendqmsg($story);
+            sendmsg($story);
         }
     }
 
