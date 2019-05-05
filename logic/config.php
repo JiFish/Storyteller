@@ -17,6 +17,7 @@ class Config {
     public $book_file;
     public $book_rules;
     public $book_images_dir;
+    public $word_wrap;
 
     public function __construct($fn = 'config.ini') {
         if (!file_exists($fn)) {
@@ -42,6 +43,7 @@ class Config {
 
         // Load general section
         $this->default_book = $this->get('default_book');
+        $this->word_wrap = $this->get('word_wrap', 100);
         $this->character_rolls = $this->get('character_rolls', 'normal');
         $this->disabled_commands = $this->get('disable_cmd', []);
         $this->max_executions = $this->get('max_executions', 30);

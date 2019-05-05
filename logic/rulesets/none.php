@@ -87,7 +87,9 @@ class book_none extends gamebook_base {
 
         // Wrapping and formatting
         $story = str_replace("\n", "\n\n", $story);
-        $story = wordwrap($story, 100);
+        if ($config->word_wrap) {
+            $story = wordwrap($story, $config->word_wrap);
+        }
         $story = explode("\n", $story);
         for ($l = 0; $l < sizeof($story); $l++) {
             if (trim($story[$l]) == "") {
