@@ -1,6 +1,8 @@
 <?php
 
 $limittime = false;
+$message_queue = "";
+$message_queue_icon = false;
 
 // Send a direct message to a user or channel on slack
 function senddirmsg($message, $user = false) {
@@ -12,8 +14,14 @@ function senddirmsg($message, $user = false) {
 
 
 // Send a quick and basic message to slack
-function sendqmsg($message, $icon = ':open_book:') {
-    return sendmsg($message, true, $icon);
+// Attempt to queue these
+function sendqmsg($message, $icon = false) {
+    global $message_queue, $message_queue_icon;
+    $message_queue .= $message."\n";
+    // First provided icon gets priority
+    if (!$message_queue_icon && $icon) {
+        $message_queue_icon = $icon;
+    }
 }
 
 
@@ -29,7 +37,17 @@ function sendimgmsg($message, $imgurl, $icon = ':open_book:') {
 // Full whistles and bells send message to slack
 // Normally use one of the convenience functions above
 function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = false) {
-    global $config;
+    global $config, $message_queue, $message_queue_icon;
+
+    // Add queued messages and use queued icon if they exist
+    if ($message_queue) {
+        $message = trim($message_queue.$message);
+        $message_queue = "";
+    }
+    if ($message_queue_icon) {
+        $icon = $message_queue_icon;
+        $message_queue_icon = false;
+    }
 
     // Split long messages for discord
     if ($config->discord_mode && strlen($message) > 1975) {

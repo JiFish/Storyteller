@@ -159,7 +159,7 @@ class book_none extends gamebook_base {
             }
         }
 
-        $story = $this->getFormatedStory($player['lastpage']);
+        $story = $this->getFormatedStory($player['lastpage'])."\n";
 
         $imgpath = "images/".$config->book_images_dir."/".$player['lastpage'];
         if (file_exists($imgpath.'.jpg')) {
@@ -364,7 +364,7 @@ class book_none extends gamebook_base {
 
         $this->savePlayer();
         $config->changeBookSetting($bookid);
-        sendqmsg("*Opening ".$config->book_name."!*", ':interrobang:');
+        sendmsg("*Opening ".$config->book_name."!*", false, ':interrobang:');
         // Bit of a hack, we have to die() here so we don't run any commands under the wrong rules
         die();
     }

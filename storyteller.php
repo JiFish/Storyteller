@@ -35,3 +35,8 @@ foreach ($commandlist as $command) {
 
 $gamebook->processCommandList();
 $gamebook->savePlayer();
+
+// Deal with messages left in the queue
+if ($message_queue) {
+    sendmsg("");
+}
