@@ -172,7 +172,8 @@ class book_ff_magic extends book_ff_basic {
                     call_user_func([$this, $s['func']]);
                 }
             } elseif (isset($s['addcmd'])) {
-                $this->addCommand($s['addcmd']);
+                // These commands are assumed to be SAFE
+                $this->addCommand($s['addcmd'], false, false);
             }
         }
     }
