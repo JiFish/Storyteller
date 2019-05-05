@@ -203,16 +203,14 @@ delay when using an emoji for the first time.
 
 ## Usage Tips and Hints
 - Remember, you have to enforce the rules!
-- `!help` to see some basic commands. Or see commands.md or commands.html for
-the full list
+- `!help` to see some basic commands. Help will be customised depending on the
+ruleset.
+- If a book adds complications to the normal `!fight` rules. Check `!help`
+to see if there is parameter or alternate command that can help you. The
+Fighting Fantasy rulesets has several alternate fight rules programmed. Most
+others allow you to stop fights after a given number of rounds.
 - If the book asks you to do something there isn't a command for, you can
 always roll dice with `!roll` and apply any effects manually.
-- `!use` doesn't do anything on it's own. You must still apply the item's
-effects manually. e.g. `!use Potion of Skill;!skill 99`
-- If a book asks you to do something after a certain number of
-rounds in a fight, you can make the fight end early by putting the number of
-rounds end the end of the command. e.g. To stop after 3 rounds: `!fight
-Squirrel 5 5 3`
 
 ## Technical Information
 **Do you accept bug reports?**
