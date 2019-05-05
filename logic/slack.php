@@ -50,7 +50,12 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     }
 
     // Split long messages for discord
-    if ($config->discord_mode && strlen($message) > 1975) {
+    if ($config->discord_mode) {
+        $message_max_chars = 1990;
+    } else {
+        $message_max_chars = 19990;
+    }
+    if (strlen($message) > $message_max_chars) {
         $m = str_replace(' ', '¥', $message);
         $m = str_replace("\n", " ", $m);
         $m = wordwrap($m, 1950, "[BREAK]", true);
