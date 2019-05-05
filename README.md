@@ -14,8 +14,7 @@ but does not strictly enforce rules - replicating the experience of playing
 with a real book and dice.
 
 Storyteller is programmed in PHP, requires no database and is state-based. This
-means it can be installed on an ordinary web-server, without the need to setup
-a complicated chat-bot.
+means it can be installed on an ordinary web-server.
 
 * Discord is also supported, with some caveats, see *Using Discord* below.
 
