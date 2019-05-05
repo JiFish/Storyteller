@@ -108,7 +108,7 @@ class book_alice extends book_character {
             'race' => 'Human',
             'colourhex' => '#02a2dc',
             'emoji' => $config->root.'/images/custom_avatars/alice.png',
-            'deck' => range(0,51)
+            'deck' => range(0, 51)
         );
         shuffle($p['deck']);
         // Roll/Set stats!
@@ -251,7 +251,7 @@ class book_alice extends book_character {
     private function deck($todraw = 1) {
         $suitnames = ['Spades', 'Hearts', 'Diamonds', 'Clubs'];
         $cardnames = ['Ace', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King'];
-        $suitcodes = [9824,9829,9830,9827];
+        $suitcodes = [9824, 9829, 9830, 9827];
         $deck = &$this->player['deck'];
         $out = [
             'val' => 0,

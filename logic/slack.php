@@ -118,8 +118,8 @@ function sendmsg($message, $attachments = false, $icon = ':open_book:', $chan = 
     // to avoid complication
     if ($result['http_code'] == 'HTTP/1.1 429 Too Many Requests' &&
         is_numeric($result['Retry-After'])) {
-            sleep($result['Retry-After']+2);
-            send_json_payload($data_string);
+        sleep($result['Retry-After']+2);
+        send_json_payload($data_string);
     }
 }
 
