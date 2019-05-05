@@ -86,15 +86,30 @@ php tools/install_lonewolf.php
 Consider making a donation to Project Aon: https://www.projectaon.org/en/Main/HelpUs#donations
 
 #### Option 2: Import a book you own
-Unless you are lucky enough to find the book you want in an eBook format, your
-only option is to scan and OCR the text yourself from a paper book. One you've
-converted the book to raw text, you can use can use the `bookconvert.php`
-script in the *tools* directory to help you convert raw text to the correct
-format. e.g.
+Storyteller comes with two tools for importing existing texts: one for plain
+text and one for htmlz. Use htmlz if your book has images. If you own the
+book in a eBook format, you can use the tool calibre (https://calibre-ebook.com/)
+to convert it to one of these two formats.
+
+Many books, notably Fighting Fantasy, are not currently available in eBook
+formats. Your only option here is to scan and OCR the text yourself!
+
+The text is converted to a php array. See `jofm.php` in *books* for an example
+book. The converters aren't perfect and you may need to clean up the output
+manually.
+
+##### Import from plain text .txt file
+Use the bookconvert.php script in the *tools* directory e.g.
 ```
-php tools/bookconvert.php mybook.txt > books/mybook.php
+php tools/bookconvert.php mybook.txt mybook
 ```
-See `jofm.php` in *books* for an example book.
+
+##### Import from .htmlz file
+htmlzconvert.php will attempt to extract images from the book to Storyteller's
+images directory at the same time as converting the text.
+```
+php tools/htmlzconvert.php mybook.htmlz mypicturebook
+```
 
 #### Option 3: Write your own adventure
 Perhaps one of the best ways to get a story in to the bot is to write your own.

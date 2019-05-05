@@ -4,8 +4,8 @@ ini_set('mbstring.substitute_character', "none");
 
 // If we were called directly
 if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {
-    if (!isset($argv[1])) {
-        die("Usage: bookconvert.php [book.txt]");
+    if (!isset($argv[1]) || !isset($argv[2])) {
+        die("Usage: bookconvert.php [book.txt] [bookid]\n(bookid will be used for output filename)");
     }
 
     if (!file_exists($argv[1])) {
@@ -14,8 +14,8 @@ if ( basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"]) ) {
 
     $book = convert_text(file_get_contents($argv[1]));
 
-    echo "<?php\n\n";
-    echo '$book = '.var_export($book, 1).";";
+    echo "Exporting book to books/$bookid.php...".PHP_EOL;
+    file_put_contents(dirname(__FILE__)."/../books/$bookid.php", "<?php\n\n\$book = ".var_export($book, 1).";");
 }
 
 // Outputs assoc array
@@ -29,7 +29,9 @@ function convert_text($text) {
         if ($line == "") { continue; }
         if (ctype_digit($line)) {
             if ($line != $expected_num) {
-                die("Unexpected page number. Expected $expected_num, got $line");
+                echo "Unexpected page number. Expected $expected_num, got $line.".PHP_EOL;
+                echo "Converter expects each new section number to be on it's own line.";
+                die();
             }
             $book[] = trim($page);
             $page = "";
