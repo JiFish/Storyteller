@@ -14,13 +14,13 @@ class book_ff_wofm extends book_ff_basic {
         $p['creationdice'] .= ' '.diceemoji($d);
         switch ($d) {
         case 1: case 2:
-            $p['stuff'][] = 'Potion of Skill';
+            $p['stuff'][] = 'Potion of Skill [skill full]';
             break;
         case 3: case 4:
-            $p['stuff'][] = 'Potion of Strength';
+            $p['stuff'][] = 'Potion of Strength [stam full]';
             break;
         case 5: case 6:
-            $p['stuff'][] = 'Potion of Luck';
+            $p['stuff'][] = 'Potion of Luck [luck full]';
             // If the potion of luck is chosen, the player get 1 bonus luck
             $p['luck']++;
             $p['max']['luck']++;
