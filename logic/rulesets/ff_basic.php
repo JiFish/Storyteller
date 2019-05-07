@@ -85,11 +85,16 @@ class book_ff_basic extends book_character {
         // Add shield flag
         $p['shield'] = false;
         // Add fantasy races
-        if (!$race || $race = '?') {
-            $races = array('Human', 'Human', 'Human', 'Elf', 'Djinnin', 'Catling', 'Dwarf');
-            $needsskintone = array(true, true, true, true, false, false, true);
+        $races = array('Human', 'Human', 'Human', 'Elf', 'Djinnin', 'Catling', 'Dwarf');
+        $needsskintone = array(true, true, true, true, false, false, true);
+        if (!$race || $race == '?') {
             $selection = array_rand($races);
             $p['race'] = $races[$selection];
+        } else {
+            $selection = array_search($race, $races);
+            if ($selection === false) {
+                $selection = 0;
+            }
         }
         if ((!$name || $name == '?') && $p['race'] == 'Catling') {
             $namesfile = 'resources/cat_names.txt';

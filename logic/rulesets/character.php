@@ -80,7 +80,11 @@ class book_character extends book_none {
             $gender = 'Female';
         }
         $p['gender'] = ucfirst(strtolower($gender));
-        $p['race'] = 'Human';
+        if (!$race || $race == '?') {
+            $p['race'] = 'Human';
+        } else {
+            $p['race'] = ucfirst($race);
+        }
         // Name and adjective
         if (!$name || $name == '?') {
             if ($gender=='Male') {
