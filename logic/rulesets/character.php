@@ -176,7 +176,7 @@ class book_character extends book_none {
         $this->registerCommand(['stuff', 'i'],     '_cmd_stuff');
         // Stats commands
         foreach ($this->getAllStatCommands() as $s) {
-            $this->registerCommand($s, '_cmd_stat_adjust', ['os', 'nm']);
+            $this->registerCommand($s, '_cmd_stat_adjust', ['(\s+max)?', "(\s+[+\-]?[0-9]+|\s+full)?"]);
         }
     }
 
@@ -286,13 +286,17 @@ class book_character extends book_none {
         }
         if (strtolower($cmd[1]) == "max") {
             $statref = &$player['max'][$thisstat];
-            $max = 999;
+            $max = 9999;
             $statname = "Maximum $statname";
         } elseif (!$cmd[1]) {
             $statref = &$player[$thisstat];
             $max = $player['max'][$thisstat];
         }
-        $val = $cmd[2];
+        if (strtolower($cmd[2]) == 'full') {
+            $val = $max;
+        } else {
+            $val = $cmd[2];
+        }
 
         // apply adjustment to stat
         $oldval = $statref;
