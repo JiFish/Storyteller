@@ -422,6 +422,8 @@ class book_ff_basic extends book_character {
             if (isset($success_page)) {
                 $this->addCommand($success_page);
             }
+            // return successful
+            return true;
         }
         else {
             if ($stat == "luck") {
@@ -443,6 +445,8 @@ class book_ff_basic extends book_character {
             if (isset($fail_page)) {
                 $this->addCommand($fail_page);
             }
+            // return failure
+            return false;
         }
     }
 
