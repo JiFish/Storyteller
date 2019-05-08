@@ -405,7 +405,7 @@ class book_ff_basic extends book_character {
         if ($roll+$dicemod <= $target) {
             if ($stat == "luck") {
                 $player['luck']--;
-                sendqmsg("_*$youare lucky*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_", ':four_leaf_clover:');
+                sendqmsg("_*$youare lucky*_\n_(_ $emojidice _vs $target, Remaining luck ".$player['luck'].")_", ':four_leaf_clover:');
             } else {
                 if (!isset($sinfo['icons'])) {
                     $icon = ':smile:';
@@ -416,7 +416,7 @@ class book_ff_basic extends book_character {
                 }
                 $text = str_replace('{youare}', $youare, $sinfo['testpass']);
                 $text = str_replace('{you}', $you, $text);
-                sendqmsg("_*$text*_\n_(_ $emojidice _ vs $target)_", $icon);
+                sendqmsg("_*$text*_\n_(_ $emojidice _vs $target)_", $icon);
             }
             // Show follow up page
             if (isset($success_page)) {
@@ -426,7 +426,7 @@ class book_ff_basic extends book_character {
         else {
             if ($stat == "luck") {
                 $player['luck']--;
-                sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_", ':lightning:');
+                sendqmsg("_*$youare unlucky.*_\n_(_ $emojidice _vs $target, Remaining luck ".$player['luck'].")_", ':lightning:');
             } else {
                 if (!isset($sinfo['icons'])) {
                     $icon = ':frowning:';
@@ -437,7 +437,7 @@ class book_ff_basic extends book_character {
                 }
                 $text = str_replace('{youare}', $youare, $sinfo['testfail']);
                 $text = str_replace('{you}', $you, $text);
-                sendqmsg("_*$text*_\n_(_ $emojidice _ vs $target)_", $icon);
+                sendqmsg("_*$text*_\n_(_ $emojidice _vs $target)_", $icon);
             }
             // Show follow up page
             if (isset($fail_page)) {
