@@ -82,7 +82,8 @@ can skip section 3. Run the script and follow the on-screen prompts:
 php tools/install_lonewolf.php
 ```
 
-Consider making a donation to Project Aon: https://www.projectaon.org/en/Main/HelpUs#donations
+It is your responsibility to comply with with the Project Aon Licence. Also,
+consider making a donation: https://www.projectaon.org/
 
 #### Option 2: Import a book you own
 Storyteller comes with two tools for importing existing texts: one for plain
@@ -210,6 +211,10 @@ Fighting Fantasy rulesets has several alternate fight rules programmed. Most
 others allow you to stop fights after a given number of rounds.
 - If the book asks you to do something there isn't a command for, you can
 always roll dice with `!roll` and apply any effects manually.
+
+## Legal
+It is YOUR responsibility to comply with copyright laws and determine what is
+fair-use.
 
 ## Technical Information
 **Do you accept bug reports?**
