@@ -176,7 +176,7 @@ class book_character extends book_none {
         $this->registerCommand(['stuff', 'i'],     '_cmd_stuff');
         // Stats commands
         foreach ($this->getAllStatCommands() as $s) {
-            $this->registerCommand($s, '_cmd_stat_adjust', ['(\s+max)?', "(\s+[+\-]?[0-9]+|\s+full)?"]);
+            $this->registerCommand($s, '_cmd_stat_adjust', ['(\s+max)?', "osl"]);
         }
     }
 
@@ -336,26 +336,50 @@ class book_character extends book_none {
 
         // apply adjustment to stat
         $oldval = $statref;
-        if ($val[0] == "+") {
-            $val = substr($val, 1);
-            $statref += (int)$val;
-            if ($statref > $max) {
-                $statref = $max;
+        // Normal numeric stats
+        if (!is_bool($statref)) {
+            // Check $val can be applied
+            if (!is_numeric($val)) {
+                sendqmsg("$val not understood", ":interrobang:");
+                return;
             }
-            $msg = "*Added $val to $your$statname, now $statref.*";
-        } else if ($val[0] == "-") {
-            $val = substr($val, 1);
-            $statref -= (int)$val;
-            if ($statref < 0 && !$allownegative) {
-                $statref = 0;
+            if ($val[0] == "+") {
+                $val = substr($val, 1);
+                $statref += (int)$val;
+                if ($statref > $max) {
+                    $statref = $max;
+                }
+                $msg = "*Added $val to $your$statname, now $statref.*";
+            } else if ($val[0] == "-") {
+                $val = substr($val, 1);
+                $statref -= (int)$val;
+                if ($statref < 0 && !$allownegative) {
+                    $statref = 0;
+                }
+                $msg = "*Subtracted $val from $your$statname, now $statref.*";
+            } else {
+                $statref = (int)$val;
+                if ($statref > $max) {
+                    $statref = $max;
+                }
+                $msg = "*Set $your$statname to $statref.*";
             }
-            $msg = "*Subtracted $val from $your$statname, now $statref.*";
-        } else {
-            $statref = (int)$val;
-            if ($statref > $max) {
-                $statref = $max;
+        }
+        // Bool stats
+        else {
+            $state = strtolower($val);
+            if ((is_numeric($state) && $state > 0) || in_array($state, ['on', 'true', 'yes'])) {
+                $state = true;
+            } elseif ((is_numeric($state) && $state < 1) || in_array($state, ['off', 'false', 'no'])) {
+                $state = false;
+            } else {
+                sendqmsg("$val not understood, Try 'on' or 'off'.", ":interrobang:");
+                return;
             }
-            $msg = "*Set $your$statname to $statref.*";
+
+            $statref = $state;
+            $state = ($statref?'On':'Off');
+            $msg = "*$your$statname now $state.*";
         }
 
         // When reducing the max value, we may also need to reduce the current value

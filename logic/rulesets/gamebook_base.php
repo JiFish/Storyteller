@@ -243,7 +243,7 @@ abstract class gamebook_base {
             function ($matches) use ($sa) {
                 if (array_key_exists($matches[1], $sa)) {
                     if (is_bool($sa[$matches[1]])) {
-                        return $sa[$matches[1]]?'yes':'no';
+                        return $sa[$matches[1]]?'on':'off';
                     }
                     return $sa[$matches[1]];
                 }

@@ -116,6 +116,12 @@ function lonewolfgold(&$player, $statname) {
 }
 
 
+function boolstat(&$player, $statname) {
+    $player[$statname] = false;
+    $player['max'][$statname] = 1;
+}
+
+
 function roll_stats(&$player, $stats) {
     foreach ($stats as $statname => $v) {
         if (!isset($v['roll'])) {
