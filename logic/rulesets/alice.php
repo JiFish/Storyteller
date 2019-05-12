@@ -44,6 +44,10 @@ class book_alice extends book_character {
                 'alias' => ['dmg'],
                 'roll' => 2,
             ],
+            'shield' => [
+                'friendly' => 'Shield',
+                'roll' => 'boolstat',
+            ],
             'cc' => [
                 'friendly' => 'Curiouser and Curiouser',
                 'roll' => 3,
@@ -80,7 +84,7 @@ class book_alice extends book_character {
                 'value' => $player['insanity'],
                 'short' => true],
             ['title' => 'Endurance',
-                'value' => $player['endurance'].'/'.$player['max']['endurance'],
+                'value' => $player['endurance'].'/'.$player['max']['endurance']." (*Shield:* ".($player['shield']?'on':'off').")",
                 'short' => true],
             ['title' => 'Curiouser & Curiouser (cc): '.$player['cc'],
                 'value' => '*The Pen is Mightier (pen): '.$player['pen'].'*',
@@ -332,7 +336,8 @@ class book_alice extends book_character {
                     $out .= "_".$opp['name']." hits alice._ $dicestr\n";
                     $fighters[$k]['init'] = true;
                     $alicenewinit = false;
-                    $p['endurance'] -= 2;
+                    $dmg = ($p['shield']?1:2);
+                    $p['endurance'] -= $dmg;
                 }
                 // Same
                 else {
