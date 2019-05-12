@@ -322,7 +322,7 @@ class book_character extends book_none {
         }
         if (strtolower($cmd[1]) == "max") {
             $statref = &$player['max'][$thisstat];
-            $max = 9999;
+            $max = 99999;
             $statname = "Maximum $statname";
         } elseif (!$cmd[1]) {
             $statref = &$player[$thisstat];
