@@ -1,8 +1,13 @@
 _*Basic Commands*_ - Just enough to get going.
 
 `![number]` Read page [number]. e.g. `!42`
+
 `!info` Show character stats and inventory.
+
 `!test luck` or `!test skill` or `!test stam` Roll two dice against a stat
+
 `!get [item]` or `!lose [item]` Adds or removes [item] to your inventory. e.g. `!get 3 gold` or `!lose Ring`
+
 `!fight [skill] [stamina]` Fight a monster with skill [skill] and stamina [stamina]. e.g. `!fight 6 2`
+
 `!newgame` Rolls and new character and resets the game.

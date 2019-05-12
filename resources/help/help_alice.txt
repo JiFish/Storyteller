@@ -1,12 +1,21 @@
 _*Alice's Nightmare in Wonderland Commands*_
 
 `![number]` Read page [number]. e.g. `!42`
+
 `!info` Show Alice's stats and inventory.
+
 `!test [stat] <+bonus/-penalty>` Test stat named [stat] with an optional penalty or bonus to Alice's stat. e.g. `!test logic` or `!test logic +2`
+
 `!get [item]` or `!lose [item]` Adds or removes [item] to your inventory. e.g. `!get Mushroom` or `!lose Potion`
+
 `![stat] <+/->[amount]` Adds or subtracts [amount] from [stat]. If the + or - is omitted, [stat] will be set to [amount]. e.g. `!endurance +2` or `!cc -1`
 Stats are: `agility` `logic` `combat` `damage` `insanity` `endurance` `cc` `pen`
 `!endurance max <+/->[amount]` As above, but alters Alice's maximum endurance
+
 `!fight <name> [combat] [endurance]` Alice fights an opponent called <name> (optional), with combat skill [combat] and endurance [endurance]. e.g. `!fight White Rabbit 4 6` or `!fight 10 10`
 You can repeat the values for additional opponents, e.g. `!fight Six of Spades 6 6 Seven of Spades 7 7`
+If Alice has the initiative, use `!fight init <name> [combat] [endurance]`
+
+`!deal` Deals a card from the deck.
+
 `!newgame` Rolls a new Alice and resets the game.

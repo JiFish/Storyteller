@@ -1,11 +1,19 @@
 _*Basic Commands*_ - Just enough to get going.
 
 `![number]` Read page [number]. e.g. `!42`
+
 `!info` Show character stats and inventory.
+
 `!get [item]` or `!lose [item]` Adds or removes [item] to your inventory. e.g. `!get Torch` or `!lose Meal`
+
 `!get special [item]` Adds [item] to your special items inventory. e.g. `!get special key`
+
 `!fight [skill] [endurance]` Fight a monster with combat skill [skill] and endurance [endurance]. e.g. `!fight 6 2`
+
 `!learn [discipline]` Learn the discipline [discipline].
+
 `!wield [weapon]` and `!unwield [weapon]` Wield (or unwield) a weapon called [weapon].
+
 `!rand` Pick a number from the random number table
+
 `!newgame` Rolls and new character and resets the game.

@@ -50,6 +50,24 @@ For the nerds
 - `!newgame [name] [gender] [emoji] [race] [adjective]` or `!ng` Rolls a new character and resets the game. Optionally customise the new character. Use `?` to randomise a field.
 - `!undo` When dead, restore the game to the last page you turned to. You cannot undo fights, tests and some other actions!
 
+### Stats Management
+
+`!<stat> [max] [+/-]<amount>`
+
+Set <stat> to <amount>.
+
+Valid values are: endurance, skill, and gold.
+
+If max is used, the stat's maximum is changed instead.
+
+If starts with a - or +, will be subtracted or added from the total. Otherwise the value is replaced with <amount>. Only the weapon bonus can be reduced below 0.
+
+Examples:
+
+- `!endurance -3` Take 3 endurance loss.
+- `!skill 20` Set Combat Skill to 20.
+- `!endurance max +1` Add 1 to maximum endurance.
+
 ### Inventory Management
 
 - `!get [special/sp] <item>` or `!take <item>` Adds to your inventory. If [special] is given, will add to your special items list.
@@ -77,24 +95,6 @@ Player: !use button
 Storyteller: Used the Escape Button [42]!
 Storyteller: Page 42 ...
 ```
-
-### Stats Management
-
-`!<stat> [max] [+/-]<amount>`
-
-Set <stat> to <amount>.
-
-Valid values are: endurance, skill, and gold.
-
-If max is used, the stat's maximum is changed instead.
-
-If starts with a - or +, will be subtracted or added from the total. Otherwise the value is replaced with <amount>. Only the weapon bonus can be reduced below 0.
-
-Examples:
-
-- `!endurance -3` Take 3 stamina loss.
-- `!skill 20` Set skill to 20.
-- `!endurance max +1` Add 1 to maximum endurance.
 
 ### Random Numbers
 

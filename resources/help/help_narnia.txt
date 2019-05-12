@@ -1,9 +1,16 @@
 _*Narnia Solo Adventures Commands*_
 
 `![number]` Read page [number]. e.g. `!42`
+
 `!info` Show character stats and inventory.
+
 `!test [stat]` Roll two dice and add your bonus for [stat]. e.g. `!test trick`
+
 `!get [item]` or `!lose [item]` Adds or removes [item] to your inventory. e.g. `!get 3 gold` or `!lose Ring`
+
 `![stat] +[number]` Add [number] to your bonus for stat. e.g. `!fight +1` If `+` omitted, sets stat instead.
 `![stat] -[number]` Subtract [number] to your bonus for stat. e.g. `!talk -2`
+`![stat] [number]` Sets your bonus for [stat] to [number]. e.g. `!action 4`
+Stats are: `fight` `trick` `action` `talk` `perception` `innerstrength`
+
 `!newgame` Rolls and new character and resets the game.

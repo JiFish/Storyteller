@@ -1,12 +1,21 @@
 _*The Crystal Maze Gamebook Commands*_
 
 `![number]` Read page [number]. e.g. `!42`
+
 `!info` Show characters stats and inventory.
+
 `!switch [character]` Switch to the team member named [character]
+
 `!test [stat] <+penalty/-bonus>` Test stat named [stat] with an optional penalty or bonus to the dice. e.g. `!test intelligence 5`
+
 `!get [item]` Adds [item] to your inventory. e.g. `!get moon rock`
+
 `!lose` Lose your held item
+
 `!crystals +1` Get a crystal. `!crystals -1` Lose a crystal.
+
 `!crystals [number]` Set crystals to [number].
+
 `!lockedin` Imprision character. Use again to release.
+
 `!newgame` Rolls and new characters and resets the game.

@@ -57,6 +57,24 @@ Some fun character ideas:
 - `!ng ? ? :robot_face: Robot`
 - `!ng Vaarsuvius Androgynous :elf::skin-tone-2: Elf`
 
+### Stats Management
+
+`!<stat> [max] [+/-]<amount>`
+
+Set <stat> to <amount>.
+
+Valid values are: skill, stam, luck, weapon, gold and prov. (Depending which booktype you are playing, additional stats may be available.)
+
+If max is used, the stat's maximum is changed instead.
+
+If starts with a - or +, will be subtracted or added from the total. Otherwise the value is replaced with <amount>. Only the weapon bonus can be reduced below 0.
+
+Examples:
+
+- `!stam -3` Take 3 stamina loss.
+- `!weapon 2` Set weapon bonus to 2.
+- `!luck max +1` Add 1 to maximum luck.
+
 ### Inventory Management
 
 - `!get <item>` or `!take <item>` Adds to your inventory. Attempts to automatically manage gold and provisions stats if used like "!get 5 gold"
@@ -85,25 +103,6 @@ Player: !use button
 Storyteller: Used the Escape Button [42]!
 Storyteller: Page 42 ...
 ```
-
-
-### Stats Management
-
-`!<stat> [max] [+/-]<amount>`
-
-Set <stat> to <amount>.
-
-Valid values are: skill, stam, luck, weapon, gold and prov. (Depending which booktype you are playing, additional stats may be available.)
-
-If max is used, the stat's maximum is changed instead.
-
-If starts with a - or +, will be subtracted or added from the total. Otherwise the value is replaced with <amount>. Only the weapon bonus can be reduced below 0.
-
-Examples:
-
-- `!stam -3` Take 3 stamina loss.
-- `!weapon 2` Set weapon bonus to 2.
-- `!luck max +1` Add 1 to maximum luck.
 
 ### Roll Automation
 
