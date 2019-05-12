@@ -83,7 +83,7 @@ Examples:
 - `!eat` Eats one provision and restores 4 stamina.
 - `!pay <amount>` or `!spend <amount>` Subtracts <amount> of gold. See stats below.
 - `!buy <item> [cost]` Add <item> to your inventory and subtracts [cost] gold. If cost is missing, 2 gold will be taken.
-- `!shield <on/off>` Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using `!fight` (and variants.)
+- `!get shield` Equips the special shield item, which gives a 1 in 6 chance to reduce damage when using `!fight` (and variants.)
 
 #### Inventory items that change your stats
 If a item's name contains stat adjustments in angular brackets `<>` then those adjustments will be applied when you pick the item up, and reversed when the item is dropped.

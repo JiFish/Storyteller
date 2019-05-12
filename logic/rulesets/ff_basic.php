@@ -62,6 +62,11 @@ class book_ff_basic extends book_character {
                 'display' => 'bonus_value',
                 'allownegative' => true,
             ],
+            'shield' => [
+                'friendly' => 'Shield',
+                'icons' => ':shield:',
+                'roll' => 'boolstat',
+            ],
             'gold' => [
                 'friendly' => 'Gold',
                 'alias' => ['cash', 'money'],
@@ -74,16 +79,12 @@ class book_ff_basic extends book_character {
 
     protected function rollHumanCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
-        // Add shield flag
-        $p['shield'] = false;
         return $p;
     }
 
 
     protected function rollCharacter($name = '?', $gender = '?', $emoji = '?', $race = '?', $adjective = '?') {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
-        // Add shield flag
-        $p['shield'] = false;
         // Add fantasy races
         $races = array('Human', 'Human', 'Human', 'Elf', 'Djinnin', 'Catling', 'Dwarf');
         $needsskintone = array(true, true, true, true, false, false, true);
@@ -132,7 +133,7 @@ class book_ff_basic extends book_character {
                     ],
                     [
                         'title' => 'Stamina (stam)',
-                        'value' => $player['stam']." / ".$player['max']['stam'],
+                        'value' => $player['stam']." / ".$player['max']['stam'].($player['shield']?' (Has shield)':''),
                         'short' => true
                     ],
                     [
@@ -160,28 +161,12 @@ class book_ff_basic extends book_character {
     }
 
 
-    protected function getStuffAttachment() {
-        $player = &$this->player;
-        // Shield
-        if ($player['shield']) {
-            $player['stuff'][] = 'Shield *(Equipped)*';
-        }
-        $attach = parent::getStuffAttachment();
-        // Remove shield Shield
-        if ($player['shield']) {
-            array_pop($player['stuff']);
-        }
-        return $attach;
-    }
-
-
     protected function registerCommands() {
         parent::registerCommands();
         $this->registerCommand('eat',                 '_cmd_eat');
         $this->registerCommand(['pay', 'spend'],      '_cmd_pay',         ['n']);
         $this->registerCommand('buy',                 '_cmd_buy',         ['ms', 'on']);
         $this->registerCommand(['luckyescape', 'le'], '_cmd_luckyescape');
-        $this->registerCommand('shield',              '_cmd_shield',      ['os']);
         $this->registerCommand('test',                '_cmd_test',        ['s', 'onm', 'on', 'on']);
         $this->registerCommand('fight',               '_cmd_fight',       ['oms', 'n', 'n', 'onm', 'osl']);
         $this->registerCommand('critfight',           '_cmd_critfight',   ['oms', 'n', 'os', 'on', 'onm']);
@@ -220,8 +205,7 @@ class book_ff_basic extends book_character {
         }
         // "shield"
         if (strtolower($item) == "shield") {
-            $this->addCommand("shield on");
-            return;
+            $cmd[1] = "Shield <shield +1>";
         }
         parent::_cmd_get($cmd);
     }
@@ -248,11 +232,6 @@ class book_ff_basic extends book_character {
         preg_match_all('/^([0-9]+) provisions/i', $drop, $matches, PREG_SET_ORDER, 0);
         if (sizeof($matches) > 0) {
             $this->addCommand("prov -".$matches[0][1]);
-            return;
-        }
-        // "shield"
-        if ($drop == "shield") {
-            $this->addCommand("shield off");
             return;
         }
         parent::_cmd_drop($cmd);
@@ -337,20 +316,6 @@ class book_ff_basic extends book_character {
         }
 
         sendqmsg($out, $icon);
-    }
-
-
-    //// !shield [on/off] - Toggle shield
-    protected function _cmd_shield($cmd) {
-        $player = &$this->player;
-        $state = strtolower($cmd[1]);
-        if ($state != 'on' && $state != 'off') {
-            $state = ($player['shield']?'off':'on');
-        }
-
-        $player['shield'] = ($state == 'on');
-        $state = ($player['shield']?'Equipped':'Un-Equipped');
-        sendqmsg("*Shield $state*", ':shield:');
     }
 
 
