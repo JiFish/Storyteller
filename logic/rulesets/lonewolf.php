@@ -229,9 +229,10 @@ class book_lonewolf extends book_character_importable {
 
         if ($result === false) {
             $this->player['endurance'] -= 3;
-            sendqmsg("*Nothing to eat! Lost 3 Endurance.*", ':interrobang:');
+            sendqmsg("*Nothing to eat! Lost 3 Endurance.*", ':frowning:');
         } else {
-            sendqmsg("*Ate the $result!*", ':bread:');
+            $icon = array(":bread:", ":cheese_wedge:", ":meat_on_bone:")[rand(0, 2)];
+            sendqmsg("*Ate the $result!*", $icon);
         }
     }
 
