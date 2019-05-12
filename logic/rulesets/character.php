@@ -203,6 +203,7 @@ class book_character extends book_none {
         $item = $cmd[1];
         $this->player['stuff'][] = $item;
         sendqmsg("*Got the $item!*", ":school_satchel:");
+        $this->item_stat_adjust($item);
     }
 
 
@@ -216,16 +217,19 @@ class book_character extends book_none {
             sendqmsg("*'$drop' didn't match anything in inventory. Can't $verb.*", ':interrobang:');
         } elseif (is_array($result)) {
             sendqmsg("*Which did you want to $verb? ".implode(", ", $result)."*", ':interrobang:');
-        } elseif ($verb == 'lose') {
-            sendqmsg("*Lost the $result!*");
         } else {
-            sendqmsg("*Dropped the $result!*", ":put_litter_in_its_place:");
+            if ($verb == 'lose') {
+                sendqmsg("*Lost the $result!*");
+            } else {
+                sendqmsg("*Dropped the $result!*", ":put_litter_in_its_place:");
+            }
+            $this->item_stat_adjust($result, true);
         }
     }
 
 
-    //// !drop / !lose / !use
-    protected function _cmd_use($cmd) {
+    //// !use
+    protected function _cmd_use($cmd, $statadjust = true) {
         $drop = strtolower($cmd[1]);
         $result = smart_remove_from_list($this->player['stuff'], $drop);
 
@@ -238,11 +242,43 @@ class book_character extends book_none {
             // Look for included command(s)
             preg_match('/\[(.+)\]/', $result, $matches);
             if (isset($matches[1])) {
-                $subcmd = $matches[1];
-                if (stripos($subcmd, $_POST['trigger_word']) === 0) {
-                    $subcmd = substr($subcmd, strlen($_POST['trigger_word']));
+                $cmdlist = explode(';', $matches[1]);
+                // Add commands backwards, since we're adding commands to run next
+                for ($c = count($cmdlist)-1; $c >= 0; $c--) {
+                    $subcmd = trim($cmdlist[$c]);
+                    if (stripos($subcmd, $_POST['trigger_word']) === 0) {
+                        $subcmd = substr($subcmd, strlen($_POST['trigger_word']));
+                    }
+                    $this->addCommand($subcmd);
                 }
-                $this->addCommand($subcmd);
+            }
+            if ($statadjust) {
+                $this->item_stat_adjust($result, true);
+            }
+        }
+    }
+
+
+    //// Various statistic adjustment commands
+    protected function item_stat_adjust($name, $drop = false) {
+        preg_match('/\<(.+)\>/', $name, $matches);
+        if (isset($matches[1])) {
+            $re = '/('.implode('|',$this->getAllStatCommands()).')\s*(?:(max)\s*)?((?:\+|-)[0-9]+)/mi';
+            preg_match_all($re, $matches[1], $matches, PREG_SET_ORDER, 0);
+            foreach($matches as $m) {
+                // flip the bonus when dropping
+                if ($drop) {
+                    if ($m[3][0]=="+") {
+                        $m[3][0] = '-';
+                    } else {
+                        $m[3][0] = '+';
+                    }
+                }
+                $this->_cmd_stat_adjust([$m[1],$m[2],$m[3]]);
+                // If we adjusted the max upwards, adjust the current upwards too
+                if ($m[3][0] == "+" && strtolower($m[2]) == 'max') {
+                    $this->_cmd_stat_adjust([$m[1],'',$m[3]]);
+                }
             }
         }
     }

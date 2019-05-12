@@ -43,7 +43,7 @@ class book_lw_kai extends book_lonewolf {
             $p['weapons'][] = 'Sword';
             break;
         case 2:
-            $p['specials'][] = 'Helmet (giving +2 end)';
+            $p['specials'][] = 'Helmet <end max +2>';
             $p['endurance'] += 2;
             $p['max']['endurance'] += 2;
             break;
@@ -52,7 +52,7 @@ class book_lw_kai extends book_lonewolf {
             $p['stuff'][] = 'Meal';
             break;
         case 4:
-            $p['specials'][] = 'Chainmail Waistcoat (giving +4 end)';
+            $p['specials'][] = 'Chainmail Waistcoat <end max +4>';
             $p['endurance'] += 4;
             $p['max']['endurance'] += 4;
             break;

@@ -19,3 +19,8 @@ If Alice has the initiative, use `!fight init <name> [combat] [endurance]`
 `!deal` Deals a card from the deck.
 
 `!newgame` Rolls a new Alice and resets the game.
+
+HINT:
+Stat adjustments in <angular brackets> are applied when an an item is in the inventory. Commands in [square brackets] are run when an item is `!use`d
+To pick up a shield: `!get Shield <shield +1, agility -1>`
+To pick up and use a healing item: `!get food [endurance +3]` `!use food`

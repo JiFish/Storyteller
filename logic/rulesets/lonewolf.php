@@ -197,17 +197,20 @@ class book_lonewolf extends book_character_importable {
 
 
     //// !get / !take (add item to inventory/stuff list) OVERRIDE
+    // Note that items in the backpack do not apply stat adjustments
     protected function _cmd_get($cmd) {
         $item = $cmd[2];
         if ($cmd[1]) { // Goes to special items inventory
             $this->player['specials'][] = $item;
             sendqmsg("*Got the special item $item!*", ":school_satchel:");
+            $this->item_stat_adjust($item);
         } else {
             if (sizeof($this->player['stuff']) >= 8) {
                 sendqmsg("*Your inventory is full! `!drop` something first.*", ':interrobang:');
                 return;
             }
-            return parent::_cmd_get([$cmd[0], $item]);
+            $this->player['stuff'][] = $item;
+            sendqmsg("*Got the $item!*", ":school_satchel:");
         }
     }
 
@@ -235,17 +238,26 @@ class book_lonewolf extends book_character_importable {
 
     //// !drop OVERRIDE (Try to drop special items after)
     protected function _cmd_drop($cmd) {
+        $p = &$this->player;
         $drop = $cmd[1];
         $verb = strtolower($cmd[0]);
+        $apply_stat_adjust = false;
 
         // Special case: whole backpack!
         if (strtolower($drop) == 'backpack') {
-            $this->player['stuff'] = array();
+            $p['stuff'] = array();
             $result = 'entire backpack';
+        // Special case: everything!
         } elseif (strtolower($drop) == 'everything') {
-            $this->player['stuff'] = array();
-            $this->player['specials'] = array();
-            $this->player['weapons'] = array();
+            $p['stuff'] = array();
+            foreach ($p['specials'] as $i) {
+                $this->item_stat_adjust($i,true);
+            }
+            foreach ($p['weapons'] as $i) {
+                $this->item_stat_adjust($i,true);
+            }
+            $p['specials'] = array();
+            $p['weapons'] = array();
             $result = 'backpack and everything else';
         } else {
             $result = smart_remove_from_list($this->player['stuff'], $drop);
@@ -253,10 +265,12 @@ class book_lonewolf extends book_character_importable {
         // If we found nothing in stuff, try again in specials
         if ($result === false) {
             $result = smart_remove_from_list($this->player['specials'], $drop);
+            $apply_stat_adjust = true;
         }
         // If we found nothing in specials, try again in weapons
         if ($result === false) {
             $result = smart_remove_from_list($this->player['weapons'], $drop);
+            $apply_stat_adjust = true;
         }
 
         if ($result === false) {
@@ -271,11 +285,17 @@ class book_lonewolf extends book_character_importable {
             case 'drop':
                 sendqmsg("*Dropped the $result!*", ":put_litter_in_its_place:");
                 break;
-            case 'use':
-                sendqmsg("*Used the $result!*");
-                break;
+            }
+            if ($apply_stat_adjust) {
+                $this->item_stat_adjust($result,true);
             }
         }
+    }
+
+
+    //// !use
+    protected function _cmd_use($cmd, $statadjust = true) {
+        parent::_cmd_use($cmd, false);
     }
 
 
@@ -338,10 +358,10 @@ class book_lonewolf extends book_character_importable {
             sendqmsg("*Which did you want to wield? ".implode(", ", $result)."*", ':interrobang:');
             return;
         } elseif ($result === false) {
-            $out = "*Weilding $weapon!*";
+            $out = "*Wielding $weapon!*";
         } else {
             $weapon = $result;
-            $out = "*Weilding $weapon!* (Taken from backpack.)";
+            $out = "*Wielding $weapon!* (Taken from backpack.)";
         }
 
         // Unwield weapon if already holding 2
@@ -351,6 +371,7 @@ class book_lonewolf extends book_character_importable {
 
         $weapons[] = $weapon;
         sendqmsg($out, ":crossed_swords:");
+        $this->item_stat_adjust($weapon);
     }
 
 
@@ -371,6 +392,7 @@ class book_lonewolf extends book_character_importable {
                 $out = "(Dropped on floor.)";
             }
             sendqmsg("*Unwielded $result!* $out", ":crossed_swords:");
+            $this->item_stat_adjust($result, true);
         }
     }
 

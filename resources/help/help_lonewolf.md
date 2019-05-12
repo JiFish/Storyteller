@@ -77,6 +77,18 @@ Examples:
 - `!unwield [weapon]` Unwield a weapon called [weapon]. Will try to match like `!lose` above. If you have backpack space, it will be placed in the backpack.
 - `!eat` Eats one meal, if there is none lose 3 endurance.
 
+#### Inventory items that change your stats
+If a item's name contains stat adjustments in angular brackets `<>` then those adjustments will be applied when you pick the item up, and reversed when the item is dropped. This only applies to *special* items and *weapons*, not items in the backpack.
+For example, a shield that adds 2 to maximum endurance, but reduces skill by 1:
+```
+Player: !get special Shield <endurance max +2, skill -1>
+Storyteller: Got the special item Shield <endurance max +2, skill -1>.
+Storyteller: Maximum endurance increased by 2, now 14. Combat Skill decreased by 1, now 10.
+Player: !drop shield
+Storyteller: Lost the Shield <endurance max +2, skill -1>.
+Storyteller: Maximum endurance decreased by 2, now 12. Combat Skill increased by 1, now 11.
+```
+
 #### !use examples
 You find a red potion. You can consume it at any time to gain 10 endurance.
 ```

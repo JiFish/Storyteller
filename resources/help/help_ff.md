@@ -85,6 +85,18 @@ Examples:
 - `!buy <item> [cost]` Add <item> to your inventory and subtracts [cost] gold. If cost is missing, 2 gold will be taken.
 - `!shield <on/off>` Equips or removes the special shield item. When on gives a 1 in 6 chance to reduce damage by 1 when using `!fight` (and variants.)
 
+#### Inventory items that change your stats
+If a item's name contains stat adjustments in angular brackets `<>` then those adjustments will be applied when you pick the item up, and reversed when the item is dropped.
+For example, a helm that adds 2 to maximum stamina, but reduces skill by 1:
+```
+Player: !get Helm <stam max +2, skill -1>
+Storyteller: Got the Helm <stam max +2, skill -1>.
+Storyteller: Maximum stamina increased by 2, now 14. Skill decreased by 1, now 10.
+Player: !drop helm
+Storyteller: Lost the Helm <stam max +2, skill -1>.
+Storyteller: Maximum stamina decreased by 2, now 12. Skill increased by 1, now 11.
+```
+
 #### !use examples
 You find a red potion. You can consume it at any time to gain 10 stamina.
 ```
