@@ -175,7 +175,7 @@ class book_crystalm extends book_character {
     }
 
 
-    //// !test <stat> <target> SONIC VERSION
+    //// !test <stat> <target>
     protected function _cmd_test($cmd) {
         $player = &$this->player;
 

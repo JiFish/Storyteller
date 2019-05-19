@@ -248,14 +248,15 @@ class book_lonewolf extends book_character_importable {
         if (strtolower($drop) == 'backpack') {
             $p['stuff'] = array();
             $result = 'entire backpack';
+        }
         // Special case: everything!
-        } elseif (strtolower($drop) == 'everything') {
+        elseif (strtolower($drop) == 'everything') {
             $p['stuff'] = array();
             foreach ($p['specials'] as $i) {
-                $this->item_stat_adjust($i,true);
+                $this->item_stat_adjust($i, true);
             }
             foreach ($p['weapons'] as $i) {
-                $this->item_stat_adjust($i,true);
+                $this->item_stat_adjust($i, true);
             }
             $p['specials'] = array();
             $p['weapons'] = array();
@@ -288,7 +289,7 @@ class book_lonewolf extends book_character_importable {
                 break;
             }
             if ($apply_stat_adjust) {
-                $this->item_stat_adjust($result,true);
+                $this->item_stat_adjust($result, true);
             }
         }
     }

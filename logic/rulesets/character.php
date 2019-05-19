@@ -263,9 +263,9 @@ class book_character extends book_none {
     protected function item_stat_adjust($name, $drop = false) {
         preg_match('/\<(.+)\>/', $name, $matches);
         if (isset($matches[1])) {
-            $re = '/('.implode('|',$this->getAllStatCommands()).')\s*(?:(max)\s*)?((?:\+|-)[0-9]+)/mi';
+            $re = '/('.implode('|', $this->getAllStatCommands()).')\s*(?:(max)\s*)?((?:\+|-)[0-9]+)/mi';
             preg_match_all($re, $matches[1], $matches, PREG_SET_ORDER, 0);
-            foreach($matches as $m) {
+            foreach ($matches as $m) {
                 // flip the bonus when dropping
                 if ($drop) {
                     if ($m[3][0]=="+") {
@@ -274,10 +274,10 @@ class book_character extends book_none {
                         $m[3][0] = '+';
                     }
                 }
-                $this->_cmd_stat_adjust([$m[1],$m[2],$m[3]]);
+                $this->_cmd_stat_adjust([$m[1], $m[2], $m[3]]);
                 // If we adjusted the max upwards, adjust the current upwards too
                 if ($m[3][0] == "+" && strtolower($m[2]) == 'max') {
-                    $this->_cmd_stat_adjust([$m[1],'',$m[3]]);
+                    $this->_cmd_stat_adjust([$m[1], '', $m[3]]);
                 }
             }
         }
