@@ -44,15 +44,12 @@ class book_ff_sob extends book_ff_basic {
             'testdice' => 3,
             'testpass' => 'Your crew is strong enough',
             'testfail' => 'Your crew is not strong enough',
-            'display' => 'current_and_max',
-            'sheet' => 1,
         ];
         $stats['strike'] = [
             'friendly' => 'Crew Strike',
             'alias' => ['crewstrike'],
             'icons' => ':crossed_swords:',
             'roll' => 'ff1die',
-            'display' => 'current_and_max',
             'sheet' => 1,
         ];
         $stats['log'] = [
@@ -68,7 +65,6 @@ class book_ff_sob extends book_ff_basic {
         $stats['gold']['friendly'] = 'Booty';
         $stats['gold']['alias'][] = 'booty';
         $stats['gold']['sheet'] = 1;
-        $stats['prov']['display'] = 'hidden';
         return $stats;
     }
 

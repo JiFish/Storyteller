@@ -9,7 +9,6 @@ class book_ff_bnc extends book_ff_basic {
             'friendly' => 'Willpower',
             'alias' => ['willpower'],
             'roll' => 'ff1die',
-            'display' => 'current_and_max',
             'testdice' => 2,
             'testpass' => '{youare} strong willed',
             'testfail' => '{youare} weak willed',

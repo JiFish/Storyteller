@@ -9,7 +9,6 @@ class book_ff_sots extends book_ff_basic {
             'friendly' => 'Honor',
             'alias' => ['honour'],
             'roll' => 3,
-            'display' => 'current_and_max'
         ];
         $stats['prov']['roll'] = 10;
         return $stats;

@@ -26,7 +26,6 @@ class book_ff_hoh extends book_ff_basic {
             'friendly' => 'Fear',
             'icons' => ':scream:',
             'roll' => 'fffeardie',
-            'display' => 'current_and_max',
         ];
         return $stats;
     }

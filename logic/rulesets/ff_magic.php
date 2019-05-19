@@ -9,7 +9,6 @@ class book_ff_magic extends book_ff_basic {
             'friendly' => 'Magic',
             'icons' => ':fireworks:',
             'roll' => 'ff2die',
-            'display' => 'current_and_max',
         ];
         return $stats;
     }
