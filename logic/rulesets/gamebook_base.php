@@ -224,13 +224,15 @@ abstract class gamebook_base {
         );
 
         // magic to substitute player vars
-        // build substitute array
+        // keep $sa outside the func so we don't have to rebuild
         $sa = array();
-        recursive_flatten_player($this->player, $sa);
-        // perform substitution
         $command = preg_replace_callback(
             '/{(.+?)}/',
             function ($matches) use ($sa) {
+                // build substitute array
+                if (!$sa) {
+                    recursive_flatten_player($this->player, $sa);
+                }
                 if (array_key_exists($matches[1], $sa)) {
                     if (is_bool($sa[$matches[1]])) {
                         return $sa[$matches[1]]?'on':'off';
