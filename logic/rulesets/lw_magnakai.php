@@ -105,7 +105,7 @@ class book_lw_magnakai extends book_lw_kai {
                 foreach ($p['weaponmastery'] as $weapon => $val) {
                     if (strpos($skill, strtolower($weapon)) !== false) {
                         $p['weaponmastery'][$weapon] = 2;
-                        $foundskill = 2;
+                        $foundskill = true;
                         break 2;
                     }
                 }
@@ -114,6 +114,11 @@ class book_lw_magnakai extends book_lw_kai {
             if (!$foundskill) {
                 $p['weaponmastery'][array_rand($p['weaponmastery'])] = 2;
             }
+        }
+        // Clear skills if moving between rulesets, it's assumed
+        // you have obtained all the skills
+        if ($this->player['ruleset'] != get_class($this)) {
+            $p['skills'] = [];
         }
 
         parent::runImportUpdate($p);
