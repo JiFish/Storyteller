@@ -46,7 +46,7 @@ class book_alice extends book_character {
             ],
             'shield' => [
                 'friendly' => 'Shield',
-                'roll' => 'boolstat',
+                'roll' => false,
             ],
             'cc' => [
                 'friendly' => 'Curiouser and Curiouser',

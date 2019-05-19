@@ -8,7 +8,8 @@ class book_ff_magic extends book_ff_basic {
         $stats['magic'] = [
             'friendly' => 'Magic',
             'icons' => ':fireworks:',
-            'roll' => 'ff2die',
+            'roll' => '2d6+6',
+            'max' => 'roll',
         ];
         return $stats;
     }

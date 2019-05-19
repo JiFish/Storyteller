@@ -25,7 +25,8 @@ class book_ff_hoh extends book_ff_basic {
         $stats['fear'] = [
             'friendly' => 'Fear',
             'icons' => ':scream:',
-            'roll' => 'fffeardie',
+            'roll' => 0,
+            'max' => '1d6+6',
         ];
         return $stats;
     }

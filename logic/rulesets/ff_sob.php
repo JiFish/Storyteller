@@ -40,7 +40,8 @@ class book_ff_sob extends book_ff_basic {
             'friendly' => 'Crew Strength',
             'alias' => ['strength', 'crewstrength'],
             'icons' => ':muscle:',
-            'roll' => 'ff2die',
+            'roll' => '2d6+6',
+            'max' => 'roll',
             'testdice' => 3,
             'testpass' => 'Your crew is strong enough',
             'testfail' => 'Your crew is not strong enough',
@@ -49,7 +50,8 @@ class book_ff_sob extends book_ff_basic {
             'friendly' => 'Crew Strike',
             'alias' => ['crewstrike'],
             'icons' => ':crossed_swords:',
-            'roll' => 'ff1die',
+            'roll' => '1d6+6',
+            'max' => 'roll',
             'sheet' => 1,
         ];
         $stats['log'] = [

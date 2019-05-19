@@ -131,13 +131,15 @@ class book_ff_sst extends book_ff_basic {
             'friendly' => 'Ship Weapons',
             'alias' => ['shipweapons'],
             'icons' => ':rocket:',
-            'roll' => 'ff1die',
+            'roll' => '1d6+6',
+            'max' => 'roll',
         ];
         $stats['shields'] = [
             'friendly' => 'Ship Shields',
             'alias' => ['shipshields'],
             'icons' => ':rocket:',
-            'roll' => 'ff1die',
+            'roll' => '1d6+6',
+            'max' => 'roll',
             'testdice' => 2,
             'testpass' => 'Your shields hold up',
             'testfail' => 'Your shields do not protect you',
@@ -388,16 +390,14 @@ class book_ff_sst extends book_ff_basic {
             $round++;
             // Player
             // Roll to hit
-            $roll = rand(1, 6); $roll2 = rand(1, 6);
-            $emoji = diceemoji($roll).diceemoji($roll2);
-            if ($roll+$roll2 < $player['weapons']) {
+            list($roll, $emoji) = roll_dice_string("2d6");
+            if ($roll < $player['weapons']) {
                 // Roll for damage
-                $roll = rand(1, 6); $roll2 = rand(1, 6);
-                $hemoji = diceemoji($roll).diceemoji($roll2);
-                if ($roll+$roll2 == 12) {
+                list($roll, $hemoji) = roll_dice_string("2d6");
+                if ($roll == 12) {
                     $out .= "_Your ship made a critical hit!_ ($emoji vs ".$player['weapons']." - $hemoji)\n";
                     $mshields -= 6;
-                } else if (($roll+$roll2) > $mshields) {
+                } else if ($roll > $mshields) {
                     $out .= "_Your ship hit with a glancing blow._ ($emoji vs ".$player['weapons']." - $hemoji vs $mshields)\n";
                     $mshields -= 2;
                 } else {
@@ -415,16 +415,14 @@ class book_ff_sst extends book_ff_basic {
             }
             // Monster
             // Roll to hit
-            $roll = rand(1, 6); $roll2 = rand(1, 6);
-            $emoji = diceemoji($roll).diceemoji($roll2);
-            if ($roll+$roll2 < $mweapons) {
+            list($roll, $emoji) = roll_dice_string("2d6");
+            if ($roll < $mweapons) {
                 // Roll for damage
-                $roll = rand(1, 6); $roll2 = rand(1, 6);
-                $hemoji = diceemoji($roll).diceemoji($roll2);
-                if ($roll+$roll2 == 12) {
+                list($roll, $hemoji) = roll_dice_string("2d6");
+                if ($roll == 12) {
                     $out .= "_$m made a critical hit!_ ($emoji vs $mweapons - $hemoji)\n";
                     $player['shields'] -= 6;
-                } else if (($roll+$roll2) > $player['shields']) {
+                } else if ($roll > $player['shields']) {
                     $out .= "_$m hit you with a glancing blow._ ($emoji vs $mweapons - $hemoji vs ".$player['shields'].")\n";
                     $player['shields'] -= 2;
                 } else {

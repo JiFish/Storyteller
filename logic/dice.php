@@ -38,99 +38,82 @@ function dice($min = 1, $max = 6) {
 }
 
 
-function baseroll(&$player, $statname, $val = 0) {
-    $player[$statname] = $val;
-    $player['max'][$statname] = 99999;
-}
-
-
-function ff1die(&$player, $statname) {
-    $d = dice();
-    $player[$statname] = $d+6;
-    $player['max'][$statname] = $player[$statname];
-    $player['creationdice'] .= ' '.diceemoji($d);
-}
-
-
-function ff2die(&$player, $statname) {
-    $d1 = dice(); $d2 = dice();
-    $player[$statname] = $d1+$d2+6;
-    $player['max'][$statname] = $player[$statname];
-    $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
-}
-
-
-function ffstam(&$player, $statname) {
-    $d1 = dice(); $d2 = dice();
-    $player[$statname] = $d1+$d2+12;
-    $player['max'][$statname] = $player[$statname];
-    $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
-}
-
-
-function loz3die(&$player, $statname) {
-    $d1 = dice(); $d2 = dice(); $d3 = dice();
-    $player[$statname] = $d1+$d2+$d3+2;
-    $player['max'][$statname] = 99999;
-    $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2).' '.diceemoji($d3);
-}
-
-
-function twodieplus12(&$player, $statname) {
-    $d1 = dice(); $d2 = dice();
-    $player[$statname] = $d1+$d2+12;
-    $player['max'][$statname] = 99999;
-    $player['creationdice'] .= ' '.diceemoji($d1).' '.diceemoji($d2);
-}
-
-
-function fffeardie(&$player, $statname) {
-    $d = dice();
-    $player[$statname] = 0;
-    $player['max'][$statname] = $d+6;
-    $player['creationdice'] .= ' '.diceemoji($d);
-}
-
-
-function lonewolfendurance(&$player, $statname) {
-    $d = dice(0, 9);
-    $player[$statname] = $d+20;
-    $player['max'][$statname] = $d+20;
-    $player['creationdice'] .= ' '.genericemoji($d);
-}
-
-
-function lonewolfcombat(&$player, $statname) {
-    $d = dice(0, 9);
-    $player[$statname] = $d+10;
-    $player['max'][$statname] = 9999;
-    $player['creationdice'] .= ' '.genericemoji($d);
-}
-
-
-function lonewolfgold(&$player, $statname) {
-    $d = dice(0, 9);
-    $player[$statname] = $d;
-    $player['max'][$statname] = 50;
-    $player['creationdice'] .= ' '.genericemoji($d);
-}
-
-
-function boolstat(&$player, $statname) {
-    $player[$statname] = false;
-    $player['max'][$statname] = 1;
-}
-
-
 function roll_stats(&$player, $stats) {
     foreach ($stats as $statname => $v) {
+        // Current value
         if (!isset($v['roll'])) {
-            baseroll($player, $statname);
-        } elseif (is_numeric($v['roll'])) {
-            baseroll($player, $statname, $v['roll']);
+            $player[$statname] = 0;
+        } elseif (is_numeric($v['roll']) || is_bool($v['roll'])) {
+            $player[$statname] = $v['roll'];
         } else {
-            $v['roll']($player, $statname);
+            list($r, $s) = roll_dice_string($v['roll'], true);
+            $player[$statname] = $r;
+            $player['creationdice'] .= ' '.$s;
+        }
+        // Maximum value
+        if (!isset($v['max'])) {
+            $player['max'][$statname] = 99999;
+        } elseif (is_numeric($v['max'])) {
+            $player['max'][$statname] = $v['max'];
+        } elseif ($v['max'] == 'roll') {
+            $player['max'][$statname] = $player[$statname];
+        } else {
+            list($r, $s) = roll_dice_string($v['max'], true);
+            $player['max'][$statname] = $r;
+            $player['creationdice'] .= ' '.$s;
         }
     }
     $player['creationdice'] = trim($player['creationdice']);
+}
+
+
+function roll_dice_string($dice, $rolling_character = false) {
+    $roll = 0;
+    $str = "";
+
+    if (is_numeric($dice)) {
+        $numdice = $dice;
+        $sides = 6;
+        $bonus = false;
+    } else {
+        preg_match('/^([1-9]?[0-9])?d((?:[1-9][0-9]{0,2}|%))?([+|\-][1-9][0-9]{0,2})?/', $dice, $matches);
+        if (!$matches) {
+            return ['roll' => 0, 'str' => "Dice string not understood"];
+        }
+        $matches = array_pad($matches, 4, null);
+        $sides = ($matches[2]?$matches[2]:6);
+        $numdice = ($matches[1]?$matches[1]:1);
+        $numdice = min($numdice, 100);
+        $bonus = ($matches[3]?$matches[3]:false);
+    }
+    // Roll Dice
+    foreach (range(1, $numdice) as $i) {
+        // Determine if we're using the fixed dice function
+        if ($rolling_character) {
+            $rollfunc = 'dice';
+        } else {
+            $rollfunc = 'rand';
+        }
+        // Percentile (0-9) dice. Also used for Lone Wolf
+        if ($sides == '%') {
+            $r = $rollfunc(0, 9);
+        }
+        // All other dice
+        else {
+            $r = $rollfunc(1, $sides);
+        }
+        $roll += $r;
+        if ($sides == 6) {
+            $str .= diceemoji($r)." ";
+        } elseif ($sides <= 20) {
+            $str .= genericemoji($r)." ";
+        } else {
+            $str .= "[$r] ";
+        }
+    }
+    if ($bonus && !$rolling_character) {
+        $roll += $bonus;
+        $str .= $bonus;
+    }
+    return [$roll, rtrim($str)];
 }

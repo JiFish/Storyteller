@@ -34,19 +34,21 @@ class book_lonewolf extends book_character_importable {
                 'friendly' => 'Endurance',
                 'icons' => [':heartpulse', ':face_with_head_bandage:'],
                 'alias' => ['end'],
-                'roll' => 'lonewolfendurance',
+                'roll' => '1d%+20',
+                'max' => 'roll',
             ],
             'skill' => [
                 'friendly' => 'Combat Skill',
                 'icons' => ':crossed_swords:',
                 'alias' => ['combat', 'combatskill'],
-                'roll' => 'lonewolfcombat',
+                'roll' => '1d%+10',
             ],
             'gold' => [
                 'friendly' => 'Gold Crowns',
                 'icons' => ':moneybag:',
                 'alias' => ['crowns', 'goldcrowns'],
-                'roll' => 'lonewolfgold',
+                'roll' => '1d%',
+                'max' => 50,
             ],
         );
         return $stats;
@@ -150,7 +152,7 @@ class book_lonewolf extends book_character_importable {
         $this->registerCommand('fight',           '_cmd_fight',   ['oms', 'n', 'n', 'onm', 'on']);
         $this->registerCommand(['attack', 'a'],   '_cmd_attack',  ['oms', 'n', 'on', 'onm']);
         $this->registerCommand('flee',            '_cmd_flee',    ['oms', 'n', 'onm', 'on']);
-        $this->registerCommand('rand',            '_cmd_roll',    ['on']);
+        $this->registerCommand('rand',            '_cmd_roll',    ['osl']);
         $this->registerCommand('learn',           '_cmd_learn',   ['l']);
         $this->registerCommand('forget',          '_cmd_forget',  ['l']);
         $this->registerCommand('wield',           '_cmd_wield',   ['l']);
@@ -170,20 +172,13 @@ class book_lonewolf extends book_character_importable {
     }
 
 
-    //// !roll [x] (roll xd10-1) OVERRIDE
+    //// !roll [x/dicestring]
     protected function _cmd_roll($cmd) {
-        $numdice = ($cmd[1]?$cmd[1]:1);
-        $numdice = max(min($numdice, 100), 1);
-        $out = "Result:";
-
-        $t = 0;
-        for ($a = 0; $a < $numdice; $a++) {
-            $r = rand(0, 9);
-            $emoji = genericemoji($r);
-            $out .= " $emoji ($r)";
-            $t += $r;
+        $cmd[1] = ($cmd[1]?$cmd[1]:1);
+        if (is_numeric($cmd[1])) {
+            $cmd[1] .= "d%";
         }
-        sendqmsg($out, ":game_die:");
+        parent::_cmd_roll($cmd);
     }
 
 
@@ -469,7 +464,7 @@ class book_lonewolf extends book_character_importable {
         $out = "";
         $turns = 0;
         while (1) {
-            $rand = rand(0, 9);
+            list($rand, $emoji) = roll_dice_string("1d%");
             $r = $crt[$rand][$crt_lu];
             // Opponent
             if ($r[1] == 99) {
@@ -491,7 +486,7 @@ class book_lonewolf extends book_character_importable {
                 $out .= $p['name'].' hit '.$opp_name.' for *'.$r[0].'* damage!';
                 $opp_end -= $r[0];
             }
-            $out .= " ".genericemoji($rand)."\n";
+            $out .= " $emoji\n";
             if (++$turns >= $max_turns) {
                 if ($max_turns > 1) {
                     $out .= "*Stopped after $max_turns turns.*\n";

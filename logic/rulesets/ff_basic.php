@@ -25,7 +25,8 @@ class book_ff_basic extends book_character {
             'skill' => [
                 'friendly' => 'Skill',
                 'icons' => [':juggling:', ':tired_face:'],
-                'roll' => 'ff1die',
+                'roll' => '1d6+6',
+                'max' => 'roll',
                 'testdice' => 2,
                 'testpass' => '{youare} skillful',
                 'testfail' => '{youare} not skillful',
@@ -34,7 +35,8 @@ class book_ff_basic extends book_character {
                 'friendly' => 'Stamina',
                 'alias' => ['stamina'],
                 'icons' => [':heartpulse', ':face_with_head_bandage:'],
-                'roll' => 'ffstam',
+                'roll' => '2d6+12',
+                'max' => 'roll',
                 'testdice' => 3,
                 'testpass' => '{youare} strong enough',
                 'testfail' => '{youare} not strong enough',
@@ -42,7 +44,8 @@ class book_ff_basic extends book_character {
             'luck' => [
                 'friendly' => 'Luck',
                 'icons' => [':four_leaf_clover:', ':lightning:'],
-                'roll' => 'ff1die',
+                'roll' => '1d6+6',
+                'max' => 'roll',
                 'testdice' => 2,
                 'testpass' => '{youare} lucky!',
                 'testfail' => '{youare} unlucky',
@@ -61,7 +64,7 @@ class book_ff_basic extends book_character {
             'shield' => [
                 'friendly' => 'Shield',
                 'icons' => ':shield:',
-                'roll' => 'boolstat',
+                'roll' => false,
             ],
             'gold' => [
                 'friendly' => 'Gold',
@@ -288,25 +291,22 @@ class book_ff_basic extends book_character {
     //// !luckyescape (roll for running away)
     protected function _cmd_luckyescape($cmd) {
         $player = &$this->player;
-        $d1 = rand(1, 6);
-        $d2 = rand(1, 6);
-        $e1 = diceemoji($d1);
-        $e2 = diceemoji($d2);
+        list($roll, $emojidice) = roll_dice_string("2d6");
         $out = "_Testing luck to negate escape damage!_\n";
         $target = $player['luck'];
         $player['luck']--;
 
-        if ($d1+$d2 <= $target) {
+        if ($roll <= $target) {
             $player['stam'] -= 1;
             if ($player['stam'] < 0) $player['stam'] = 0;
-            $out .= "_*You are lucky*_\n_(_ $e1 $e2 _ vs $target, Remaining luck ".$player['luck'].")_\n";
+            $out .= "_*You are lucky*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_\n";
             $out .= "_*Lost 1 stamina!* Remaining stamina ".$player['stam']."_";
             $icon = ":four_leaf_clover:";
         }
         else {
             $player['stam'] -= 3;
             if ($player['stam'] < 0) $player['stam'] = 0;
-            $out .= "_*You are unlucky.*_\n_(_ $e1 $e2 _ vs $target, Remaining luck ".$player['luck'].")_\n";
+            $out .= "_*You are unlucky.*_\n_(_ $emojidice _ vs $target, Remaining luck ".$player['luck'].")_\n";
             $out .= "_*Lost 3 stamina!* Remaining stamina ".$player['stam']."_";
             $icon = ':lightning:';
         }
@@ -347,14 +347,7 @@ class book_ff_basic extends book_character {
         }
 
         // Roll dice
-        $roll = 0;
-        $emojidice = '';
-        for ($a = 0; $a < $sinfo['testdice']; $a++) {
-            $r = rand(1, 6);
-            $roll += $r;
-            $emojidice .= diceemoji($r).' ';
-
-        }
+        list($roll, $emojidice) = roll_dice_string($sinfo['testdice']);
 
         // Dice modifier
         if ($dicemod != 0) {
@@ -612,7 +605,7 @@ class book_ff_basic extends book_character {
         $bonusdmgchance = (isset($input['bonusdmgchance'])?$input['bonusdmgchance']: 3);
         $fasthands =      (isset($input['fasthands'])?     $input['fasthands']:      false);
         $healthstatname = (isset($input['healthstatname'])?$input['healthstatname']: 'stamina');
-        $playerdicemod =  (isset($input['playerdicemod'])? $input['playerdicemod']:  0);
+        $playerdicemod =  (isset($input['playerdicemod'])? sprintf("%+d", $input['playerdicemod']):  '');
         $gamebook = getbook();
 
         // Special case for Starship Traveller Macommonian
@@ -660,16 +653,14 @@ class book_ff_basic extends book_character {
         $round = 0;
         while ($player['stam'] > 0 && $mstam > 0) {
             $round++;
-            $mroll = rand(1, 6); $mroll2 = rand(1, 6);
-            $proll = rand(1, 6); $proll2 = rand(1, 6);
-            $memoji = diceemoji($mroll).diceemoji($mroll2);
-            $pemoji = diceemoji($proll).diceemoji($proll2).($playerdicemod?sprintf("%+d", $playerdicemod):'');
+            list($mroll, $memoji) = roll_dice_string("2d6");
+            list($proll, $pemoji) = roll_dice_string("2d6$playerdicemod");
 
-            $mattack = $mskill+$mroll+$mroll2;
-            $pattack = $player['skill']+$player['weapon']+$proll+$proll2+$playerdicemod;
+            $mattack = $mskill+$mroll;
+            $pattack = $player['skill']+$player['weapon']+$proll;
 
             // Special case for Creature of Havok instant kills
-            if ($gamebook == 'ff_coh' && $proll == $proll2) {
+            if ($gamebook == 'ff_coh' && $proll == 12+$playerdicemod) {
                 $out .= "_*Instant Kill*_ $pemoji\n";
                 $mstam = 0;
                 break;
@@ -677,11 +668,9 @@ class book_ff_basic extends book_character {
 
             // Fast hands gives 1 extra dice, drop lowest for attack power
             if ($fasthands) {
-                $fhroll  = rand(1, 6);
-                $fhroll2 = rand(1, 6);
-                $fhemoji = diceemoji($fhroll).diceemoji($fhroll2).($playerdicemod?sprintf("%+d", $playerdicemod):'');
-                if ($fhroll+$fhroll2 > $proll+$proll2) {
-                    $pattack = $player['skill']+$player['weapon']+$fhroll+$fhroll2+$playerdicemod;
+                list($fhroll, $fhemoji) = roll_dice_string("2d6$playerdicemod");
+                if ($fhroll > $proll) {
+                    $pattack = $player['skill']+$player['weapon']+$fhroll;
                     $pemoji = "~$pemoji~ / $fhemoji";
                 } else {
                     $pemoji = "$pemoji / ~$fhemoji~";
@@ -692,8 +681,7 @@ class book_ff_basic extends book_character {
             }
 
             if ($critsfor != 'nobody') {
-                $croll = rand(1, 6);
-                $cemoji = diceemoji($croll);
+                list($croll, $cemoji) = roll_dice_string("1d6");
             }
 
             if ($pattack > $mattack) {
@@ -737,13 +725,10 @@ class book_ff_basic extends book_character {
 
             // Monster 2 attack
             if ($m2) {
-                $mroll = rand(1, 6); $mroll2 = rand(1, 6);
-                $proll = rand(1, 6); $proll2 = rand(1, 6);
-                $mattack = $mskill2+$mroll+$mroll2;
-                $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
-
-                $memoji = diceemoji($mroll).diceemoji($mroll2);
-                $pemoji = diceemoji($proll).diceemoji($proll2);
+                list($mroll, $memoji) = roll_dice_string("2d6");
+                list($proll, $pemoji) = roll_dice_string("2d6$playerdicemod");
+                $mattack = $mskill2+$mroll;
+                $pattack = $player['skill']+$player['weapon']+$proll;
 
                 if ($pattack > $mattack) {
                     $out .= "_$you block $m2's attack. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
@@ -760,13 +745,10 @@ class book_ff_basic extends book_character {
 
             //  Your backup attack
             if ($backupname) {
-                $mroll = rand(1, 6); $mroll2 = rand(1, 6);
-                $proll = rand(1, 6); $proll2 = rand(1, 6);
-                $mattack = $mskill+$mroll+$mroll2;
-                $pattack = $backupskill+$proll+$proll2;
-
-                $memoji = diceemoji($mroll).diceemoji($mroll2);
-                $pemoji = diceemoji($proll).diceemoji($proll2);
+                list($mroll, $memoji) = roll_dice_string("2d6");
+                list($proll, $pemoji) = roll_dice_string("2d6");
+                $mattack = $mskill2+$mroll;
+                $pattack = $backupskill+$proll;
 
                 if ($pattack > $mattack) {
                     $out .= "_$backupname hits $m! (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
@@ -783,9 +765,9 @@ class book_ff_basic extends book_character {
 
             // Bonus damage
             if ($bonusdmg && $mstam > 0) {
-                $bdroll = rand(1, 6);
+                list($bdroll, $bdemoji) = roll_dice_string("1d6");
                 if ($bdroll > 6-$bonusdmgchance) {
-                    $bdemoji = ($bonusdmgchance < 6?'(_ '.diceemoji($bdroll).' _)':'');
+                    $bdemoji = ($bonusdmgchance < 6?"(_ $bdemoji _)":'');
                     $out .= "_$m hits $youlc with ".$bonusdmg." bonus damage! $bdemoji _\n";
                     $player['stam'] -= $bonusdmg;
                 }
@@ -793,17 +775,13 @@ class book_ff_basic extends book_character {
 
             //stave off death
             if ($player['stam'] == 0 && $player['luck'] > 0) {
-                // roll 2d6
-                $d1 = rand(1, 6);
-                $d2 = rand(1, 6);
-                $e1 = diceemoji($d1);
-                $e2 = diceemoji($d2);
+                list($luckroll, $luckemoji) = roll_dice_string("2d6");
                 $out .= "_Testing luck to stave off death... ";
-                if ($d1+$d2 <= $player['luck']) {
-                    $out .= " $youare lucky!_ :four_leaf_clover: ( $e1 $e2 )\n";
+                if ($luckroll <= $player['luck']) {
+                    $out .= " $youare lucky!_ :four_leaf_clover: ( $luckemoji )\n";
                     $player['stam'] += 1;
                 } else {
-                    $out .= " $youare unlucky!_ :lightning: ( $e1 $e2 )\n";
+                    $out .= " $youare unlucky!_ :cloud_lightning: ( $luckemoji )\n";
                     $player['stam'] -= 1;
                 }
                 $player['luck']--;
@@ -831,13 +809,11 @@ class book_ff_basic extends book_character {
 
 
     protected function runSingleAttack(&$player, $mname, $mskill, $mstam, $mdamage = 2, $pdamage = 2) {
-        $mroll = rand(1, 6); $mroll2 = rand(1, 6);
-        $proll = rand(1, 6); $proll2 = rand(1, 6);
-        $mattack = $mskill+$mroll+$mroll2;
-        $pattack = $player['skill']+$player['weapon']+$proll+$proll2;
+        list($mroll, $memoji) = roll_dice_string("2d6");
+        list($proll, $pemoji) = roll_dice_string("2d6");
 
-        $memoji = diceemoji($mroll).diceemoji($mroll2);
-        $pemoji = diceemoji($proll).diceemoji($proll2);
+        $mattack = $mskill+$mroll;
+        $pattack = $player['skill']+$player['weapon']+$proll;
 
         if ($pattack > $mattack) {
             $out = "_You hit $mname. (_ $pemoji _ $pattack vs _ $memoji _ $mattack)_\n";
@@ -898,9 +874,8 @@ class book_ff_basic extends book_character {
         while (true) {
             $round++;
             // Player
-            $roll = rand(1, 6); $roll2 = rand(1, 6);
-            $emoji = diceemoji($roll).diceemoji($roll2).($modifier?sprintf("%+d", $modifier):'');
-            if (($roll+$roll2+$modifier) >= $player['skill']) {
+            list($roll, $emoji) = roll_dice_string("2d6".($modifier?sprintf("%+d", $modifier):''));
+            if (($roll) >= $player['skill']) {
                 $out .= "_$your shot missed!_ ($emoji vs ".$player['skill'].")\n";
             } else {
                 $out .= "_$your shot hit!_ ($emoji vs ".$player['skill'].")\n";
@@ -908,9 +883,8 @@ class book_ff_basic extends book_character {
                 break;
             }
             // Monster
-            $roll = rand(1, 6); $roll2 = rand(1, 6);
-            $emoji = diceemoji($roll).diceemoji($roll2);
-            if (($roll+$roll2) >= $mskill) {
+            list($roll, $emoji) = roll_dice_string("2d6");
+            if (($roll) >= $mskill) {
                 $out .= "_$m's shot missed!_ ($emoji vs $mskill)\n";
             } else {
                 $out .= "_$m's shot hit!_ ($emoji vs $mskill)\n";

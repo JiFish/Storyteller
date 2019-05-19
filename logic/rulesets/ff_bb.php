@@ -12,7 +12,7 @@ class book_ff_bb extends book_ff_basic {
 
     protected function getStats() {
         $stats = parent::getStats();
-        $stats['gold']['roll'] = 'twodieplus12';
+        $stats['gold']['roll'] = '2d6+12';
         $stats['time'] = [
             'friendly' => 'Time',
             'icons' => ':clock:',

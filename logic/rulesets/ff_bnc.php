@@ -8,7 +8,8 @@ class book_ff_bnc extends book_ff_basic {
         $stats['will'] = [
             'friendly' => 'Willpower',
             'alias' => ['willpower'],
-            'roll' => 'ff1die',
+            'roll' => '1d6+6',
+            'max' => 'roll',
             'testdice' => 2,
             'testpass' => '{youare} strong willed',
             'testfail' => '{youare} weak willed',

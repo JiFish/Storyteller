@@ -24,7 +24,7 @@ class book_ff_loz extends book_ff_magic {
             'testfail' => '{you} didn\'t spot anything}',
         ];
         $stats['magic']['roll'] = 0;
-        $stats['gold']['roll'] = 'loz3die';
+        $stats['gold']['roll'] = '3d6+2';
         return $stats;
     }
 

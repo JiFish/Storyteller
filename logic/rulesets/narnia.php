@@ -170,17 +170,14 @@ class book_narnia extends book_character {
         if (in_array($stat, $this->getAllStatCommands())) {
             $stat = $this->getStatFromAlias($stat);
             $statname = $this->getStats()[$stat]['friendly'];
-            $mod = $player[$stat];
+            $mod = sprintf("%+d", $player[$stat]);
         } else {
             sendqmsg("*Don't know how to test ".$stat."*", ':interrobang:');
             return;
         }
 
         // Roll dice
-        $d1 = rand(1, 6);
-        $d2 = rand(1, 6);
-        $emojidice = diceemoji($d1).diceemoji($d2).'+'.$mod;
-        $total = $d1+$d2+$mod;
+        list($total, $emojidice) = roll_dice_string("2d6$mod");
         sendqmsg("_".$player['name']." tests $statname and got *$total*!_ ($emojidice)", ':game_die:');
     }
 

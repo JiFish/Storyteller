@@ -186,7 +186,7 @@ class book_crystalm extends book_character {
             sendqmsg("*Don't know how to test ".$stat."*", ':interrobang:');
             return;
         }
-        $mod = $cmd[2]?(int)$cmd[2]:0;
+        $mod = $cmd[2]?(int)$cmd[2]:'';
 
         // Setup outcome pages to read if provided
         if ($cmd[3]) {
@@ -212,12 +212,10 @@ class book_crystalm extends book_character {
         }
 
         // Roll dice
-        $d1 = rand(1, 6);
-        $d2 = rand(1, 6);
-        $emojidice = diceemoji($d1).diceemoji($d2).'+'.$mod;
+        list($roll, $emojidice) = roll_dice_string("2d6$mod");
 
         // Check roll versus target number
-        if ($d1+$d2+$mod <= $target) {
+        if ($roll <= $target) {
             sendqmsg("_*".$player['name']." is $desc!*_\n_(_ $emojidice _ vs $target)_", ':smile:');
             // Show follow up page
             if (isset($success_page)) {

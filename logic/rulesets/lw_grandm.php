@@ -35,14 +35,14 @@ class book_lw_grandm extends book_lw_magnakai {
         parent::runImportUpdate($p);
         // There is some debate on how to deal with stats from an existing character
         // see https://www.projectaon.org/en/ReadersHandbook/GrandMaster
-        // I've gone with my own solution: 1d10 extra endurance, 1d10+5 extra skill
+        // I've gone with my own solution: 1d%+1 extra endurance, 1d%+6 extra skill
         if ($p['ruleset'] == 'book_lw_magnakai' ||
             $p['ruleset'] == 'book_lw_kai') {
-            $d1 = dice(0, 9);
-            $d2 = dice(0, 9);
-            $p['endurance'] = $p['max']['endurance'] = $p['max']['endurance'] + $d1 + 1;
-            $p['skill'] += $d2 + 6;
-            sendqmsg('*'.$p['name'].' leveled up!* +'.($d1+1).' endurance, +'.($d2+6).' combat skill! '.genericemoji($d1).' '.genericemoji($d2), $p['emoji']);
+            list($d1, $emoji1) = roll_dice_string("1d%+1", true);
+            list($d2, $emoji2) = roll_dice_string("1d%+6", true);
+            $p['endurance'] = $p['max']['endurance'] = $p['max']['endurance'] + $d1;
+            $p['skill'] += $d2;
+            sendqmsg('*'.$p['name']." leveled up!* +$d1 endurance, +$d2 combat skill! $emoji1 $emoji2", $p['emoji']);
         }
     }
 

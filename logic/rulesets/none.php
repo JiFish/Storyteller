@@ -40,7 +40,7 @@ class book_none extends gamebook_base {
         $this->registerCommand('look',           '_cmd_look');
         $this->registerCommand('page',           '_cmd_page',      ['n']);
         $this->registerCommand('background',     '_cmd_background');
-        $this->registerCommand('roll',           '_cmd_roll',      ['on']);
+        $this->registerCommand('roll',           '_cmd_roll',      ['osl']);
         $this->registerCommand(['help', '?'],    '_cmd_help');
         $this->registerCommand('echo',           '_cmd_echo',      ['l']);
         $this->registerCommand('randpage',       '_cmd_randpage',  ['n', 'n', 'on', 'on', 'on', 'on', 'on', 'on']);
@@ -181,22 +181,11 @@ class book_none extends gamebook_base {
     }
 
 
-    //// !roll [x] (roll xd6)
+    //// !roll [x/dicestring]
     protected function _cmd_roll($cmd) {
-        $numdice = ($cmd[1]?$cmd[1]:1);
-        $numdice = max(min($numdice, 100), 1);
-        $out = "Result:";
-
-        $t = 0;
-        for ($a = 0; $a < $numdice; $a++) {
-            $r = rand(1, 6);
-            $emoji = diceemoji($r);
-            $out .= " $emoji ($r)";
-            $t += $r;
-        }
-        if ($cmd[1] > 1) {
-            $out .= " *Total: $t*";
-        }
+        $dicestr = ($cmd[1]?$cmd[1]:1);
+        list($roll, $str) = roll_dice_string($dicestr);
+        $out = "Result: $str *Total: $roll*";
         sendqmsg($out, ":game_die:");
     }
 
@@ -243,27 +232,19 @@ class book_none extends gamebook_base {
 
     //// !randpage <page 1> [page 2] [page 3] [...]
     protected function _cmd_randpage($cmd) {
-        $pagelist = array();
-        foreach ($cmd as $c) {
-            if (is_numeric($c)) {
-                $pagelist[] = $c;
-            }
+        $pagelist = array_values(array_filter($cmd, 'is_numeric'));
+        // Make things a bit more pleasing if 2 or 3 pages were provided
+        if (count($pagelist) == 2) {
+            $pagelist[5] = $pagelist[4] = $pagelist[3] = $pagelist[1];
+            $pagelist[1] = $pagelist[2] = $pagelist[0];
+        } elseif (count($pagelist) == 3) {
+            $pagelist[5] = $pagelist[4] = $pagelist[2];
+            $pagelist[3] = $pagelist[2] = $pagelist[1];
+            $pagelist[1] = $pagelist[0];
         }
-
-        $totalpages = sizeof($pagelist);
-        if ($totalpages < 1) {
-            return;
-        }
-
-        $choice = rand(0, $totalpages-1);
-
-        // Display a rolled dice, if we can. Actually calculated after the choice (above)
-        if ($totalpages == 2 || $totalpages == 3) {
-            $ds = 6/$totalpages;
-            $de = diceemoji(rand(1+$choice*$ds, $ds+$choice*$ds));
-        } elseif ($totalpages <= 6) {
-            $de = diceemoji($choice+1);
-        }
+        // Roll
+        list($choice, $de) = roll_dice_string("1d".count($pagelist));
+        $choice--;
 
         sendqmsg("Rolled $de", ":game_die:");
         $this->addCommand("page ".$pagelist[$choice]);

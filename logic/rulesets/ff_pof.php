@@ -19,8 +19,8 @@ class book_ff_pof extends book_ff_magic {
         $p = parent::rollCharacter($name, $gender, $emoji, $race, $adjective);
         // Random Potion
         // The book rules actually give you a choice, but this is a bit more fun
-        $d = dice();
-        $p['creationdice'] .= ' '.diceemoji($d);
+        list($d, $emojidice) = roll_dice_string("1d6");
+        $p['creationdice'] .= " $emojidice";
         switch ($d) {
         case 1: case 2:
             $p['stuff'][] = 'Potion of Skill [skill full]';

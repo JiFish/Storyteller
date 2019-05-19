@@ -36,8 +36,8 @@ class book_lw_kai extends book_lonewolf {
             $p['emoji'] = str_replace('older_adult', 'child', $p['emoji']);
         }
         // Starting bonus
-        $d = rand(0, 9);
-        $p['creationdice'] .= ' '.genericemoji($d);
+        list($d, $emoji) = roll_dice_string("1d%");
+        $p['creationdice'] .= " $emoji";
         switch ($d) {
         case 1:
             $p['weapons'][] = 'Sword';

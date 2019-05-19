@@ -221,11 +221,10 @@ class book_sonic extends book_character {
         }
 
         // Roll dice
-        $d1 = rand(1, 6);
-        $emojidice = diceemoji($d1).'+'.$mod;
+        list($roll, $emojidice) = roll_dice_string("1d6+$mod");
 
         // Check roll versus target number
-        if ($d1+$mod >= $target) {
+        if ($roll >= $target) {
             if (!is_numeric($stat)) {
                 sendqmsg("_*".$player['name']." is $desc!*_\n_(_ $emojidice _ vs $target)_", ':smile:');
             } else {
@@ -287,13 +286,13 @@ class book_sonic extends book_character {
 
         while (1) {
             // Sonic hit
-            $roll = rand(1, 6);
+            list($roll, $emojidice) = roll_dice_string("1d6+$skill");
             if ($mod == 0) {
-                $teststr = diceemoji($roll)."+$skill vs $mskill";
+                $teststr = "$emojidice vs $mskill";
             } else {
-                $teststr = diceemoji($roll)."+$skill ".sprintf("%+d", $mod)." vs $mskill";
+                $teststr = "$emojidice ".sprintf("%+d", $mod)." vs $mskill";
             }
-            if ($roll+$skill+$mod >= $mskill) {
+            if ($roll+$mod >= $mskill) {
                 $out .= "_*".$player['name']." has defeated the $monster!*_ ($teststr)\n";
                 break;
             } else {
@@ -301,9 +300,9 @@ class book_sonic extends book_character {
             }
 
             // Monster hit
-            $roll = rand(1, 6);
-            $teststr = diceemoji($roll)."+$mskill vs 10";
-            if ($roll+$mskill >= 10) {
+            list($roll, $emojidice) = roll_dice_string("1d6+$mskill");
+            $teststr = "$emojidice vs 10";
+            if ($roll >= 10) {
                 $out .= "_$monster has hit ".$player['name']."!_ ($teststr)\n";
                 if ($player['rings'] > 0) {
                     $out .= "_*".$player['name']." lost all ".($player['gender']=='Male'?'his':'her')." rings!*_\n";

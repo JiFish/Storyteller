@@ -216,19 +216,9 @@ abstract class gamebook_base {
 
         // magic to substitute dice rolls
         $command = preg_replace_callback(
-            '/{([1-9][0-9]?)d([1-9][0-9]{0,2})?([+|\-][1-9][0-9]{0,2})?}/',
+            '/{(([1-9]?[0-9])?d((?:[1-9][0-9]{0,2}|%))?([+|\-][1-9][0-9]{0,2})?)}/',
             function ($matches) {
-                $roll = 0;
-                if (!isset($matches[2]) || !$matches[2]) {
-                    $matches[2] = 6;
-                }
-                foreach (range(1, $matches[1]) as $i) {
-                    $roll += rand(1, $matches[2]);
-                }
-                if (isset($matches[3])) {
-                    $roll += $matches[3];
-                }
-                return $roll;
+                return roll_dice_string($matches[1])[0];
             },
             $command
         );
