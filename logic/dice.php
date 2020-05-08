@@ -51,16 +51,22 @@ function roll_stats(&$player, $stats) {
             $player['creationdice'] .= ' '.$s;
         }
         // Maximum value
-        if (!isset($v['max'])) {
-            $player['max'][$statname] = 99999;
-        } elseif (is_numeric($v['max'])) {
-            $player['max'][$statname] = $v['max'];
-        } elseif ($v['max'] == 'roll') {
-            $player['max'][$statname] = $player[$statname];
+        if (is_bool($v['roll'])) {
+            $player['max'][$statname] = 1;
         } else {
-            list($r, $s) = roll_dice_string($v['max'], true);
-            $player['max'][$statname] = $r;
-            $player['creationdice'] .= ' '.$s;
+            if (!isset($v['max'])) {
+                $player['max'][$statname] = 99999;
+            } elseif (is_numeric($v['max'])) {
+                $player['max'][$statname] = $v['max'];
+            } elseif ($v['max'] == 'roll') {
+                $player['max'][$statname] = $player[$statname];
+            } else {
+                list($r, $s) = roll_dice_string($v['max'], true);
+                $player['max'][$statname] = $r;
+                $player['creationdice'] .= ' '.$s;
+            }
+            // Ensure start value does not exceed max value
+            $player[$statname] = min($player[$statname], $player['max'][$statname]);
         }
     }
     $player['creationdice'] = trim($player['creationdice']);
