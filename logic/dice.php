@@ -11,10 +11,10 @@ function dice($min = 1, $max = 6) {
         $r = rand($min+1, $max);
         break;
     case 'min3':
-        $r = max(3, $max);
+        $r = max(3, rand($min, $max));
         break;
     case 'min4':
-        $r = max(4, $max);
+        $r = max(4, rand($min, $max));
         break;
     case 'roll2':
         $r = max(rand($min, $max), rand($min, $max));
