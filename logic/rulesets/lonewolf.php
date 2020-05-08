@@ -32,7 +32,7 @@ class book_lonewolf extends book_character_importable {
         $stats = array(
             'endurance' => [
                 'friendly' => 'Endurance',
-                'icons' => [':heartpulse', ':face_with_head_bandage:'],
+                'icons' => [':heartpulse:', ':face_with_head_bandage:'],
                 'alias' => ['end'],
                 'roll' => '1d%+20',
                 'max' => 'roll',
